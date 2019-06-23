@@ -27,8 +27,30 @@
 
 ## 会不会提供免费的弹幕服务器？
 
-有需要的人多的话可能会吧，暂时是没有，没钱，我自己的服务器都是仍在客厅沙发底下的，如果有人有性能不错的服务器想要贡献出来，可以联系我。
+拿国外的小JJ搞了一个，性能有限，不提供任何保障，随时有可能挂掉，随时可能删库跑路，仅作演示使用，请勿用于生产环境
 
 ## 示例？
 
-简单给一个吧 https://blog.xxwhite.com/2017/VideoTest.html
+简单给一个吧   
+视频：https://blog.xxwhite.com/2017/VideoTest.html
+普通弹幕接口 https://danmaku.xwhite.studio/api/dplayer/v3/?id=46190A32F63DFF2CF0A3BB0F3293636C（视频设定的id，最大长度32，推荐使用视频的MD5值作为id）  
+BiliBili弹幕接口：  
+- https://danmaku.xwhite.studio/api/dplayer/v3/bilibili/?cid=28019559
+- https://danmaku.xwhite.studio/api/dplayer/v3/bilibili?aid=17150441&p=1
+- https://danmaku.xwhite.studio/api/dplayer/v3/bilibili/?cid=1176840
+- https://danmaku.xwhite.studio/api/dplayer/v3/bilibili?aid=810872&p=1
+
+Dplayer弹幕接口：
+
+```js
+    danmaku: {
+        id: '46190A32F63DFF2CF0A3BB0F3293636C',     //建议使用视频MD5或者其他唯一值
+        api: 'https://danmaku.xwhite.studio/api/dplayer/',
+        addition: ['https://danmaku.xwhite.studio/api/dplayer/v3/bilibili?cid=cid']    //可使用cid或者aid+p作为参数，p默认为1
+    }
+```
+
+
+## TODO
+
+- [] 管理面板
