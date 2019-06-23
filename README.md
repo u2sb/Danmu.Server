@@ -32,7 +32,7 @@
 ## 示例？
 
 简单给一个吧   
-视频：https://blog.xxwhite.com/2017/VideoTest.html
+视频：https://blog.xxwhite.com/2017/VideoTest.html  
 普通弹幕接口 https://danmaku.xwhite.studio/api/dplayer/v3/?id=46190A32F63DFF2CF0A3BB0F3293636C （视频设定的id，最大长度32，推荐使用视频的MD5值作为id）  
 BiliBili弹幕接口：  
 - https://danmaku.xwhite.studio/api/dplayer/v3/bilibili/?cid=28019559
