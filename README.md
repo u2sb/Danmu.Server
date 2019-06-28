@@ -32,8 +32,8 @@
 ## 示例？
 
 简单给一个吧   
-视频：https://blog.xxwhite.com/2017/VideoTest.html  
-普通弹幕接口 https://danmaku.xwhite.studio/api/dplayer/v3/?id=46190A32F63DFF2CF0A3BB0F3293636C （视频设定的id，最大长度32，推荐使用视频的MD5值作为id）  
+视频：[https://doc.video.xwhite.studio/danmaku/index.html](https://doc.video.xwhite.studio/danmaku/index.html)   
+普通弹幕接口 https://danmaku.xwhite.studio/api/dplayer/v3/?id=C6CC6218F1FB8770 （视频设定的id，最大长度32，推荐使用视频的MD5值作为id）  
 BiliBili弹幕接口：  
 - https://danmaku.xwhite.studio/api/dplayer/v3/bilibili/?cid=28019559
 - https://danmaku.xwhite.studio/api/dplayer/v3/bilibili?aid=17150441&p=1
@@ -44,9 +44,9 @@ Dplayer弹幕接口：
 
 ```js
     danmaku: {
-        id: '46190A32F63DFF2CF0A3BB0F3293636C',     //建议使用视频MD5或者其他唯一值
+        id: 'C6CC6218F1FB8770',     //建议使用视频 CRC64 或者其他唯一值
         api: 'https://danmaku.xwhite.studio/api/dplayer/',
-        addition: ['https://danmaku.xwhite.studio/api/dplayer/v3/bilibili?cid=cid']    //可使用cid或者aid+p作为参数，p默认为1
+        addition: ['https://danmaku.xwhite.studio/api/dplayer/v3/bilibili?cid=cid']    //可使用 cid 或者aid + p作为参数，p 默认为1
     }
 ```
 
