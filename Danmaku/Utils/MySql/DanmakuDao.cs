@@ -18,7 +18,7 @@ namespace Danmaku.Utils.MySql
         {
             return _con.Connection()
                 .QueryAsync<DanmakuGet>(
-                    $"SELECT Time, Type, Color, Author, Text FROM Danmaku WHERE Id = '{id}'").Result.AsList();
+                    "SELECT Time, Type, Color, Author, Text FROM Danmaku WHERE Id = @id", new {id}).Result.AsList();
         }
 
         public int Insert(DanmakuModel danmaku)

@@ -3,6 +3,7 @@ using Danmaku.Utils.MySql;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -46,7 +47,13 @@ namespace Danmaku
                 app.UseCors(builder =>
                     builder.WithOrigins(Configuration["WithOrigins"].Split(",")).WithMethods("GET", "POST", "OPTIONS").AllowAnyHeader());
             }
-            
+
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
+            app.UseAuthentication();
+
             app.UseMvc();
         }
     }
