@@ -1,8 +1,7 @@
 ﻿using Danmaku.Utils.BiliBili;
-using Danmaku.Utils.MySql;
+using Danmaku.Utils.PostgreSQL;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -16,19 +15,14 @@ namespace Danmaku
         {
             Configuration = configuration;
         }
-        
+
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
-#if DEBUG
-            services.AddSingleton<IMySqlCon, MySqlConDev>();
-#else
-            services.AddSingleton<IMySqlCon, MySqlCon>();
-#endif
+            services.AddSingleton<IPsCon, PsCon>();
 
             services.AddSingleton<IDanmakuDao, DanmakuDao>();
             services.AddSingleton<IBilibiliHelp, BilibiliHelp>();
@@ -45,7 +39,8 @@ namespace Danmaku
             else
             {
                 app.UseCors(builder =>
-                    builder.WithOrigins(Configuration["WithOrigins"].Split(",")).WithMethods("GET", "POST", "OPTIONS").AllowAnyHeader());
+                    builder.WithOrigins(Configuration["WithOrigins"].Split(",")).WithMethods("GET", "POST", "OPTIONS")
+                        .AllowAnyHeader());
             }
 
             app.UseForwardedHeaders(new ForwardedHeadersOptions

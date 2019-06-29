@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 using Danmaku.Model;
+using Danmaku.Utils;
 using Danmaku.Utils.BiliBili;
-using Danmaku.Utils.MySql;
+using Danmaku.Utils.PostgreSQL;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Danmaku.Controllers
 {
@@ -29,22 +30,12 @@ namespace Danmaku.Controllers
             string id = Request.Query["id"];
             if (string.IsNullOrEmpty(id)) return new WebResult();
 
-            var queryList = _dd.Query(id);
-            if (queryList.Count == 0) return new WebResult();
-
-            var result = new List<object[]>();
-
-            foreach (var query in queryList)
-                result.Add(new object[]
-                {
-                    query.Time, query.Type, query.Color, HttpUtility.HtmlEncode(query.Author),
-                    HttpUtility.HtmlEncode(query.Text)
-                });
-
-            return new WebResult
+            var result = _dd.Query(id);
+            if (result.Count == 0) return new WebResult();
+            
+            return new WebResult(result)
             {
-                Code = 0,
-                Data = result
+                Code = 0
             };
         }
 
@@ -53,10 +44,10 @@ namespace Danmaku.Controllers
         public WebResult Post([FromBody] DanmakuModel data)
         {
             if (data == null) return new WebResult();
-            data.Ip = Request.Headers["X-Real-IP"];
+            data.Ip = Ip.Ip2Long(Request.Headers["X-Real-IP"]);
             data.Referer = Request.Headers["Referer"].FirstOrDefault();
 
-            var result = _dd.Insert(data) == 0 ? new WebResult() : new WebResult {Code = 0};
+            var result = _dd.Insert(new DanmakuInsert(data)) == 0 ? new WebResult() : new WebResult {Code = 0};
             return result;
         }
 
