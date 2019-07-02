@@ -1,5 +1,6 @@
 ﻿using Danmaku.Utils.BiliBili;
 using Danmaku.Utils.PostgreSQL;
+using Danmaku.Utils.WebSocket;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -23,9 +24,9 @@ namespace Danmaku
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSingleton<IPsCon, PsCon>();
-
             services.AddSingleton<IDanmakuDao, DanmakuDao>();
             services.AddSingleton<IBilibiliHelp, BilibiliHelp>();
+            services.AddSingleton<ILiveDanmaku, LiveDanmaku>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,6 +51,9 @@ namespace Danmaku
             app.UseAuthentication();
 
             app.UseMvc();
+
+            //TODO 临时启动
+            var liveDanmaku = new LiveDanmaku(Configuration);
         }
     }
 }
