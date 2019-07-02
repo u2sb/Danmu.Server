@@ -4,6 +4,6 @@ namespace Danmaku.Utils.WebSocket
 {
     public interface ILiveDanmaku
     {
-        WebSocketServer Server();
+        HttpServer Server();
     }
 }
