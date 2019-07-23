@@ -31,7 +31,7 @@ namespace Danmaku.Controllers
             if (string.IsNullOrEmpty(id)) return new WebResult();
 
             var result = _dd.Query(id);
-            if (result.Count == 0) return new WebResult();
+            if (result.Count == 0) return new WebResult{Code = 0};
             
             return new WebResult(result)
             {
