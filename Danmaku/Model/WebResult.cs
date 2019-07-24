@@ -9,6 +9,10 @@ namespace Danmaku.Model
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ss">数据list</param>
         public WebResult(List<string> ss)
         {
             var lo = new List<object[]>();
@@ -20,7 +24,15 @@ namespace Danmaku.Model
             Data = lo;
         }
 
+
+        /// <summary>
+        /// 代码，0正常 1错误
+        /// </summary>
         public int Code { get; set; } = 1;
+
+        /// <summary>
+        /// 数据
+        /// </summary>
         public object Data { get; set; }
     }
 }

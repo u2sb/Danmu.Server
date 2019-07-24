@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Danmaku.Model;
+using Microsoft.Extensions.Configuration;
 using Npgsql;
 
 namespace Danmaku.Utils.PostgreSQL
@@ -9,9 +10,10 @@ namespace Danmaku.Utils.PostgreSQL
 
         public PsCon(IConfiguration configuration)
         {
+            var dansql = new AppConfiguration(configuration).DanmakuSQL;
             var conf = configuration.GetSection("DanmakuSQL");
             _conStr =
-                $"Host={conf["Host"]};Username={conf["UserName"]};Password={conf["PassWord"]};Database={conf["DataBase"]};";
+                $"Host={dansql.Host};Username={dansql.UserName};Password={dansql.PassWord};Database={dansql.DataBase};";
         }
 
         public NpgsqlConnection Connection()

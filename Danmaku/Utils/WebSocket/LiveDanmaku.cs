@@ -7,10 +7,12 @@ namespace Danmaku.Utils.WebSocket
     public class LiveDanmaku : ILiveDanmaku
     {
         private readonly HttpServer _webSocketServer;
+        private readonly AppConfiguration _appConfiguration;
 
         public LiveDanmaku(IConfiguration configuration)
         {
-            _webSocketServer = new HttpServer(int.Parse(configuration["WebSocketPort"]));
+            _appConfiguration = new AppConfiguration(configuration);
+            _webSocketServer = new HttpServer(_appConfiguration.WebSocketPort);
             _webSocketServer.Start();
 
             //TODO 临时使用，后面需要写一个管理界面

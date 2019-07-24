@@ -1,4 +1,5 @@
-﻿using Danmaku.Utils.BiliBili;
+﻿using Danmaku.Model;
+using Danmaku.Utils.BiliBili;
 using Danmaku.Utils.PostgreSQL;
 using Danmaku.Utils.WebSocket;
 using Microsoft.AspNetCore.Builder;
@@ -32,6 +33,7 @@ namespace Danmaku
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            AppConfiguration appConfiguration = new AppConfiguration(Configuration);
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -40,7 +42,7 @@ namespace Danmaku
             else
             {
                 app.UseCors(builder =>
-                    builder.WithOrigins(Configuration["WithOrigins"].Split(",")).WithMethods("GET", "POST", "OPTIONS")
+                    builder.WithOrigins(appConfiguration.WithOrigins).WithMethods("GET", "POST", "OPTIONS")
                         .AllowAnyHeader());
             }
 
