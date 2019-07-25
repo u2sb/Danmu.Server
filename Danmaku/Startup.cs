@@ -16,9 +16,11 @@ namespace Danmaku
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            AppConfiguration = new AppConfiguration(configuration);
         }
 
         public IConfiguration Configuration { get; }
+        public AppConfiguration AppConfiguration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -33,7 +35,8 @@ namespace Danmaku
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            AppConfiguration appConfiguration = new AppConfiguration(Configuration);
+            
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -42,7 +45,7 @@ namespace Danmaku
             else
             {
                 app.UseCors(builder =>
-                    builder.WithOrigins(appConfiguration.WithOrigins).WithMethods("GET", "POST", "OPTIONS")
+                    builder.WithOrigins(AppConfiguration.WithOrigins).WithMethods("GET", "POST", "OPTIONS")
                         .AllowAnyHeader());
             }
 
@@ -51,6 +54,7 @@ namespace Danmaku
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
             app.UseAuthentication();
+            app.UseCookiePolicy();
 
             app.UseMvc();
 

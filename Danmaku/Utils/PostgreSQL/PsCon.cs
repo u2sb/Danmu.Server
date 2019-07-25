@@ -11,7 +11,6 @@ namespace Danmaku.Utils.PostgreSQL
         public PsCon(IConfiguration configuration)
         {
             var dansql = new AppConfiguration(configuration).DanmakuSQL;
-            var conf = configuration.GetSection("DanmakuSQL");
             _conStr =
                 $"Host={dansql.Host};Username={dansql.UserName};Password={dansql.PassWord};Database={dansql.DataBase};";
         }
