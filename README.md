@@ -1,5 +1,9 @@
 # Dplayer弹幕服务器C#版
 
+## 文档
+
+[https://doc.video.xwhite.studio/danmaku/cs.html](https://doc.video.xwhite.studio/danmaku/cs.html)
+
 ## 这是什么？
 
 这是[Dplayer播放器](https://github.com/MoePlayer/DPlayer)的弹幕服务器
@@ -13,7 +17,7 @@
 原版有的功能这东西都有，顺便增强了一下BiliBili弹幕解析能力
 
 - [x] 独立弹幕（和原版一样）
-- [x] 解析BiliBili弹幕（比原版多了支持分P）
+- [x] 解析BiliBili弹幕（支持分P和历史弹幕）
 
 ## 这货性能怎么样？
 
@@ -56,5 +60,5 @@ Dplayer弹幕接口：
 ## TODO
 
 - [ ] 管理面板
-- [ ] 直播弹幕
-- [ ] BiliBili历史弹幕叠加
+- [x] 直播弹幕
+- [x] BiliBili历史弹幕叠加
