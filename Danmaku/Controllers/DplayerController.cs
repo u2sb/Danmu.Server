@@ -6,7 +6,6 @@ using Danmaku.Utils;
 using Danmaku.Utils.BiliBili;
 using Danmaku.Utils.PostgreSQL;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 
 namespace Danmaku.Controllers
 {
@@ -31,8 +30,8 @@ namespace Danmaku.Controllers
             if (string.IsNullOrEmpty(id)) return new WebResult();
 
             var result = _dd.Query(id);
-            if (result.Count == 0) return new WebResult{Code = 0};
-            
+            if (result.Count == 0) return new WebResult {Code = 0};
+
             return new WebResult(result)
             {
                 Code = 0
@@ -55,6 +54,8 @@ namespace Danmaku.Controllers
         public WebResult BiliBili()
         {
             var request = Request.Query;
+
+            string[] date = request["date"];
             var cid = request["cid"];
             if (string.IsNullOrEmpty(cid))
             {
@@ -67,16 +68,30 @@ namespace Danmaku.Controllers
             }
 
             if (cid == "0") return new WebResult();
-
-            var ds = _bp.GetBiDanmaku(cid);
             var result = new List<object[]>();
 
-            foreach (var d in ds)
-                result.Add(new object[]
-                {
-                    d.Time, d.Type, d.Color, HttpUtility.HtmlEncode(d.Author),
-                    HttpUtility.HtmlEncode(d.Text)
-                });
+            if (date.Length == 0)
+            {
+                var ds = _bp.GetBiDanmaku(cid);
+
+                foreach (var d in ds)
+                    result.Add(new object[]
+                    {
+                        d.Time, d.Type, d.Color, HttpUtility.HtmlEncode(d.Author),
+                        HttpUtility.HtmlEncode(d.Text)
+                    });
+            }
+            else
+            {
+                var ds = _bp.GetBiDanmaku(cid, date);
+
+                foreach (var d in ds)
+                    result.Add(new object[]
+                    {
+                        d.Time, d.Type, d.Color, HttpUtility.HtmlEncode(d.Author),
+                        HttpUtility.HtmlEncode(d.Text)
+                    });
+            }
 
             return new WebResult
             {

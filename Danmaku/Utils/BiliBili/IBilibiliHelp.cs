@@ -8,5 +8,7 @@ namespace Danmaku.Utils.BiliBili
         int GetCid(string aid, int p);
 
         List<DanmakuGet> GetBiDanmaku(string cid);
+
+        List<DanmakuGet> GetBiDanmaku(string cid, string[] date);
     }
 }

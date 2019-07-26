@@ -15,6 +15,7 @@ namespace Danmaku.Model
         public string[] WithOrigins { get; set; }
         public int WebSocketPort { get; set; }
         public DanmakuSQL DanmakuSQL { get; set; }
+        public string BCookie { get; set; }
     }
 
 
