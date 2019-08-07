@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Numerics;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -9,7 +10,7 @@ namespace Danmaku.Model
     {
         [MaxLength(32)] public string Id { get; set; }
 
-        public long Ip { get; set; }
+        public BigInteger Ip { get; set; }
         public string Referer { get; set; }
         public DateTime Date { get; set; } = DateTime.Now;
     }
@@ -48,7 +49,7 @@ namespace Danmaku.Model
 
         public object[] Data { get; set; }
 
-        public long Ip { get; set; }
+        public BigInteger Ip { get; set; }
         public string Referer { get; set; }
         public long Date { get; set; }
 
