@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Net;
+using System.Web;
 
 namespace Danmaku.Model
 {
@@ -10,16 +12,24 @@ namespace Danmaku.Model
         {
         }
 
+        public DanmakuWebResult(int code)
+        {
+            Code = code;
+        }
+
+
         public DanmakuWebResult(List<DanmakuData> data)
         {
-            Data = data.Select(s => new object[] {s.Time, s.Type, s.Color, s.Author, s.Text}).ToList();
+            Code = 0;
+            Data = data.Select(s => new object[]
+                {s.Time, s.Type, s.Color, HttpUtility.HtmlEncode(s.Author), HttpUtility.HtmlEncode(s.Text)}).ToList();
         }
 
 
         /// <summary>
         ///     代码，0正常 1错误
         /// </summary>
-        public int Code { get; set; } = 0;
+        public int Code { get; set; }
 
         /// <summary>
         ///     数据
@@ -38,5 +48,13 @@ namespace Danmaku.Model
         [MaxLength(16)] public string Author { get; set; }
 
         [MaxLength(255)] public string Text { get; set; }
+    }
+
+    public class DanmakuDataInsert : DanmakuData
+    {
+        [MaxLength(36)] public string Id { get; set; }
+
+        public IPAddress Ip { get; set; }
+        public string Referer { get; set; }
     }
 }

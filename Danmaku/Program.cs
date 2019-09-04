@@ -1,11 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace Danmaku
 {
@@ -20,7 +14,14 @@ namespace Danmaku
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseStartup<Startup>().ConfigureKestrel((context, options) =>
+                    {
+#if DEBUG
+                        options.ListenAnyIP(5000);
+#else
+                        options.ListenUnixSocket("/tmp/dplayer.danmaku.sock");
+#endif
+                    });
                 });
     }
 }

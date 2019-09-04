@@ -1,14 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Danmaku.Model;
+using Danmaku.Utils.BiliBili;
+using Danmaku.Utils.Dao;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using static Danmaku.Model.AppConfiguration;
 
 namespace Danmaku
 {
@@ -17,6 +16,7 @@ namespace Danmaku
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            Config = new AppConfiguration(configuration);
         }
 
         public IConfiguration Configuration { get; }
@@ -25,24 +25,43 @@ namespace Danmaku
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddDbContext<DanmakuContext>();
+            services.AddSingleton<IBiliBiliHelp, BiliBiliHelp>();
+            services.AddSingleton<IDanmakuDao, DanmakuDao>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetRequiredService<DanmakuContext>();
+                context.Database.EnsureCreated();
+            }
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             }
+            else
+            {
+                app.UseCors(builder =>
+                    builder.WithOrigins(Config.WithOrigins).WithMethods("GET", "POST", "OPTIONS")
+                        .AllowAnyHeader());
+            }
+
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
 
             app.UseRouting();
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
 }
