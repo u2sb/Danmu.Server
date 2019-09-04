@@ -16,9 +16,9 @@ namespace Danmaku
                 {
                     webBuilder.UseStartup<Startup>().ConfigureKestrel((context, options) =>
                     {
-#if DEBUG
+#if DEBUG || WIN
                         options.ListenAnyIP(5000);
-#else
+#elif LINUX
                         options.ListenUnixSocket("/tmp/dplayer.danmaku.sock");
 #endif
                     });
