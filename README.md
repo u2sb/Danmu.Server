@@ -4,6 +4,42 @@
 
 [https://doc.video.xwhite.studio/danmaku/cs.html](https://doc.video.xwhite.studio/danmaku/cs.html)
 
+
+## 0.3版本
+
+##关于0.3版本
+
+0.3 版本目前仍在测试阶段，不建议使用。  
+0.3 版本是完全的重构，所以并不兼容以前版本的数据库，所以不能直接从以前版本升级到0.3版本，等0.3版本正式发布之后会写一个数据库迁移工具。  
+因为 0.3 版本使用了 .net core 3.0，所以需要 .net core 3.0 发布正式版以后再发布（很快就要发布了）。
+
+### 使用
+
+此版本仅供有能力使用的人进行测试使用，如果认为自己能力不足，请等待正式版本发布。
+
+以Linux为例，64位系统可以下载已经编译好的文件直接使用，32位系统需要自己编译，因为开启了 R2R ，所以不能交叉编译，如需交叉编译请关闭 R2R，方法请自行搜索。
+
+```
+dotnet publish -c Release-Linux64 linux-x64 --self-contained false
+
+dotnet publish -c Release-Linux32 linux-x86 --self-contained false
+```
+
+安装并配置好 PostgreSQL ，配置文件中填写的用户需要有创建数据库的权限，如果没有创建数据库的权限，需要自己手动创建好指定的数据库。
+
+安装好 .net core 环境，需要 .net core 3.0 ，安装方法自己看官网，写的很详细。下载编译好的二进制文件，解压，运行  
+
+```
+./Danmaku
+```
+
+程序会自动创建数据库，并且配置好数据表的字段。
+
+Linux使用了Unix套接字作为连接，所以反向代理需要代理 `unix:/tmp/dplayer.danmaku.sock`，目前此选项无法配置，后续会提供可配置的连接方式。  
+Windows使用5000端口连接。
+
+
+
 ## 这是什么？
 
 这是[Dplayer播放器](https://github.com/MoePlayer/DPlayer)的弹幕服务器
