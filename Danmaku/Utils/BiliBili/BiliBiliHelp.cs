@@ -4,7 +4,6 @@ using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using System.Web;
 using System.Xml;
 using Danmaku.Model;
 
@@ -60,33 +59,40 @@ namespace Danmaku.Utils.BiliBili
 
         private async Task<List<DanmakuData>> GetBiDanmakuDataAsync(string url, string cookie)
         {
-            var handler = new SocketsHttpHandler {AutomaticDecompression = DecompressionMethods.Deflate};
-            using var client = new HttpClient(handler);
-            if (!string.IsNullOrEmpty(cookie)) client.DefaultRequestHeaders.Add("Cookie", cookie);
-            var result = await client.GetStringAsync(url);
-
-            var xml = new XmlDocument();
-            xml.LoadXml(result);
-            var ds = xml.GetElementsByTagName("d");
-
-            var dgs = new List<DanmakuData>();
-            if (ds.Count == 0) return dgs;
-
-            foreach (XmlNode d in ds)
+            try
             {
-                var ps = d.Attributes["p"].InnerText.Split(",");
-                var dg = new DanmakuData
-                {
-                    Time = float.Parse(ps[0]),
-                    Color = int.Parse(ps[3]),
-                    Type = int.Parse(ps[5]),
-                    Author = "",
-                    Text = d.InnerText
-                };
-                dgs.Add(dg);
-            }
+                var handler = new SocketsHttpHandler {AutomaticDecompression = DecompressionMethods.Deflate};
+                using var client = new HttpClient(handler);
+                if (!string.IsNullOrEmpty(cookie)) client.DefaultRequestHeaders.Add("Cookie", cookie);
+                var result = await client.GetStringAsync(url);
 
-            return dgs;
+                var xml = new XmlDocument();
+                xml.LoadXml(result);
+                var ds = xml.GetElementsByTagName("d");
+
+                var dgs = new List<DanmakuData>();
+                if (ds.Count == 0) return dgs;
+
+                foreach (XmlNode d in ds)
+                {
+                    var ps = d.Attributes["p"].InnerText.Split(",");
+                    var dg = new DanmakuData
+                    {
+                        Time = float.Parse(ps[0]),
+                        Color = int.Parse(ps[3]),
+                        Type = int.Parse(ps[5]),
+                        Author = "",
+                        Text = d.InnerText
+                    };
+                    dgs.Add(dg);
+                }
+
+                return dgs;
+            }
+            catch
+            {
+                return new List<DanmakuData>();
+            }
         }
     }
 }
