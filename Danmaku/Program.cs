@@ -1,3 +1,4 @@
+using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
@@ -19,6 +20,7 @@ namespace Danmaku
 #if DEBUG || WIN
                         options.ListenAnyIP(5000);
 #elif LINUX
+                        if (File.Exists("/tmp/dplayer.danmaku.sock")) File.Delete("/tmp/dplayer.danmaku.sock");
                         options.ListenUnixSocket("/tmp/dplayer.danmaku.sock");
 #endif
                     });
