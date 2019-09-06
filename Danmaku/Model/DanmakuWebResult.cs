@@ -39,6 +39,20 @@ namespace Danmaku.Model
 
     public class DanmakuData
     {
+        public DanmakuData()
+        {
+        }
+
+        public DanmakuData(string json)
+        {
+            var t = System.Text.Json.JsonSerializer.Deserialize<DanmakuData>(json);
+            Time = t.Time;
+            Type = t.Type;
+            Color = t.Color;
+            Author = t.Author;
+            Text = t.Text;
+        }
+
         public float Time { get; set; }
 
         public int Type { get; set; }
@@ -48,6 +62,12 @@ namespace Danmaku.Model
         [MaxLength(16)] public string Author { get; set; }
 
         [MaxLength(255)] public string Text { get; set; }
+
+        
+        public string ToJson()
+        {
+            return System.Text.Json.JsonSerializer.Serialize(this);
+        }
     }
 
     public class DanmakuDataInsert : DanmakuData
