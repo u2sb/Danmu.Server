@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Danmaku.Controllers.Dplayer.V3
 {
-    [Route("api/dplayer/v3/")]
     [ApiController]
     public class DefaultController : ControllerBase
     {
@@ -18,8 +17,8 @@ namespace Danmaku.Controllers.Dplayer.V3
         }
 
         // GET: api/dplayer/v3/
-        [HttpGet]
-        public DanmakuWebResult Get()
+        [HttpGet("api/dplayer/v3/")]
+        public string Get()
         {
             string id = Request.Query["id"];
             if (string.IsNullOrEmpty(id)) return new DanmakuWebResult(1);
@@ -28,8 +27,8 @@ namespace Danmaku.Controllers.Dplayer.V3
         }
 
         // POST: api/dplayer/v3/
-        [HttpPost]
-        public DanmakuWebResult Post([FromBody] DanmakuDataInsert data)
+        [HttpPost("api/dplayer/v3/")]
+        public string Post([FromBody] DanmakuDataInsert data)
         {
             if (string.IsNullOrWhiteSpace(data.Id) || string.IsNullOrWhiteSpace(data.Text))
                 return new DanmakuWebResult(1);

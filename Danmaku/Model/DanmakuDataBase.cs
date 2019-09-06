@@ -13,17 +13,20 @@ namespace Danmaku.Model
 
         public DanmakuDataBase(DanmakuDataInsert date)
         {
-            Ip = date.Ip;
-            Vid = date.Id;
-            Referer = date.Referer;
-            DanmakuData = new DanmakuData
+            if (date != null)
             {
-                Time = date.Time,
-                Type = date.Type,
-                Author = date.Author,
-                Color = date.Color,
-                Text = date.Text
-            };
+                Ip = date.Ip;
+                Vid = date.Id;
+                Referer = date.Referer;
+                DanmakuData = new DanmakuData
+                {
+                    Time = date.Time,
+                    Type = date.Type,
+                    Author = date.Author,
+                    Color = date.Color,
+                    Text = date.Text
+                };
+            }
         }
 
         [Key] public Guid Id { get; set; }

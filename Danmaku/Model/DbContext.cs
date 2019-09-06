@@ -16,23 +16,17 @@ namespace Danmaku.Model
             {
                 case PostgreSQL:
                     Sql.Port = Sql.Port == 0 ? 5432 : Sql.Port;
-                    var connection0 =
-                        $"Host={Sql.Host};Port={Sql.Port};Database={Sql.DataBase};Username={Sql.UserName};Password={Sql.PassWord};";
-                    optionsBuilder.UseNpgsql(connection0);
+                    optionsBuilder.UseNpgsql($"Host={Sql.Host};Port={Sql.Port};Database={Sql.DataBase};Username={Sql.UserName};Password={Sql.PassWord};");
                     break;
 //                case MySQL:
 //                    Sql.Port = Sql.Port == 0 ? 3306 : Sql.Port;
-//                    var connection1 =
-//                        $"Server={Sql.Host};Port={Sql.Port};Database={Sql.DataBase};UserId={Sql.UserName};Password={Sql.PassWord};Sslmode=none;";
-//                    optionsBuilder.UseMySql(connection1, optionsBuilder =>
-//                        {
-//                            optionsBuilder.ServerVersion(new Version(8, 0, 16), ServerType.MySql);
-//                        });
+//                    optionsBuilder.UseMySql($"Server={Sql.Host};Port={Sql.Port};Database={Sql.DataBase};UserId={Sql.UserName};Password={Sql.PassWord};Sslmode=none;", optionsBuilder =>
+//                    {
+//                        optionsBuilder.ServerVersion(new Version(8, 0, 16), ServerType.MySql);
+//                    });
 //                    break;
                 case SQLite:
-                    var connection2 =
-                        "Data Source=Danmaku.db";
-                    optionsBuilder.UseSqlite(connection2);
+                    optionsBuilder.UseSqlite("Data Source=Danmaku.db");
                     break;
             }
 
@@ -62,7 +56,7 @@ namespace Danmaku.Model
                     modelBuilder.Entity<DanmakuDataBase>().Property(e => e.Ip)
                         .HasConversion(v => v.ToString(), v => IPAddress.Parse(v));
                     modelBuilder.Entity<DanmakuDataBase>().Property(e => e.DanmakuData)
-                        .HasConversion(v => v.ToJson(), v => new DanmakuData(v));
+                        .HasConversion(v => v.ToJson(), v => DanmakuData.FromJson(v));
                     break;
             }
         }

@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net;
+using System.Text.Json;
 using System.Web;
 
 namespace Danmaku.Model
@@ -20,7 +22,6 @@ namespace Danmaku.Model
 
         public DanmakuWebResult(List<DanmakuData> data)
         {
-            Code = 0;
             Data = data.Select(s => new object[]
                 {s.Time, s.Type, s.Color, HttpUtility.HtmlEncode(s.Author), HttpUtility.HtmlEncode(s.Text)}).ToList();
         }
@@ -29,28 +30,20 @@ namespace Danmaku.Model
         /// <summary>
         ///     代码，0正常 1错误
         /// </summary>
-        public int Code { get; set; }
+        [DefaultValue(0)] public int Code { get; set; }
 
         /// <summary>
         ///     数据
         /// </summary>
-        public List<object[]> Data { get; set; }
+        public List<object[]> Data { get; }
+
+        public static implicit operator string(DanmakuWebResult result) => JsonSerializer.Serialize(result);
     }
 
     public class DanmakuData
     {
         public DanmakuData()
         {
-        }
-
-        public DanmakuData(string json)
-        {
-            var t = System.Text.Json.JsonSerializer.Deserialize<DanmakuData>(json);
-            Time = t.Time;
-            Type = t.Type;
-            Color = t.Color;
-            Author = t.Author;
-            Text = t.Text;
         }
 
         public float Time { get; set; }
@@ -63,11 +56,9 @@ namespace Danmaku.Model
 
         [MaxLength(255)] public string Text { get; set; }
 
-        
-        public string ToJson()
-        {
-            return System.Text.Json.JsonSerializer.Serialize(this);
-        }
+        public string ToJson() => JsonSerializer.Serialize(this);
+
+        public static DanmakuData FromJson(string json) => JsonSerializer.Deserialize<DanmakuData>(json);
     }
 
     public class DanmakuDataInsert : DanmakuData

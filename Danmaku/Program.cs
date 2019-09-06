@@ -1,4 +1,6 @@
+#if LINUX
 using System.IO;
+#endif
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
