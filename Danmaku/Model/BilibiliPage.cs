@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Danmaku.Model
 {
     public class BilibiliPage
@@ -5,16 +7,16 @@ namespace Danmaku.Model
         /// <summary>
         /// 分P
         /// </summary>
-        public int Page { get; set; }
-        
+        [JsonPropertyName("page")]public int Page { get; set; }
+
         /// <summary>
         /// 标题
         /// </summary>
-        public string Name { get; set; }
+        [JsonPropertyName("name")] public string Name { get; set; }
 
         /// <summary>
         /// cid
         /// </summary>
-        public int Cid { get; set; }
+        [JsonPropertyName("cid")] public int Cid { get; set; }
     }
 }
