@@ -1,6 +1,7 @@
 using Danmaku.Model;
 using Danmaku.Utils.BiliBili;
 using Danmaku.Utils.Dao;
+using Danmaku.Utils.LiveDanmaku;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -28,6 +29,7 @@ namespace Danmaku
             services.AddSingleton<IBiliBiliHelp, BiliBiliHelp>();
             services.AddSingleton<IDanmakuDao, DanmakuDao>();
             services.AddControllers();
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,13 +44,13 @@ namespace Danmaku
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+                app.UseCors(builder => builder.WithOrigins("http://localhost","http://localhost:*").AllowAnyMethod().AllowAnyHeader().AllowCredentials());
             }
             else
             {
                 app.UseCors(builder =>
                     builder.WithOrigins(Config.WithOrigins).WithMethods("GET", "POST", "OPTIONS")
-                        .AllowAnyHeader());
+                        .AllowAnyHeader().AllowCredentials());
             }
 
             app.UseForwardedHeaders(new ForwardedHeadersOptions
@@ -60,7 +62,11 @@ namespace Danmaku
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapHub<LiveDanmaku>("dplayer/live");
+            });
         }
     }
 }

@@ -21,9 +21,7 @@ namespace Danmaku.Controllers.Dplayer.V3
         public string Get()
         {
             string id = Request.Query["id"];
-            if (string.IsNullOrEmpty(id)) return new DanmakuWebResult(1);
-            var result = _dd.DanmakuQuery(id);
-            return new DanmakuWebResult(result);
+            return string.IsNullOrEmpty(id) ? new DanmakuWebResult(1) : new DanmakuWebResult(_dd.DanmakuQuery(id));
         }
 
         // POST: api/dplayer/v3/
