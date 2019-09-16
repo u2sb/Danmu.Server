@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Web;
 
 namespace Danmaku.Model
@@ -30,12 +31,12 @@ namespace Danmaku.Model
         /// <summary>
         ///     代码，0正常 1错误
         /// </summary>
-        [DefaultValue(0)] public int Code { get; set; }
+        [DefaultValue(0)][JsonPropertyName("code")] public int Code { get; set; }
 
         /// <summary>
         ///     数据
         /// </summary>
-        public List<object[]> Data { get; }
+        [JsonPropertyName("data")] public List<object[]> Data { get; }
 
         public static implicit operator string(DanmakuWebResult result) => JsonSerializer.Serialize(result);
     }
