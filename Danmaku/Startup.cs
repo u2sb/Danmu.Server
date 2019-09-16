@@ -44,7 +44,9 @@ namespace Danmaku
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseCors(builder => builder.WithOrigins("http://localhost","http://localhost:*").AllowAnyMethod().AllowAnyHeader().AllowCredentials());
+                app.UseCors(builder =>
+                    builder.WithOrigins(Config.WithOrigins).WithMethods("GET", "POST", "OPTIONS")
+                        .AllowAnyHeader().AllowCredentials());
             }
             else
             {
@@ -65,7 +67,7 @@ namespace Danmaku
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<LiveDanmaku>("dplayer/live");
+                endpoints.MapHub<LiveDanmaku>("api/dplayer/live");
             });
         }
     }
