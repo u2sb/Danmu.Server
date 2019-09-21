@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -27,5 +27,10 @@ namespace Danmaku.Controllers.Dplayer.DanmakuList
             return View(_dao.DanmakuBaseQuery());
         }
 
+        [HttpPost]
+        public ActionResult Index(string vid)
+        {
+            return View(_dao.DanmakuBasesQueryByVid(vid));
+        }
     }
 }

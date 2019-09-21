@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Danmaku.Model;
 
 namespace Danmaku.Utils.Dao
@@ -10,5 +10,6 @@ namespace Danmaku.Utils.Dao
         int DanmakuInsert(DanmakuDataInsert date);
 
         List<DanmakuDataBase> DanmakuBaseQuery();
+        List<DanmakuDataBase> DanmakuBasesQueryByVid(string vid);
     }
 }

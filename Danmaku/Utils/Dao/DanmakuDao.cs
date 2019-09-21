@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Danmaku.Model;
@@ -25,6 +25,12 @@ namespace Danmaku.Utils.Dao
 		{
 			using var con = new DanmakuContext();
 			return con.Danmaku.OrderBy(b => b.Date).ToList();
+		}
+
+		public List<DanmakuDataBase> DanmakuBasesQueryByVid(string vid)
+		{
+			using var con = new DanmakuContext();
+			return con.Danmaku.Where(e => e.Vid == vid).OrderBy(b => b.Date).ToList();
 		}
 	}
 }
