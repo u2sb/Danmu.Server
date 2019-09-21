@@ -1,0 +1,29 @@
+@model List<Danmaku.Model.DanmakuDataBase>
+
+<h2>列表</h2>
+
+<table>
+    <thead>
+    <tr>
+        <td>VID</td>
+        <td>数据</td>
+        <td>时间</td>
+        <td>IP</td>
+        <td>网址</td>
+        <td>操作</td>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var l in Model)
+    {
+        <tr id=@l.Id>
+            <td>@l.Vid</td>
+            <td>@l.DanmakuData.Text</td>
+            <td>@l.Date.ToString("yyyy-MM-dd hh:mm:ss")</td>
+            <td>@l.Ip</td>
+            <td>@l.Referer</td>
+            <td><a href="">修改</a> <a href="">删除</a></td>
+        </tr>d
+    }
+    </tbody>
+</table>

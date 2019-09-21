@@ -8,5 +8,7 @@ namespace Danmaku.Utils.Dao
         List<DanmakuData> DanmakuQuery(string id);
 
         int DanmakuInsert(DanmakuDataInsert date);
+
+        List<DanmakuDataBase> DanmakuBaseQuery();
     }
 }

@@ -1,9 +1,14 @@
+using System;
 using Danmaku.Model;
+using Danmaku.Utils;
 using Danmaku.Utils.BiliBili;
 using Danmaku.Utils.Dao;
 using Danmaku.Utils.LiveDanmaku;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,8 +33,21 @@ namespace Danmaku
             services.AddDbContext<DanmakuContext>();
             services.AddSingleton<IBiliBiliHelp, BiliBiliHelp>();
             services.AddSingleton<IDanmakuDao, DanmakuDao>();
-            services.AddControllers();
+
+            services.AddControllersWithViews();
             services.AddSignalR();
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/account/login";
+                    options.LogoutPath = "/account/logout";
+                    options.Cookie.Name = "DCookie";
+                    options.Cookie.MaxAge = TimeSpan.FromHours(1);
+                });
+
+            // claims transformation is run after every Authenticate call
+            services.AddTransient<IClaimsTransformation, ClaimsTransformer>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -62,11 +80,14 @@ namespace Danmaku
 
             app.UseRouting();
 
+            app.UseStaticFiles();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapDefaultControllerRoute();
                 endpoints.MapHub<LiveDanmaku>("api/dplayer/live");
             });
         }

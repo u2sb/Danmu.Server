@@ -17,6 +17,7 @@ namespace Danmaku.Model
         public string[] WithOrigins { get; set; }
         public int WebSocketPort { get; set; }
         public DanmakuSQL DanmakuSQL { get; set; }
+        public Admin Admin { get; set; }
         public string BCookie { get; set; }
     }
 
@@ -44,5 +45,11 @@ namespace Danmaku.Model
         PostgreSQL = 0,
         MySQL = 1,
         SQLite = 2
+    }
+
+    public class Admin
+    {
+        public string User { get; set; }
+        public string Password { get; set; }
     }
 }

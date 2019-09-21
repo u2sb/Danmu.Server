@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Danmaku.Controllers.Dplayer.V3
 {
+    [Route("api/dplayer/v3")]
     [ApiController]
     public class BiliBiliController : ControllerBase
     {
@@ -16,7 +17,7 @@ namespace Danmaku.Controllers.Dplayer.V3
         }
 
         // GET: api/dplayer/v3/bilibili
-        [HttpGet("api/dplayer/v3/bilibili")]
+        [HttpGet("bilibili")]
         public string Get()
         {
             var request = Request.Query;
