@@ -46,7 +46,7 @@ namespace Danmaku.Model
             switch (Sql.Sql)
             {
                 case PostgreSQL:
-                    modelBuilder.Entity<DanmakuDataBase>().HasIndex(d => d.Vid).HasMethod("hash");
+	                modelBuilder.Entity<DanmakuDataBase>().HasIndex(d => d.Vid).HasMethod("hash");
                     break;
 //                case MySQL:
 //                    modelBuilder.Entity<DanmakuDataBase>().Property(e => e.Ip)
