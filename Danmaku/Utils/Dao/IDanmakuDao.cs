@@ -3,13 +3,13 @@ using Danmaku.Model;
 
 namespace Danmaku.Utils.Dao
 {
-    public interface IDanmakuDao
-    {
-        List<DanmakuData> DanmakuQuery(string id);
+	public interface IDanmakuDao
+	{
+		List<DanmakuData> DanmakuQuery(string id);
 
-        int DanmakuInsert(DanmakuDataInsert date);
+		int DanmakuInsert(DanmakuDataInsert date);
 
-        List<DanmakuDataBase> DanmakuBaseQuery();
-        List<DanmakuDataBase> DanmakuBasesQueryByVid(string vid);
-    }
+		List<DanmakuDataBase> DanmakuBaseQuery(int page, int size);
+		List<DanmakuDataBase> DanmakuBasesQueryByVid(string vid, int page, int size);
+	}
 }

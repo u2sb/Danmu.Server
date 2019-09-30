@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Danmaku.Model;
 
@@ -21,16 +20,22 @@ namespace Danmaku.Utils.Dao
 			return con.SaveChanges();
 		}
 
-		public List<DanmakuDataBase> DanmakuBaseQuery()
+		public List<DanmakuDataBase> DanmakuBaseQuery(int page, int size)
 		{
 			using var con = new DanmakuContext();
-			return con.Danmaku.OrderBy(b => b.Date).ToList();
+			return con.Danmaku
+				.OrderBy(b => b.Vid).ThenByDescending(b => b.Date)
+				.Skip(size * (page - 1)).Take(size)
+				.ToList();
 		}
 
-		public List<DanmakuDataBase> DanmakuBasesQueryByVid(string vid)
+		public List<DanmakuDataBase> DanmakuBasesQueryByVid(string vid, int page, int size)
 		{
 			using var con = new DanmakuContext();
-			return con.Danmaku.Where(e => e.Vid == vid).OrderBy(b => b.Date).ToList();
+			return con.Danmaku.Where(e => e.Vid == vid)
+				.OrderByDescending(b => b.Date)
+				.Skip(size * (page - 1)).Take(size)
+				.ToList();
 		}
 	}
 }
