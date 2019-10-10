@@ -1,8 +1,10 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Net;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Debug;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using static Danmaku.Model.SqlType;
 
 namespace Danmaku.Model
@@ -19,13 +21,13 @@ namespace Danmaku.Model
                     Sql.Port = Sql.Port == 0 ? 5432 : Sql.Port;
                     optionsBuilder.UseNpgsql($"Host={Sql.Host};Port={Sql.Port};Database={Sql.DataBase};Username={Sql.UserName};Password={Sql.PassWord};");
                     break;
-//                case MySQL:
-//                    Sql.Port = Sql.Port == 0 ? 3306 : Sql.Port;
-//                    optionsBuilder.UseMySql($"Server={Sql.Host};Port={Sql.Port};Database={Sql.DataBase};UserId={Sql.UserName};Password={Sql.PassWord};Sslmode=none;", optionsBuilder =>
-//                    {
-//                        optionsBuilder.ServerVersion(new Version(8, 0, 16), ServerType.MySql);
-//                    });
-//                    break;
+                case MySQL:
+                    Sql.Port = Sql.Port == 0 ? 3306 : Sql.Port;
+                    optionsBuilder.UseMySql($"Server={Sql.Host};Port={Sql.Port};Database={Sql.DataBase};UserId={Sql.UserName};Password={Sql.PassWord};Sslmode=none;", optionsBuilder =>
+                    {
+                        optionsBuilder.ServerVersion(new Version(8, 0, 16), ServerType.MySql);
+                    });
+                    break;
                 case SQLite:
                     if (!Directory.Exists("DataBase")) Directory.CreateDirectory("DataBase");
                     optionsBuilder.UseSqlite("Data Source=DataBase/Danmaku.db");
@@ -51,10 +53,14 @@ namespace Danmaku.Model
                     modelBuilder.Entity<DanmakuDataBase>().Property(p => p.IsDelete).HasDefaultValue(false);
                     modelBuilder.Entity<DanmakuDataBase>().HasIndex(d => new {d.Vid, d.IsDelete});
                     break;
-//                case MySQL:
-//                    modelBuilder.Entity<DanmakuDataBase>().Property(e => e.Ip)
-//                        .HasConversion(v => v.ToString(), v => IPAddress.Parse(v));
-//                    break;
+                case MySQL:
+                    modelBuilder.Entity<DanmakuDataBase>().Property(e => e.Ip)
+                        .HasConversion(v => v.ToString(), v => IPAddress.Parse(v));
+                    modelBuilder.Entity<DanmakuDataBase>().Property(e => e.DanmakuData)
+                        .HasConversion(v => v.ToJson(), v => DanmakuData.FromJson(v));
+                    modelBuilder.Entity<DanmakuDataBase>().Property(p => p.IsDelete).HasDefaultValue(false);
+                    modelBuilder.Entity<DanmakuDataBase>().HasIndex(d => new { d.Vid, d.IsDelete });
+                    break;
                 case SQLite:
                     modelBuilder.Entity<DanmakuDataBase>().Property(e => e.Ip)
                         .HasConversion(v => v.ToString(), v => IPAddress.Parse(v));
