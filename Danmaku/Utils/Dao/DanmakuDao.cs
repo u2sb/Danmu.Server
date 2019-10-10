@@ -9,7 +9,7 @@ namespace Danmaku.Utils.Dao
 		public List<DanmakuData> DanmakuQuery(string id)
 		{
 			using var con = new DanmakuContext();
-			return con.Danmaku.Where(e => e.Vid == id).Select(s => s.DanmakuData).ToList();
+			return con.Danmaku.Where(e => e.Vid == id).Where(e => e.IsDelete == false).Select(s => s.DanmakuData).ToList();
 		}
 
 		public int DanmakuInsert(DanmakuDataInsert date)

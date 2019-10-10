@@ -1,3 +1,4 @@
+﻿using System.IO;
 using System.Net;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -26,7 +27,8 @@ namespace Danmaku.Model
 //                    });
 //                    break;
                 case SQLite:
-                    optionsBuilder.UseSqlite("Data Source=Danmaku.db");
+                    if (!Directory.Exists("DataBase")) Directory.CreateDirectory("DataBase");
+                    optionsBuilder.UseSqlite("Data Source=DataBase/Danmaku.db");
                     break;
             }
 
@@ -46,7 +48,8 @@ namespace Danmaku.Model
             switch (Sql.Sql)
             {
                 case PostgreSQL:
-	                modelBuilder.Entity<DanmakuDataBase>().HasIndex(d => d.Vid).HasMethod("hash");
+                    modelBuilder.Entity<DanmakuDataBase>().Property(p => p.IsDelete).HasDefaultValue(false);
+                    modelBuilder.Entity<DanmakuDataBase>().HasIndex(d => new {d.Vid, d.IsDelete});
                     break;
 //                case MySQL:
 //                    modelBuilder.Entity<DanmakuDataBase>().Property(e => e.Ip)
@@ -57,6 +60,8 @@ namespace Danmaku.Model
                         .HasConversion(v => v.ToString(), v => IPAddress.Parse(v));
                     modelBuilder.Entity<DanmakuDataBase>().Property(e => e.DanmakuData)
                         .HasConversion(v => v.ToJson(), v => DanmakuData.FromJson(v));
+                    modelBuilder.Entity<DanmakuDataBase>().Property(p => p.IsDelete).HasDefaultValue(false);
+                    modelBuilder.Entity<DanmakuDataBase>().HasIndex(d => new { d.Vid, d.IsDelete });
                     break;
             }
         }
