@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Net;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -23,9 +22,9 @@ namespace Danmaku.Model
                     break;
                 case MySQL:
                     Sql.Port = Sql.Port == 0 ? 3306 : Sql.Port;
-                    optionsBuilder.UseMySql($"Server={Sql.Host};Port={Sql.Port};Database={Sql.DataBase};UserId={Sql.UserName};Password={Sql.PassWord};Sslmode=none;", optionsBuilder =>
+                    optionsBuilder.UseMySql($"Server={Sql.Host};Port={Sql.Port};Database={Sql.DataBase};UserId={Sql.UserName};Password={Sql.PassWord};", mySqlDbContextOptionsBuilder =>
                     {
-                        optionsBuilder.ServerVersion(new Version(8, 0, 16), ServerType.MySql);
+                        mySqlDbContextOptionsBuilder.ServerVersion(Sql.Version, ServerType.MySql);
                     });
                     break;
                 case SQLite:
@@ -50,26 +49,22 @@ namespace Danmaku.Model
             switch (Sql.Sql)
             {
                 case PostgreSQL:
-                    modelBuilder.Entity<DanmakuDataBase>().Property(p => p.IsDelete).HasDefaultValue(false);
-                    modelBuilder.Entity<DanmakuDataBase>().HasIndex(d => new {d.Vid, d.IsDelete});
                     break;
                 case MySQL:
-                    modelBuilder.Entity<DanmakuDataBase>().Property(e => e.Ip)
+                    modelBuilder.Entity<DanmakuDataBase>().Property(e => e.Ip).HasColumnType("varchar(40)")
                         .HasConversion(v => v.ToString(), v => IPAddress.Parse(v));
-                    modelBuilder.Entity<DanmakuDataBase>().Property(e => e.DanmakuData)
+                    modelBuilder.Entity<DanmakuDataBase>().Property(e => e.DanmakuData).HasColumnType("json")
                         .HasConversion(v => v.ToJson(), v => DanmakuData.FromJson(v));
-                    modelBuilder.Entity<DanmakuDataBase>().Property(p => p.IsDelete).HasDefaultValue(false);
-                    modelBuilder.Entity<DanmakuDataBase>().HasIndex(d => new { d.Vid, d.IsDelete });
                     break;
                 case SQLite:
                     modelBuilder.Entity<DanmakuDataBase>().Property(e => e.Ip)
                         .HasConversion(v => v.ToString(), v => IPAddress.Parse(v));
-                    modelBuilder.Entity<DanmakuDataBase>().Property(e => e.DanmakuData)
+                    modelBuilder.Entity<DanmakuDataBase>().Property(e => e.DanmakuData).HasColumnType("TEXT")
                         .HasConversion(v => v.ToJson(), v => DanmakuData.FromJson(v));
-                    modelBuilder.Entity<DanmakuDataBase>().Property(p => p.IsDelete).HasDefaultValue(false);
-                    modelBuilder.Entity<DanmakuDataBase>().HasIndex(d => new { d.Vid, d.IsDelete });
                     break;
             }
+            modelBuilder.Entity<DanmakuDataBase>().Property(p => p.IsDelete).HasDefaultValue(false);
+            modelBuilder.Entity<DanmakuDataBase>().HasIndex(d => new { d.Vid, d.IsDelete });
         }
     }
 }

@@ -1,3 +1,4 @@
+﻿using System;
 using Microsoft.Extensions.Configuration;
 
 namespace Danmaku.Model
@@ -38,6 +39,7 @@ namespace Danmaku.Model
         public string UserName { get; set; }
         public string PassWord { get; set; }
         public string DataBase { get; set; }
+        public Version Version { get; set; }
     }
 
     public enum SqlType

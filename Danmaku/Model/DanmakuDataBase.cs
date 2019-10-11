@@ -1,8 +1,6 @@
 ﻿using System;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Diagnostics.CodeAnalysis;
 using System.Net;
 
 namespace Danmaku.Model
@@ -35,7 +33,7 @@ namespace Danmaku.Model
 
 		[MaxLength(36)] [Required] public string Vid { get; set; }
 
-		[Column(TypeName = "jsonb")] public DanmakuData DanmakuData { get; set; }
+		[Column(TypeName = "jsonb")] [Required]public DanmakuData DanmakuData { get; set; }
 
 		public IPAddress Ip { get; set; }
 
