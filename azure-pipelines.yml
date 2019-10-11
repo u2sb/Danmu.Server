@@ -1,0 +1,34 @@
+# ASP.NET Core
+# Build and test ASP.NET Core projects targeting .NET Core.
+# Add steps that run tests, create a NuGet package, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+trigger:
+- 0.3
+- releases/*
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  buildConfiguration: 'Release-Linux64'
+
+steps:
+- task: DotNetCoreCLI@2
+  inputs:
+    command: publish
+    publishWebProjects: True
+    arguments: '-c Release-Linux64 -r linux-x64 --self-contained false --output $(Build.ArtifactStagingDirectory)'
+    zipAfterPublish: False
+
+- script: tar Jcvf $(Build.ArtifactStagingDirectory)/linux64.tar.xz $(Build.ArtifactStagingDirectory)/Danmaku/
+  displayName: 'zipRelease'
+
+- task: GithubRelease@0
+  displayName: 'Edit GitHub Release'
+  inputs:
+    gitHubConnection: MonoLogueChiToken
+    repositoryName: MonoLogueChi/Dplayer.Danmaku
+    action: create
+    tag: $(Build.BuildNumber)
+    assets: $(Build.ArtifactStagingDirectory)/linux64.tar.xz
