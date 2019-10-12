@@ -1,0 +1,25 @@
+<% if (config.theme_config.gitalk && page.comments){ %>
+    <div class="dc-page">
+        <div id="gitalk-container"></div>
+    </div>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.css">
+     <style>
+      #gitalk-container{padding-left:20px; padding-right:10px; padding-bottom:5px; box-shadow: 0 1px 3px 2px rgba(0,0,0,0.08); background:#fff}
+
+    </style>
+    <script>
+        loadScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js',function(){
+            var gitalk = new Gitalk({
+                clientID: '<%= config.theme_config.gitalk.clientID %>',
+                clientSecret: '<%= config.theme_config.gitalk.clientSecret %>',
+                repo: '<%= config.theme_config.gitalk.repo %>',
+                owner: '<%= config.theme_config.gitalk.owner %>',
+                admin: <%- config.theme_config.gitalk.admin %>,
+                id: '<%- url_for(page.path) %>',
+                distractionFreeMode: false
+            });
+            gitalk.render('gitalk-container');
+        });
+    </script>
+<% } %>
