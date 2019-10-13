@@ -31,9 +31,10 @@ steps:
     script: |
       hexo g
       cd public
+      touch .nojekyll
       git config --global user.email "$(EMAIL)"
       git config --global user.name "$(USER)"
       git init
       git add .
       git commit -m update
-      git push --force --quiet https://$(TOKEN)@github.com/MonoLogueChi/Dplayer.Danmaku.git master:gh-page
+      git push --force --quiet https://$(TOKEN)@github.com/MonoLogueChi/Dplayer.Danmaku.git master:gh-pages
