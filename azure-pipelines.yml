@@ -1,0 +1,39 @@
+
+trigger:
+- doc-source
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+- group: github
+
+steps:
+- task: UseNode@1
+  inputs:
+    checkLatest: true
+- task: Npm@1
+  inputs:
+    command: 'custom'
+    customCommand: 'install hexo-cli -g'
+- task: Npm@1
+  inputs:
+    command: 'custom'
+    customCommand: 'install --pure-lockfile'
+- task: Npm@1
+  inputs:
+    command: 'custom'
+    customCommand: 'install --pure-lockfile'
+    workingDir: 'themes/hexo-theme-doc/'
+
+- task: CmdLine@2
+  inputs:
+    script: |
+      hexo g
+      cd public
+      git config --global user.email "$(EMAIL)"
+      git config --global user.name "$(USER)"
+      git init
+      git add .
+      git commit -m update
+      git push --force --quiet https://$(TOKEN)@github.com/MonoLogueChi/Dplayer.Danmaku.git master:gh-page
