@@ -44,8 +44,6 @@ main:
   - text: 其他方案
     type: link
     path: live/other.html
-
-
 - text: 赞助
   type: link
   path: sponsors/index.html
