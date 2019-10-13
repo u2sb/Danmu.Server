@@ -1,7 +1,8 @@
-﻿using System.IO;
-using Microsoft.AspNetCore;
+﻿#if LINUX
+using System.IO;
+#endif
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 
 namespace Danmaku
 {
@@ -9,15 +10,20 @@ namespace Danmaku
     {
         public static void Main(string[] args)
         {
-            var config = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json").Build();
-            CreateWebHostBuilder(args, config).Build().Run();
+            CreateHostBuilder(args).Build().Run();
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args, IConfiguration config)
-        {
-            return WebHost.CreateDefaultBuilder(args).UseKestrel().UseConfiguration(config)
-                .UseStartup<Startup>();
-        }
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>().ConfigureKestrel((context, options) =>
+                    {
+#if LINUX
+                        if (File.Exists("/tmp/dplayer.danmaku.sock")) File.Delete("/tmp/dplayer.danmaku.sock");
+                        options.ListenUnixSocket("/tmp/dplayer.danmaku.sock");
+#endif
+                    });
+                });
     }
 }

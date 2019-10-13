@@ -1,37 +1,42 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System;
+using Microsoft.Extensions.Configuration;
 
 namespace Danmaku.Model
 {
     public class AppConfiguration
     {
-        public AppConfiguration(IConfiguration configuration)
-        {
-            configuration.Bind(this);
-        }
+        public static AppConfiguration Config { get; set; }
 
-        public Logging Logging { get; set; }
+        public AppConfiguration(IConfiguration configuration) => configuration.Bind(this);
 
-        public string AllowedHosts { get; set; }
         public string[] WithOrigins { get; set; }
-        public int WebSocketPort { get; set; }
         public DanmakuSQL DanmakuSQL { get; set; }
+        public Admin Admin { get; set; }
         public string BCookie { get; set; }
-    }
-
-
-    public class Logging
-    {
-        public class LogLevel
-        {
-            public string Default { get; set; }
-        }
     }
 
     public class DanmakuSQL
     {
-        public string Host { get; set; }
+        public SqlType Sql { get; set; } = SqlType.SQLite;
+        public string Host { get; set; } = "127.0.0.1";
+        public int Port { get; set; } = 0;
         public string UserName { get; set; }
         public string PassWord { get; set; }
         public string DataBase { get; set; }
+        public Version Version { get; set; }
+    }
+
+    public enum SqlType
+    {
+        PostgreSQL = 0,
+        MySQL = 1,
+        SQLite = 2,
+        SQLServer = 3
+    }
+
+    public class Admin
+    {
+        public string User { get; set; }
+        public string Password { get; set; }
     }
 }

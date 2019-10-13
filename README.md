@@ -2,7 +2,7 @@
 
 ## 文档
 
-[https://doc.video.xwhite.studio/danmaku/cs.html](https://doc.video.xwhite.studio/danmaku/cs.html)
+[https://doc.video.xwhite.studio](https://doc.video.xwhite.studio)
 
 ## 这是什么？
 
@@ -27,7 +27,7 @@
 
 ## 怎么用？
 
-后面会写一个关于编译和部署的教程的，如果需要的人多的话，Docker版也在计划之内
+后面会写一个关于编译和部署的教程的，如果需要的人多的话，Docker版也在计划之内。
 
 ## 会不会提供免费的弹幕服务器？
 

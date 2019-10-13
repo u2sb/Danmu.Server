@@ -5,13 +5,35 @@
 
 trigger:
 - master
+- releases/*
 
 pool:
   vmImage: 'ubuntu-latest'
 
-variables:
-  buildConfiguration: 'Release'
-
 steps:
-- script: dotnet build --configuration $(buildConfiguration)
-  displayName: 'dotnet build $(buildConfiguration)'
+- task: DotNetCoreCLI@2
+  inputs:
+    command: publish
+    publishWebProjects: True
+    arguments: '-c Release-Linux64 -r linux-x64 --self-contained false --output $(Build.ArtifactStagingDirectory)'
+    zipAfterPublish: False
+
+# - script: tar Jcvf $(Build.ArtifactStagingDirectory)/linux64.tar.xz -C $(Build.ArtifactStagingDirectory)/Danmaku ./
+#   displayName: 'zipRelease'
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/Danmaku'
+    includeRootFolder: true
+    archiveType: 'tar'
+    tarCompression: 'xz'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/linux64.tar.xz'
+    replaceExistingArchive: true
+
+- task: GithubRelease@0
+  displayName: 'Edit GitHub Release'
+  inputs:
+    gitHubConnection: MonoLogueChiToken
+    repositoryName: MonoLogueChi/Dplayer.Danmaku
+    action: create
+    tag: $(Build.BuildNumber)
+    assets: $(Build.ArtifactStagingDirectory)/linux64.tar.xz
