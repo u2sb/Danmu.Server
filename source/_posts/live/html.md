@@ -45,6 +45,7 @@ window.onload=function(){
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dplayer/dist/DPlayer.min.css">
     <script src="https://cdn.jsdelivr.net/npm/dplayer/dist/DPlayer.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@microsoft/signalr/dist/browser/signalr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/MonoLogueChi/Dplayer.Danmaku@gh-pages/js/livedanmaku.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flv.js/dist/flv.min.js"></script>
 </head>
