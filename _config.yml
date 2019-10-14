@@ -85,16 +85,16 @@ theme_config:
   favicon: images/favicon.ico
 
   support:
-    link_url: https://github.com/MonoLogueChi/doc.video.xwhite.studio
+    link_url: https://github.com/MonoLogueChi/Dplayer.Danmaku
     text: Didn't you find what are you looking for? <br> Try searching again on the left menu or
     link_text: Raise an Issue on Github
     navigation: false
     navigation_label:
   
   gitalk:
-    clientID: 755cfff7e4e160230661
-    clientSecret: 3f2b1baed73d0ed6e1828dee07838ac55358a979
-    repo: doc.video.xwhite.studio
+    clientID: b26880b4ce394f432a26
+    clientSecret: 1460cd44beaa179927701ebc782cf7540eae811b
+    repo: gitalk
     owner: MonoLogueChi
     admin: "['MonoLogueChi']"
   
