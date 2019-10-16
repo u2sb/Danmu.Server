@@ -1,4 +1,5 @@
-﻿using Danmaku.Model;
+﻿using System.Threading.Tasks;
+using Danmaku.Model;
 using Danmaku.Utils.BiliBili;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,7 +18,7 @@ namespace Danmaku.Controllers.Dplayer.V3
 
         // GET: api/dplayer/v3/bilibili
         [HttpGet("bilibili")]
-        public string Get()
+        public async Task<string> Get()
         {
             var request = Request.Query;
 
@@ -29,13 +30,13 @@ namespace Danmaku.Controllers.Dplayer.V3
                 string p = request["p"];
                 p = string.IsNullOrEmpty(p) ? "1" : p;
                 if (!int.TryParse(p, out var page)) return new DanmakuWebResult(1);
-                cid = _biliBili.GetCid(aid, page).ToString();
+                cid = (await _biliBili.GetCid(aid, page)).ToString();
             }
             return string.IsNullOrWhiteSpace(cid)
                 ? new DanmakuWebResult(1)
                 : date.Length == 0
-                    ? new DanmakuWebResult(_biliBili.GetBiDanmaku(cid))
-                    : new DanmakuWebResult(_biliBili.GetBiDanmaku(cid, date));
+                    ? new DanmakuWebResult(await _biliBili.GetBiDanmaku(cid))
+                    : new DanmakuWebResult(await _biliBili.GetBiDanmaku(cid, date));
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -13,17 +12,18 @@ namespace Danmaku.Utils.BiliBili
     public class BiliBiliHelp : IBiliBiliHelp
     {
         private readonly AppSettings _settings;
+        private readonly IHttpClientFactory _httpClientFactory;
 
-        public BiliBiliHelp(IAppConfiguration appConfiguration)
+        public BiliBiliHelp(IAppConfiguration appConfiguration, IHttpClientFactory httpClientFactory)
         {
             _settings = appConfiguration.GetAppSetting();
+            _httpClientFactory = httpClientFactory;
         }
 
-        public List<BilibiliPage> GetBilibiliPage(string aid)
+        public async Task<List<BilibiliPage>> GetBilibiliPage(string aid)
         {
-            var handler = new SocketsHttpHandler {AutomaticDecompression = DecompressionMethods.GZip};
-            using var client = new HttpClient(handler);
-            var result = client.GetStringAsync($"https://www.bilibili.com/widget/getPageList?aid={aid}").Result;
+            var client = _httpClientFactory.CreateClient("gzip");
+            var result = await client.GetStringAsync($"https://www.bilibili.com/widget/getPageList?aid={aid}");
             var pages = JsonSerializer.Deserialize<List<BilibiliPage>>(result);
             return pages;
         }
@@ -37,30 +37,30 @@ namespace Danmaku.Utils.BiliBili
             return cid;
         }
 
-        public int GetCid(string aid, int p)
+        public async Task<int> GetCid(string aid, int p)
         {
-            var pages = GetBilibiliPage(aid);
+            var pages = await GetBilibiliPage(aid);
             return GetCid(pages, p);
         }
 
-        public List<DanmakuData> GetBiDanmaku(string cid)
+        public async Task<List<DanmakuData>> GetBiDanmaku(string cid)
         {
-            return GetBiDanmakuDataAsync($"https://api.bilibili.com/x/v1/dm/list.so?oid={cid}", null).Result;
+            return await GetBiDanmakuDataAsync($"https://api.bilibili.com/x/v1/dm/list.so?oid={cid}", null);
         }
 
-        public List<DanmakuData> GetBiDanmaku(string cid, string[] date)
+        public async Task<List<DanmakuData>> GetBiDanmaku(string cid, string[] date)
         {
-            var dgss = new List<Task<List<DanmakuData>>>();
+            var dgss = new List<List<DanmakuData>>();
             foreach (var da in date)
             {
-                var b = GetBiDanmakuDataAsync(
+                var b = await GetBiDanmakuDataAsync(
                     $"https://api.bilibili.com/x/v2/dm/history?type=1&oid={cid}&date={da}",
                     _settings.BCookie);
                 dgss.Add(b);
             }
 
             var dgs = new List<DanmakuData>();
-            foreach (var dg in dgss) dgs = dgs.Concat(dg.Result).ToList();
+            foreach (var dg in dgss) dgs = dgs.Concat(dg).ToList();
             return dgs;
         }
 
@@ -68,8 +68,7 @@ namespace Danmaku.Utils.BiliBili
         {
             try
             {
-                var handler = new SocketsHttpHandler {AutomaticDecompression = DecompressionMethods.Deflate};
-                using var client = new HttpClient(handler);
+                var client = _httpClientFactory.CreateClient("deflate");
                 if (!string.IsNullOrEmpty(cookie)) client.DefaultRequestHeaders.Add("Cookie", cookie);
                 var result = await client.GetStringAsync(url);
 

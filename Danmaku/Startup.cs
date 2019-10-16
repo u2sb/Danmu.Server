@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Net;
+using System.Net.Http;
 using Danmaku.Model;
 using Danmaku.Utils;
 using Danmaku.Utils.AppConfiguration;
@@ -16,79 +18,80 @@ using Microsoft.Extensions.Hosting;
 
 namespace Danmaku
 {
-    public class Startup
-    {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+	public class Startup
+	{
+		public Startup(IConfiguration configuration)
+		{
+			Configuration = configuration;
+		}
 
-        public IConfiguration Configuration { get; }
+		public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddSingleton<IAppConfiguration>(s => new AppConfiguration(Configuration));
-            services.AddDbContext<DanmakuContext>();
-            services.AddSingleton<IBiliBiliHelp, BiliBiliHelp>();
-            services.AddSingleton<IDanmakuDao, DanmakuDao>();
+		// This method gets called by the runtime. Use this method to add services to the container.
+		public void ConfigureServices(IServiceCollection services)
+		{
+			services.AddSingleton<IAppConfiguration>(s => new AppConfiguration(Configuration));
+			services.AddDbContext<DanmakuContext>();
+			services.AddHttpClient("gzip").ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler{AutomaticDecompression = DecompressionMethods.GZip});
+			services.AddHttpClient("deflate").ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler{AutomaticDecompression = DecompressionMethods.Deflate});
+			services.AddSingleton<IBiliBiliHelp, BiliBiliHelp>();
+			services.AddSingleton<IDanmakuDao, DanmakuDao>();
+			services.AddControllersWithViews();
+			services.AddSignalR();
 
-            services.AddControllersWithViews();
-            services.AddSignalR();
+			services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+				.AddCookie(options =>
+				{
+					options.LoginPath = "/account/login";
+					options.LogoutPath = "/account/logout";
+					options.Cookie.Name = "DCookie";
+					options.Cookie.MaxAge = TimeSpan.FromHours(1);
+				});
 
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(options =>
-                {
-                    options.LoginPath = "/account/login";
-                    options.LogoutPath = "/account/logout";
-                    options.Cookie.Name = "DCookie";
-                    options.Cookie.MaxAge = TimeSpan.FromHours(1);
-                });
+			// claims transformation is run after every Authenticate call
+			services.AddTransient<IClaimsTransformation, ClaimsTransformer>();
+		}
 
-            // claims transformation is run after every Authenticate call
-            services.AddTransient<IClaimsTransformation, ClaimsTransformer>();
-        }
+		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IAppConfiguration config)
+		{
+			if (env.IsDevelopment())
+			{
+				app.UseDeveloperExceptionPage();
+				app.UseCors(builder =>
+					builder.WithOrigins(config.GetAppSetting().WithOrigins).WithMethods("GET", "POST", "OPTIONS")
+						.AllowAnyHeader().AllowCredentials());
+			}
+			else
+			{
+				app.UseCors(builder =>
+					builder.WithOrigins(config.GetAppSetting().WithOrigins).WithMethods("GET", "POST", "OPTIONS")
+						.AllowAnyHeader().AllowCredentials());
+			}
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IAppConfiguration config)
-        {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseCors(builder =>
-                    builder.WithOrigins(config.GetAppSetting().WithOrigins).WithMethods("GET", "POST", "OPTIONS")
-                        .AllowAnyHeader().AllowCredentials());
-            }
-            else
-            {
-                app.UseCors(builder =>
-                    builder.WithOrigins(config.GetAppSetting().WithOrigins).WithMethods("GET", "POST", "OPTIONS")
-                        .AllowAnyHeader().AllowCredentials());
-            }
+			app.UseStaticFiles();
 
-            app.UseStaticFiles();
+			app.UseForwardedHeaders(new ForwardedHeadersOptions
+			{
+				ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+			});
 
-            app.UseForwardedHeaders(new ForwardedHeadersOptions
-            {
-                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-            });
+			app.UseRouting();
+			app.UseAuthentication();
+			app.UseAuthorization();
 
-            app.UseRouting();
-            app.UseAuthentication();
-            app.UseAuthorization();
+			using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+			{
+				var context = serviceScope.ServiceProvider.GetRequiredService<DanmakuContext>();
+				context.Database.EnsureCreated();
+			}
 
-            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-            {
-                var context = serviceScope.ServiceProvider.GetRequiredService<DanmakuContext>();
-                context.Database.EnsureCreated();
-            }
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-                endpoints.MapDefaultControllerRoute();
-                endpoints.MapHub<LiveDanmaku>("api/dplayer/live");
-            });
-        }
-    }
+			app.UseEndpoints(endpoints =>
+			{
+				endpoints.MapControllers();
+				endpoints.MapDefaultControllerRoute();
+				endpoints.MapHub<LiveDanmaku>("api/dplayer/live");
+			});
+		}
+	}
 }
