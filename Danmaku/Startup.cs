@@ -1,6 +1,7 @@
 ﻿using System;
 using Danmaku.Model;
 using Danmaku.Utils;
+using Danmaku.Utils.AppConfiguration;
 using Danmaku.Utils.BiliBili;
 using Danmaku.Utils.Dao;
 using Danmaku.Utils.LiveDanmaku;
@@ -12,7 +13,6 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using static Danmaku.Model.AppConfiguration;
 
 namespace Danmaku
 {
@@ -21,7 +21,6 @@ namespace Danmaku
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            Config = new AppConfiguration(configuration);
         }
 
         public IConfiguration Configuration { get; }
@@ -29,6 +28,7 @@ namespace Danmaku
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IAppConfiguration>(s => new AppConfiguration(Configuration));
             services.AddDbContext<DanmakuContext>();
             services.AddSingleton<IBiliBiliHelp, BiliBiliHelp>();
             services.AddSingleton<IDanmakuDao, DanmakuDao>();
@@ -50,27 +50,23 @@ namespace Danmaku
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IAppConfiguration config)
         {
-            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-            {
-                var context = serviceScope.ServiceProvider.GetRequiredService<DanmakuContext>();
-                context.Database.EnsureCreated();
-            }
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseCors(builder =>
-                    builder.WithOrigins(Config.WithOrigins).WithMethods("GET", "POST", "OPTIONS")
+                    builder.WithOrigins(config.GetAppSetting().WithOrigins).WithMethods("GET", "POST", "OPTIONS")
                         .AllowAnyHeader().AllowCredentials());
             }
             else
             {
                 app.UseCors(builder =>
-                    builder.WithOrigins(Config.WithOrigins).WithMethods("GET", "POST", "OPTIONS")
+                    builder.WithOrigins(config.GetAppSetting().WithOrigins).WithMethods("GET", "POST", "OPTIONS")
                         .AllowAnyHeader().AllowCredentials());
             }
+
+            app.UseStaticFiles();
 
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
@@ -78,10 +74,14 @@ namespace Danmaku
             });
 
             app.UseRouting();
-
-            app.UseStaticFiles();
             app.UseAuthentication();
             app.UseAuthorization();
+
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetRequiredService<DanmakuContext>();
+                context.Database.EnsureCreated();
+            }
 
             app.UseEndpoints(endpoints =>
             {

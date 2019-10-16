@@ -9,7 +9,7 @@ namespace Danmaku.Controllers.Dplayer.V3
 {
 	[Route("api/dplayer/v3")]
 	[ApiController]
-	public class DplayerController : DanmakuDaoBaseController
+	public class DplayerController : DanmakuDaoBaseApiController
 	{
 		public DplayerController(IDanmakuDao danmakuDao) : base(danmakuDao)
 		{

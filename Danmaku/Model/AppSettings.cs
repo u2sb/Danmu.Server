@@ -3,11 +3,9 @@ using Microsoft.Extensions.Configuration;
 
 namespace Danmaku.Model
 {
-    public class AppConfiguration
+    public class AppSettings
     {
-        public static AppConfiguration Config { get; set; }
-
-        public AppConfiguration(IConfiguration configuration) => configuration.Bind(this);
+        public AppSettings(IConfiguration configuration) => configuration.Bind(this);
 
         public string[] WithOrigins { get; set; }
         public DanmakuSQL DanmakuSQL { get; set; }

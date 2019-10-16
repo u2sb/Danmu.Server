@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Net;
+using Danmaku.Utils.AppConfiguration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Debug;
@@ -10,7 +11,12 @@ namespace Danmaku.Model
 {
     public class MyDbContext : DbContext
     {
-        private protected readonly DanmakuSQL Sql = AppConfiguration.Config.DanmakuSQL;
+        private protected readonly DanmakuSQL Sql;
+
+        public MyDbContext(IAppConfiguration configuration)
+        {
+            Sql = configuration.GetAppSetting().DanmakuSQL;
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -42,6 +48,9 @@ namespace Danmaku.Model
 
     public class DanmakuContext : MyDbContext
     {
+        public DanmakuContext(IAppConfiguration configuration) : base(configuration)
+        {
+        }
         public DbSet<DanmakuDataBase> Danmaku { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

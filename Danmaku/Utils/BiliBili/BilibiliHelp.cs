@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -6,11 +6,19 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Xml;
 using Danmaku.Model;
+using Danmaku.Utils.AppConfiguration;
 
 namespace Danmaku.Utils.BiliBili
 {
     public class BiliBiliHelp : IBiliBiliHelp
     {
+        private readonly AppSettings _settings;
+
+        public BiliBiliHelp(IAppConfiguration appConfiguration)
+        {
+            _settings = appConfiguration.GetAppSetting();
+        }
+
         public List<BilibiliPage> GetBilibiliPage(string aid)
         {
             var handler = new SocketsHttpHandler {AutomaticDecompression = DecompressionMethods.GZip};
@@ -35,7 +43,6 @@ namespace Danmaku.Utils.BiliBili
             return GetCid(pages, p);
         }
 
-
         public List<DanmakuData> GetBiDanmaku(string cid)
         {
             return GetBiDanmakuDataAsync($"https://api.bilibili.com/x/v1/dm/list.so?oid={cid}", null).Result;
@@ -48,7 +55,7 @@ namespace Danmaku.Utils.BiliBili
             {
                 var b = GetBiDanmakuDataAsync(
                     $"https://api.bilibili.com/x/v2/dm/history?type=1&oid={cid}&date={da}",
-                    AppConfiguration.Config.BCookie);
+                    _settings.BCookie);
                 dgss.Add(b);
             }
 

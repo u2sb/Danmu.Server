@@ -1,7 +1,8 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Danmaku.Model;
+using Danmaku.Utils.AppConfiguration;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
@@ -13,12 +14,10 @@ namespace Danmaku.Controllers
     {
         private readonly Admin _admin;
 
-        public AccountController()
+        public AccountController(IAppConfiguration configuration)
         {
-            _admin = AppConfiguration.Config.Admin;
+            _admin = configuration.GetAppSetting().Admin;
         }
-
-
 
         public ActionResult Login()
         {

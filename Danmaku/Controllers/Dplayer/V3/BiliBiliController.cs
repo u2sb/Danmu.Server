@@ -1,5 +1,4 @@
-using System;
-using Danmaku.Model;
+﻿using Danmaku.Model;
 using Danmaku.Utils.BiliBili;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,8 +31,7 @@ namespace Danmaku.Controllers.Dplayer.V3
                 if (!int.TryParse(p, out var page)) return new DanmakuWebResult(1);
                 cid = _biliBili.GetCid(aid, page).ToString();
             }
-
-            return String.IsNullOrWhiteSpace(cid)
+            return string.IsNullOrWhiteSpace(cid)
                 ? new DanmakuWebResult(1)
                 : date.Length == 0
                     ? new DanmakuWebResult(_biliBili.GetBiDanmaku(cid))
