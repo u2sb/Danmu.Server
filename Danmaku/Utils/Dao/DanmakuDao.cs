@@ -17,14 +17,14 @@ namespace Danmaku.Utils.Dao
 		public List<DanmakuData> DanmakuQuery(string id)
 		{
 			using var con = new DanmakuContext(_configuration);
-			return con.Danmaku.Where(e => e.Vid == id).Where(e => e.IsDelete == false).Select(s => s.DanmakuData).ToList();
+			return con.Danmaku.Where(e => e.Vid == id && e.IsDelete == false).Select(s => s.DanmakuData).ToList();
 		}
 
 		public int DanmakuInsert(DanmakuDataInsert date)
 		{
 			using var con = new DanmakuContext(_configuration);
 			var dateBase = new DanmakuDataBase(date);
-			con.Danmaku.Add(dateBase);
+			con.Danmaku.AddAsync(dateBase);
 			return con.SaveChanges();
 		}
 
