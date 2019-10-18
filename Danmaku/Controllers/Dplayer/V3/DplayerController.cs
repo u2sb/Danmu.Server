@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using Danmaku.Controllers.Base;
 using Danmaku.Model;
 using Danmaku.Utils.Dao;
@@ -17,10 +18,10 @@ namespace Danmaku.Controllers.Dplayer.V3
 
 		// GET: api/dplayer/v3/
 		[HttpGet]
-		public string Get()
+		public async Task<string> Get()
 		{
 			string id = Request.Query["id"];
-			return string.IsNullOrEmpty(id) ? new DanmakuWebResult(1) : new DanmakuWebResult(Dao.DanmakuQuery(id));
+			return string.IsNullOrEmpty(id) ? new DanmakuWebResult(1) : new DanmakuWebResult(await Dao.DanmakuQuery(id));
 		}
 
 		// POST: api/dplayer/v3/

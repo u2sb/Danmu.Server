@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Danmaku.Model;
 using Danmaku.Utils.AppConfiguration;
+using Microsoft.EntityFrameworkCore;
 
 namespace Danmaku.Utils.Dao
 {
@@ -14,10 +16,10 @@ namespace Danmaku.Utils.Dao
 			_configuration = configuration;
 		}
 
-		public List<DanmakuData> DanmakuQuery(string id)
+		public async Task<List<DanmakuData>> DanmakuQuery(string id)
 		{
-			using var con = new DanmakuContext(_configuration);
-			return con.Danmaku.Where(e => e.Vid == id && e.IsDelete == false).Select(s => s.DanmakuData).ToList();
+			await using var con = new DanmakuContext(_configuration);
+			return await con.Danmaku.Where(e => e.Vid == id && e.IsDelete == false).Select(s => s.DanmakuData).ToListAsync();
 		}
 
 		public int DanmakuInsert(DanmakuDataInsert date)
@@ -28,22 +30,22 @@ namespace Danmaku.Utils.Dao
 			return con.SaveChanges();
 		}
 
-		public List<DanmakuDataBase> DanmakuBaseQuery(int page, int size)
+		public async Task<List<DanmakuDataBase>> DanmakuBaseQuery(int page, int size)
 		{
-			using var con = new DanmakuContext(_configuration);
-			return con.Danmaku
+			await using var con = new DanmakuContext(_configuration);
+			return await con.Danmaku
 				.OrderBy(b => b.Vid).ThenByDescending(b => b.Date)
 				.Skip(size * (page - 1)).Take(size)
-				.ToList();
+				.ToListAsync();
 		}
 
-		public List<DanmakuDataBase> DanmakuBasesQueryByVid(string vid, int page, int size)
+		public async Task<List<DanmakuDataBase>> DanmakuBasesQueryByVid(string vid, int page, int size)
 		{
-			using var con = new DanmakuContext(_configuration);
-			return con.Danmaku.Where(e => e.Vid == vid)
+			await using var con = new DanmakuContext(_configuration);
+			return await con.Danmaku.Where(e => e.Vid == vid)
 				.OrderByDescending(b => b.Date)
 				.Skip(size * (page - 1)).Take(size)
-				.ToList();
+				.ToListAsync();
 		}
 	}
 }

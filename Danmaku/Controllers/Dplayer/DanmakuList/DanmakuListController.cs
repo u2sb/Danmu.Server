@@ -1,4 +1,5 @@
-﻿using Danmaku.Controllers.Base;
+﻿using System.Threading.Tasks;
+using Danmaku.Controllers.Base;
 using Danmaku.Utils.Dao;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,21 +15,15 @@ namespace Danmaku.Controllers.Dplayer.DanmakuList
 		}
 
 
-		public ActionResult Index()
+		public async Task<ActionResult> Index(int page = 1, int size = 10)
 		{
-			return View(Dao.DanmakuBaseQuery(1, 10));
+			return View(await Dao.DanmakuBaseQuery(page, size));
 		}
 
-//		[HttpPost]
-//        public ActionResult Index(int page, int size = 10)
-//        {
-//	        return View(Dao.DanmakuBaseQuery(page, size));
-//		}
-
 		[HttpPost]
-		public ActionResult Index(string vid)
+		public async Task<ActionResult> Index([FromForm] string vid, [FromForm] int page = 1, [FromForm] int size = 10)
 		{
-			return View(Dao.DanmakuBasesQueryByVid(vid, 1, 10));
+			return View(await Dao.DanmakuBasesQueryByVid(vid, page, size));
 		}
 	}
 }

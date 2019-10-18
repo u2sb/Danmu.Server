@@ -30,10 +30,16 @@ namespace Danmaku
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
+			//全局配置文件
 			services.AddSingleton<IAppConfiguration>(s => new AppConfiguration(Configuration));
+
+			//数据库
 			services.AddDbContext<DanmakuContext>();
+
+			//http请求
 			services.AddHttpClient("gzip").ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler{AutomaticDecompression = DecompressionMethods.GZip});
 			services.AddHttpClient("deflate").ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler{AutomaticDecompression = DecompressionMethods.Deflate});
+
 			services.AddSingleton<IBiliBiliHelp, BiliBiliHelp>();
 			services.AddSingleton<IDanmakuDao, DanmakuDao>();
 			services.AddControllersWithViews();
