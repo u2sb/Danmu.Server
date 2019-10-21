@@ -18,8 +18,6 @@ steps:
     arguments: '-c Release-Linux64 -r linux-x64 --self-contained false --output $(Build.ArtifactStagingDirectory)'
     zipAfterPublish: False
 
-# - script: tar Jcvf $(Build.ArtifactStagingDirectory)/linux64.tar.xz -C $(Build.ArtifactStagingDirectory)/Danmaku ./
-#   displayName: 'zipRelease'
 - task: ArchiveFiles@2
   inputs:
     rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/Danmaku'
@@ -36,4 +34,4 @@ steps:
     repositoryName: MonoLogueChi/Dplayer.Danmaku
     action: create
     tag: $(Build.BuildNumber)
-    assets: $(Build.ArtifactStagingDirectory)/linux64.tar.xz
+    assets: $(Build.ArtifactStagingDirectory)/*.tar.xz
