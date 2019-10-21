@@ -15,13 +15,13 @@ Dplaeyr的弹幕[接口](http://dplayer.js.org/zh/guide.html#弹幕)和相关[AP
             video: {
                 quality:[{
                     name: '1080P',
-                    url: '/videos/s_1080.mp4'
+                    url: 'https://i.natfrp.com/2ed54bc59a513c1634c8b1845a2c6f8e.gif'
                 }, {
                     name: '720P',
-                    url: '/videos/s_720.mp4'
+                    url: 'https://i.natfrp.com/94dc11628f76dfe8ce356506acd8586e.gif'
                 }, {
                     name: '540P',
-                    url: '/videos/s_540.mp4'
+                    url: 'https://i.natfrp.com/8473d33ca7d73f268e68fc221cf07cd3.gif'
                 }],
                 defaultQuality: 2,
                 pic: '/videos/s.jpg',
