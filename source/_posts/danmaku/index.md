@@ -23,7 +23,7 @@ Dplaeyr的弹幕[接口](http://dplayer.js.org/zh/guide.html#弹幕)和相关[AP
                     name: '540P',
                     url: 'https://i.natfrp.com/8473d33ca7d73f268e68fc221cf07cd3.gif'
                 }],
-                defaultQuality: 2,
+                defaultQuality: 0,
                 pic: '/videos/s.jpg',
                 thumbnails: '/videos/thumbnails.jpg'
             },

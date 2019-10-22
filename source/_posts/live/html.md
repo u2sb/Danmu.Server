@@ -18,7 +18,7 @@ window.onload=function(){
         autoplay: true,
         volume: 0.6,
         video: {
-            url: '/videos/s_720.mp4'
+            url: 'https://i.natfrp.com/2ed54bc59a513c1634c8b1845a2c6f8e.gif'
         },
         danmaku: true,
         apiBackend: liveDan('https://danmaku.xwhite.studio/api/dplayer/live', "san", function (dan) {
