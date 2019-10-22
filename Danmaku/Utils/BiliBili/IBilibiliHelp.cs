@@ -10,7 +10,7 @@ namespace Danmaku.Utils.BiliBili
         /// 获取视频Cid和分P信息
         /// </summary>
         /// <param name="aid">视频的aid</param>
-        /// <returns></returns>
+        /// <returns>Page信息</returns>
         Task<List<BilibiliPage>> GetBilibiliPage(string aid);
 
         /// <summary>
@@ -18,7 +18,7 @@ namespace Danmaku.Utils.BiliBili
         /// </summary>
         /// <param name="pages"></param>
         /// <param name="p">分p</param>
-        /// <returns></returns>
+        /// <returns>cid</returns>
         int GetCid(List<BilibiliPage> pages, int p);
 
         /// <summary>
@@ -26,14 +26,14 @@ namespace Danmaku.Utils.BiliBili
         /// </summary>
         /// <param name="aid">视频的aid</param>
         /// <param name="p">分p</param>
-        /// <returns></returns>
+        /// <returns>cid</returns>
         Task<int> GetCid(string aid, int p);
 
         /// <summary>
         /// 获取弹幕列表
         /// </summary>
         /// <param name="cid">视频的cid</param>
-        /// <returns></returns>
+        /// <returns>弹幕列表</returns>
         Task<List<DanmakuData>> GetBiDanmaku(string cid);
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace Danmaku.Utils.BiliBili
         /// </summary>
         /// <param name="cid">视频的cid</param>
         /// <param name="date">历史日期</param>
-        /// <returns></returns>
+        /// <returns>弹幕列表</returns>
         Task<List<DanmakuData>> GetBiDanmaku(string cid, string[] date);
     }
 }

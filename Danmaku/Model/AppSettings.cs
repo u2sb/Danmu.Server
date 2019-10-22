@@ -8,6 +8,7 @@ namespace Danmaku.Model
         public AppSettings(IConfiguration configuration) => configuration.Bind(this);
 
         public string[] WithOrigins { get; set; }
+        public string[] LiveWithOrigins { get; set; }
         public DanmakuSQL DanmakuSQL { get; set; }
         public Admin Admin { get; set; }
         public string BCookie { get; set; }

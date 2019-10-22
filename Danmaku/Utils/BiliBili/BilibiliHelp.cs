@@ -50,6 +50,7 @@ namespace Danmaku.Utils.BiliBili
 
 		public async Task<List<DanmakuData>> GetBiDanmaku(string cid, string[] date)
 		{
+			//TODO 这里有问题，等我想清楚了再改
 			return await Task.Run(() => date.Select(async s => await GetBiDanmakuDataAsync(
 				$"https://api.bilibili.com/x/v2/dm/history?type=1&oid={cid}&date={s}",
 				_settings.BCookie)).SelectMany(s => s.Result).ToList());
@@ -59,10 +60,10 @@ namespace Danmaku.Utils.BiliBili
 		{
 			var client = _httpClientFactory.CreateClient("deflate");
 			if (!string.IsNullOrEmpty(cookie)) client.DefaultRequestHeaders.Add("Cookie", cookie);
-			var result = await client.GetStringAsync(url);
+			var result = client.GetStringAsync(url);
 
 			var xml = new XmlDocument();
-			xml.LoadXml(result);
+			xml.LoadXml(await result);
 			var ds = xml.GetElementsByTagName("d");
 			if (ds.Count == 0) return null;
 

@@ -20,6 +20,9 @@ namespace Danmaku
 {
 	public class Startup
 	{
+		private readonly string DanmakuAllowSpecificOrigins = "_myAllowSpecificOrigins";
+		private readonly string LiveAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
 		public Startup(IConfiguration configuration)
 		{
 			Configuration = configuration;
@@ -27,18 +30,20 @@ namespace Danmaku
 
 		public IConfiguration Configuration { get; }
 
-		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
 			//全局配置文件
-			services.AddSingleton<IAppConfiguration>(s => new AppConfiguration(Configuration));
+			var config = new AppConfiguration(Configuration);
+			services.AddSingleton<IAppConfiguration>(s => config);
 
 			//数据库
 			services.AddDbContext<DanmakuContext>();
 
 			//http请求
-			services.AddHttpClient("gzip").ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler{AutomaticDecompression = DecompressionMethods.GZip});
-			services.AddHttpClient("deflate").ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler{AutomaticDecompression = DecompressionMethods.Deflate});
+			services.AddHttpClient("gzip").ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
+				{AutomaticDecompression = DecompressionMethods.GZip});
+			services.AddHttpClient("deflate").ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
+				{AutomaticDecompression = DecompressionMethods.Deflate});
 
 			services.AddSingleton<IBiliBiliHelp, BiliBiliHelp>();
 			services.AddSingleton<IDanmakuDao, DanmakuDao>();
@@ -54,26 +59,27 @@ namespace Danmaku
 					options.Cookie.MaxAge = TimeSpan.FromHours(1);
 				});
 
-			// claims transformation is run after every Authenticate call
 			services.AddTransient<IClaimsTransformation, ClaimsTransformer>();
+
+			services.AddCors(options =>
+			{
+				options.AddPolicy(DanmakuAllowSpecificOrigins, builder =>
+					builder.WithOrigins(config.GetAppSetting().WithOrigins)
+						.SetIsOriginAllowedToAllowWildcardSubdomains().WithMethods("GET", "POST", "OPTIONS")
+						.AllowAnyHeader());
+
+				options.AddPolicy(LiveAllowSpecificOrigins, builder =>
+					builder.WithOrigins(config.GetAppSetting().LiveWithOrigins)
+						.SetIsOriginAllowedToAllowWildcardSubdomains().WithMethods("GET", "POST", "OPTIONS")
+						.AllowAnyHeader().AllowCredentials());
+			});
 		}
 
-		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IAppConfiguration config)
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 		{
-			if (env.IsDevelopment())
-			{
-				app.UseDeveloperExceptionPage();
-				app.UseCors(builder =>
-					builder.WithOrigins(config.GetAppSetting().WithOrigins).WithMethods("GET", "POST", "OPTIONS")
-						.AllowAnyHeader().AllowCredentials());
-			}
-			else
-			{
-				app.UseCors(builder =>
-					builder.WithOrigins(config.GetAppSetting().WithOrigins).WithMethods("GET", "POST", "OPTIONS")
-						.AllowAnyHeader().AllowCredentials());
-			}
+			if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
+
+			app.UseCors(DanmakuAllowSpecificOrigins);
 
 			app.UseStaticFiles();
 
@@ -96,7 +102,7 @@ namespace Danmaku
 			{
 				endpoints.MapControllers();
 				endpoints.MapDefaultControllerRoute();
-				endpoints.MapHub<LiveDanmaku>("api/dplayer/live");
+				endpoints.MapHub<LiveDanmaku>("api/dplayer/live").RequireCors(LiveAllowSpecificOrigins);
 			});
 		}
 	}
