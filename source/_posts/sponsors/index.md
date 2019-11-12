@@ -9,7 +9,7 @@
 > 如果我的项目对您有帮助，您也可以通过下面的链接赞助我（备注弹幕服务器捐赠），较大金额的赞助会永久列在下面的赞助列表中，本项目所有所得赞助，均会用于本项目的持续开发和公共服务的搭建。
 
 
-截至<span class="ddddddd">2019年6月30日</span>，本项目共收到捐款 <font color="blue">0</font> 元
+截至<span class="ddddddd">2019年6月30日</span>，本项目共收到捐款 <font color="blue">50.36</font> 元
 截至<span class="ddddddd">2019年6月30日</span>，本项目共支出 <font color="red">344</font> 元
 
 {% raw %}
@@ -27,3 +27,7 @@ for(var dd in ddddddd){
 }
 </script>
 {% endraw %}
+
+
+> 感谢 `*永虎` 于2019年11月4日捐赠的 `50` 元。
+> 其他捐赠共计 `0.36` 元。
