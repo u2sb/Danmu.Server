@@ -20,7 +20,9 @@
     <link rel="icon" href="<%- url_for(config.theme_config.favicon) %>">
 
     <%- project_partial('head_end') %>
-
+    <% if (config.offline){ %>
+      <%- partial('_partial/service-worker') %>
+    <% } %>
   </head>
   <body>
 

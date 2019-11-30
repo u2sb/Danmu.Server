@@ -30,7 +30,7 @@ Dplaeyr的弹幕[接口](http://dplayer.js.org/zh/guide.html#弹幕)和相关[AP
             danmaku: {
                 id: 'C6CC6218F1FB8770',
                 api: 'https://danmaku.xwhite.studio/api/dplayer/',
-                addition: ['https://danmaku.xwhite.studio/api/dplayer/v3/bilibili?cid=73636868','https://danmaku.xwhite.studio/api/dplayer/v3/bilibili?cid=73636868&date=2019-07-01&date=2019-04-01&date=2019-02-01']
+                addition: ['https://danmaku.xwhite.studio/api/dplayer/v3/bilibili?cid=73636868']
             },
             highlight: [{
                 time: 67,
