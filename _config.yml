@@ -89,7 +89,7 @@ filter_optimize:
   # remove the surrounding comments in each of the bundled files
   remove_comments: false
   css:
-    enable: true
+    enable: false
     # bundle loaded css file into the one
     bundle: true
     # use a script block to load css elements dynamically
@@ -102,7 +102,7 @@ filter_optimize:
   js:
     # bundle loaded js file into the one
     bundle: true
-    excludes:
+    excludes: 
   # set the priority of this plugin,
   # lower means it will be executed first, default is 10
   priority: 12
@@ -118,7 +118,7 @@ offline:
     - urlPattern: /*
       handler: cacheFirst
       options:
-        origin:  https://cdn.jsdelivr.net
+        origin: https://cdn.jsdelivr.net
 
 theme_config:
   favicon: images/favicon.ico
