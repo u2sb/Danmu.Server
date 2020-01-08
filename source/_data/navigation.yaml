@@ -44,6 +44,13 @@ main:
   - text: 其他方案
     type: link
     path: live/other.html
+- text: hexo-tag-mmedia
+  type: link
+  path: mmedia/index.html
+  children:
+  - text: 演示
+    type: link
+    path: mmedia/show.html
 - text: 赞助
   type: link
   path: sponsors/index.html

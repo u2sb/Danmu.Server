@@ -118,7 +118,7 @@ offline:
     - urlPattern: /*
       handler: cacheFirst
       options:
-        origin: https://cdn.jsdelivr.net
+        origin:  https://cdn.jsdelivr.net
 
 theme_config:
   favicon: images/favicon.ico
