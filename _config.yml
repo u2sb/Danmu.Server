@@ -89,7 +89,7 @@ filter_optimize:
   # remove the surrounding comments in each of the bundled files
   remove_comments: false
   css:
-    enable: false
+    enable: true
     # bundle loaded css file into the one
     bundle: true
     # use a script block to load css elements dynamically
@@ -98,7 +98,9 @@ filter_optimize:
     #   - only support the full path
     #   - default is ['css/main.css']
     inlines: ['style/doc.css']
-    excludes:
+    excludes: 
+      - '*/cdn.jsdelivr.net/**/*'
+      - '//fonts.loli.net/**/*'
   js:
     # bundle loaded js file into the one
     bundle: true
