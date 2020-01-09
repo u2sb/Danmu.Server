@@ -17,6 +17,6 @@
     "hexo-renderer-marked": "^2.0.0",
     "hexo-renderer-stylus": "^1.1.0",
     "hexo-server": "^1.0.0",
-    "hexo-tag-mmedia": "0.0.2"
+    "hexo-tag-mmedia": "^0.1.0"
   }
 }

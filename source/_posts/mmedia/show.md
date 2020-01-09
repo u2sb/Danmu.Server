@@ -18,7 +18,7 @@
 
 ### bilibili
 
-{% bilibili "aid:41940944" "quality:high" "danmaku" "allowfullscreen" %}
+{% bilibili "aid:41940944" "quality:high" "danmaku" "allowfullscreen" "width:850px" "height:550px" %}
 
 ```
 {% bilibili "aid:41940944" "quality:high" "danmaku" "width:850px" "height:500px" "allowfullscreen" %}
