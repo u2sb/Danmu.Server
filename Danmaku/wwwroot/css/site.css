@@ -1,0 +1,15 @@
+/* µÇÂ¼Ò³ */
+.layout-body {
+    position: absolute;
+    top: 150px;
+    right: 10%;
+}
+
+.landing-body-login {
+    max-width: 400px;
+    width: 96%;
+    background-color: #fff;
+    margin-right: 50px;
+    margin-top: 40px;
+    float: right;
+}
