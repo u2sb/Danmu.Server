@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Danmaku.Model;
@@ -28,6 +29,14 @@ namespace Danmaku.Utils.Dao
 			var dateBase = new DanmakuDataBase(date);
 			con.Danmaku.AddAsync(dateBase);
 			return con.SaveChanges();
+		}
+
+		public async Task<DanmakuDataBase> DanmakuBaseQuery(string id)
+		{
+			await using var con = new DanmakuContext(_configuration);
+			if (Guid.TryParse(id, out var guid))
+				return await con.Danmaku.Where(e => e.Id == guid).FirstOrDefaultAsync();
+			return null;
 		}
 
 		public async Task<List<DanmakuDataBase>> DanmakuBaseQuery(int page, int size)

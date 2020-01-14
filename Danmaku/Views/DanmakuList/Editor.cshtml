@@ -1,0 +1,72 @@
+﻿@model Danmaku.Model.DanmakuDataBase
+@{
+  Layout = "_Layout";
+  ViewData["Title"] = "编辑";
+}
+
+  <form class="layui-form form-select" action="">
+    <div class="layui-form-item">
+      <label class="layui-form-label">ID</label>
+      <div class="layui-input-block" style="width: 460px;">
+        <input type="text" value="@Model.Id" class="layui-input" readonly>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">VID</label>
+      <div class="layui-input-block">
+        <input type="text" value="@Model.Vid" class="layui-input" readonly>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">Referer</label>
+      <div class="layui-input-block">
+        <input type="text" value="@Model.Referer" class="layui-input" readonly>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">IP</label>
+      <div class="layui-input-block">
+        <input type="text" value="@Model.Ip" class="layui-input" readonly>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">AUTHOR</label>
+      <div class="layui-input-block">
+        <input type="text" value="@Model.DanmakuData.Author" class="layui-input" readonly>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">DATE</label>
+      <div class="layui-input-inline">
+        <input type="text" value="@Model.Date.ToString("yyyy-MM-dd hh:mm:ss")" class="layui-input" readonly>
+      </div>
+    </div>
+
+    <div class="layui-form-item">
+      <label class="layui-form-label">弹幕类型</label>
+      <div class="layui-input-block">
+        <select name="Type" lay-filter="Type">
+          <option value=""></option>
+          <option value="0">滚动弹幕</option>
+          <option value="1">顶部弹幕</option>
+          <option value="2">底部弹幕</option>
+          <option value="3" selected=""></option>
+        </select>
+      </div>
+    </div>
+
+    <div class="layui-form-item">
+      <label class="layui-form-label">颜色</label>
+      <div class="layui-input-block">
+        <input type="text" name="Text" lay-verify="Text" autocomplete="off" placeholder="请输入评论关键词" class="layui-input">
+      </div>
+    </div>
+
+<div class="layui-form-item">
+      <div class="layui-input-block">
+        <button class="layui-btn" lay-submit lay-filter="form1">提交</button>
+        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+      </div>
+    </div>
+
+  </form>

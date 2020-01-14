@@ -1,4 +1,4 @@
-/* ��¼ҳ */
+﻿/* 登录页 */
 .layout-body {
     position: absolute;
     top: 150px;
@@ -12,4 +12,12 @@
     margin-right: 50px;
     margin-top: 40px;
     float: right;
+}
+
+
+/* 筛选页 */
+.form-select {
+    position: absolute;
+    top: 20px;
+    right: 50px;
 }

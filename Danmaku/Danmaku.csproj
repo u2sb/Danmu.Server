@@ -47,6 +47,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Views\DanmakuList\Index.cshtml~RF552f50d.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.0">
