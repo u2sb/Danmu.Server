@@ -22,7 +22,7 @@ namespace Danmaku.Utils.Dao
 		public async Task<List<DanmakuData>> DanmakuQuery(string id)
 		{
 			await using var con = new DanmakuContext(_configuration);
-			return await con.Danmaku.AsNoTracking().Where(e => e.Vid == id && e.IsDelete == false).Select(s => s.DanmakuData)
+			return await con.Danmaku.Where(e => e.Vid == id && e.IsDelete == false).Select(s => s.DanmakuData)
 				.ToListAsync();
 		}
 
@@ -38,31 +38,15 @@ namespace Danmaku.Utils.Dao
 		{
 			await using var con = new DanmakuContext(_configuration);
 			if (Guid.TryParse(id, out var guid))
-				return await con.Danmaku.AsNoTracking().Where(e => e.Id == guid).FirstOrDefaultAsync();
+				return await con.Danmaku.Where(e => e.Id == guid).FirstOrDefaultAsync();
 			return null;
 		}
 
 		public async Task<List<DanmakuDataBase>> DanmakuBaseQuery(int page, int size)
 		{
 			await using var con = new DanmakuContext(_configuration);
-
-			return await con.Danmaku.AsNoTracking()
+			return await con.Danmaku
 				.OrderBy(b => b.Vid).ThenByDescending(b => b.Date)
-				.Skip(size * (page - 1)).Take(size)
-				.ToListAsync();
-
-			return await con.Danmaku.AsNoTracking()
-				.OrderBy(b => b.Vid).ThenByDescending(b => b.Date)
-				.Skip(size * (page - 1)).Take(size)
-				.ToListAsync();
-		}
-
-
-		public async Task<List<DanmakuDataBase>> DanmakuBasesQueryByVid(string vid, int page, int size)
-		{
-			await using var con = new DanmakuContext(_configuration);
-			return await con.Danmaku.AsNoTracking().Where(e => e.Vid == vid)
-				.OrderByDescending(b => b.Date)
 				.Skip(size * (page - 1)).Take(size)
 				.ToListAsync();
 		}

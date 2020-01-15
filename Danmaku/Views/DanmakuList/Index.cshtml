@@ -6,7 +6,69 @@
 
 <h2>列表</h2>
 
-<button type="button" data-method="btn_select" class="layui-btn">筛选</button>
+<form class="layui-form form-select" action="/dplayer/danmakulist">
+  <div class="layui-form-item">
+    <label class="layui-form-label">视频ID</label>
+    <div class="layui-input-block" style="width: 250px;">
+      <input type="text" name="vid" lay-verify="vid" autocomplete="off" placeholder="请输入视频ID" class="layui-input">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">IP</label>
+    <div class="layui-input-block">
+      <input type="text" name="ip" lay-verify="ip" autocomplete="off" placeholder="请输入评论者IP" class="layui-input">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">关键词</label>
+    <div class="layui-input-block" style="width: 400px;">
+      <input type="text" name="text" lay-verify="text" autocomplete="off" placeholder="请输入评论关键词" class="layui-input">
+    </div>
+  </div>
+
+  <br />
+
+  <div class="layui-form-item">
+    <div class="layui-inline">
+      <label class="layui-form-label">日期</label>
+      <div class="layui-input-inline" style="width: 200px;">
+        <input type="text" name="date_star" id="date_star" lay-verify="date_star" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+      </div>
+      <div class="layui-form-mid">-</div>
+      <div class="layui-input-inline" style="width: 200px;">
+        <input type="text" name="date_end" id="date_end" lay-verify="date_end" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">弹幕类型</label>
+    <div class="layui-input-block">
+      <select name="type" lay-filter="type">
+        <option value="0">滚动弹幕</option>
+        <option value="1">顶部弹幕</option>
+        <option value="2">底部弹幕</option>
+        <option value=10 selected="">全部</option>
+      </select>
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">排序</label>
+    <div class="layui-input-block">
+      <select name="order" lay-filter="order">
+        <option value=""></option>
+        <option value="0" selected="">倒序</option>
+        <option value="1">正序</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <div class="layui-input-block">
+      <button class="layui-btn" type="submit">查询</button>
+      <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+    </div>
+  </div>
+</form>
 
 <div class="layui-form">
   <table class="layui-table">
@@ -54,37 +116,13 @@
 </div>
 
 <script>
-  layui.use(['layer'],
+  layui.use(['layer', 'form', 'laydate'],
     function() {
-      var $ = layui.jquery, layer = layui.layer;
+      var $ = layui.jquery, layer = layui.layer ,form = layui.form, laydate = layui.laydate;
       var active = {
-        //筛选按钮
-        btn_select: function() {
-          layer.open({
-            type: 2,
-            title: '筛选',
-            area: ['630px', '550px'],
-            shade: 0,
-            maxmin: true,
-            offset: [
-              $(window).height() / 2 - 275,
-              $(window).width() / 2 - 315
-            ],
-            content: '/dplayer/danmakulist/select',
-            btn: ['关闭'],
-            yes: function() {
-              layer.closeAll();
-            },
-            zIndex: layer.zIndex,
-            success: function(layero) {
-              //layer.btn_select(layero);
-            }
-          });
-        },
-
         //编辑按钮
         btn_edit: function() {
-          const id = $(this).parent().parent().parent().attr('id');
+          var id = $(this).parent().parent().parent().attr('id');
           layer.open({
             type: 2,
             title: '编辑',
@@ -118,12 +156,27 @@
         }
       };
 
-      //按钮选择
+      //按钮
       $('.layui-btn').on('click',
         function() {
           const othis = $(this);
           const method = othis.data('method');
           active[method] ? active[method].call(this, othis) : '';
         });
+
+      laydate.render({
+        elem: '#date_star'
+      });
+      laydate.render({
+        elem: '#date_end'
+      });
+
+      form.verify({
+        Vid: function(value) {
+          if (value.length < 1) {
+            value = "";
+          }
+        }
+      });
     });
 </script>

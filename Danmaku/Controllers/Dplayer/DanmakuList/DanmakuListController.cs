@@ -17,18 +17,12 @@ namespace Danmaku.Controllers.Dplayer.DanmakuList
 		}
 
 
-		public async Task<ActionResult> Index(int page = 1, int size = 10, string vid = null, string author = null,
+		public async Task<ActionResult> Index(int page = 1, int size = 20, string vid = null, string author = null,
 			string date_star = null, string date_end = null, int type = 3, string ip = null, string text = null,
 			int order = 0)
 		{
 			if (type == 3) return View(await Dao.DanmakuBaseQuery(page, size));
 			return View(await Dao.DanmakuBasesQuery(page, size, vid, author, date_star, date_end, type, ip, text, order));
-		}
-
-		[HttpPost]
-		public async Task<ActionResult> Index([FromForm] string vid, [FromForm] int page = 1, [FromForm] int size = 10)
-		{
-			return View(await Dao.DanmakuBasesQueryByVid(vid, page, size));
 		}
 
 		/// <summary>

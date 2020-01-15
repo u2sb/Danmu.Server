@@ -14,10 +14,14 @@
     float: right;
 }
 
-
-/* 筛选页 */
-.form-select {
+.form-edit {
     position: absolute;
     top: 20px;
     right: 50px;
+}
+
+
+/* 筛选页 */
+.form-select .layui-form-item {
+    display: inline-block
 }

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Net;
 using Danmaku.Utils.AppConfiguration;
 using Microsoft.EntityFrameworkCore;
@@ -60,13 +61,15 @@ namespace Danmaku.Model
                 case PostgreSQL:
                     break;
                 case MySQL:
-                    modelBuilder.Entity<DanmakuDataBase>().Property(e => e.Ip).HasColumnType("varchar(40)")
+	                modelBuilder.Entity<DanmakuDataBase>().Property(e => e.Id).HasColumnType("varchar(40)").HasConversion(v => v.ToString(), v => Guid.Parse(v));
+          modelBuilder.Entity<DanmakuDataBase>().Property(e => e.Ip).HasColumnType("varchar(40)")
                         .HasConversion(v => v.ToString(), v => IPAddress.Parse(v));
                     modelBuilder.Entity<DanmakuDataBase>().Property(e => e.DanmakuData).HasColumnType("json")
                         .HasConversion(v => v.ToJson(), v => DanmakuData.FromJson(v));
                     break;
                 case SQLite:
-                    modelBuilder.Entity<DanmakuDataBase>().Property(e => e.Ip)
+	                modelBuilder.Entity<DanmakuDataBase>().Property(e => e.Id).HasColumnType("TEXT").HasConversion(v => v.ToString(), v => Guid.Parse(v));
+	                modelBuilder.Entity<DanmakuDataBase>().Property(e => e.Ip)
                         .HasConversion(v => v.ToString(), v => IPAddress.Parse(v));
                     modelBuilder.Entity<DanmakuDataBase>().Property(e => e.DanmakuData).HasColumnType("TEXT")
                         .HasConversion(v => v.ToJson(), v => DanmakuData.FromJson(v));

@@ -36,13 +36,22 @@ namespace Danmaku.Utils.Dao
 		Task<List<DanmakuDataBase>> DanmakuBaseQuery(int page, int size);
 
 		/// <summary>
-		/// 根据vid筛选全部视频
+		/// 筛选弹幕
 		/// </summary>
-		/// <param name="vid"></param>
-		/// <param name="page"></param>
-		/// <param name="size"></param>
-		/// <returns></returns>
-		Task<List<DanmakuDataBase>> DanmakuBasesQueryByVid(string vid, int page, int size);
+		/// <param name="page">页码</param>
+		/// <param name="size">每页弹幕数</param>
+		/// <param name="vid">视频id</param>
+		/// <param name="author">弹幕发送人</param>
+		/// <param name="startDate">开始时间</param>
+		/// <param name="endDate">结束时间</param>
+		/// <param name="type">弹幕类型</param>
+		/// <param name="ip">发送弹幕人ip</param>
+		/// <param name="key">弹幕关键词</param>
+		/// <param name="order">0-倒序， 1-正序</param>
+		/// <returns>筛选结果</returns>
+		Task<List<DanmakuDataBase>> DanmakuBasesQuery(int page, int size, string vid, string author, string startDate,
+			string endDate, int type, string ip,
+			string key, int order);
 
 		/// <summary>
 		/// 修改弹幕
@@ -61,23 +70,5 @@ namespace Danmaku.Utils.Dao
 		/// <param name="id">id</param>
 		/// <returns></returns>
 		Task<bool> DanmakuDelete(string id);
-
-		/// <summary>
-		/// 筛选弹幕
-		/// </summary>
-		/// <param name="page">页码</param>
-		/// <param name="size">每页弹幕数</param>
-		/// <param name="vid">视频id</param>
-		/// <param name="author">弹幕发送人</param>
-		/// <param name="startDate">开始时间</param>
-		/// <param name="endDate">结束时间</param>
-		/// <param name="type">弹幕类型</param>
-		/// <param name="ip">发送弹幕人ip</param>
-		/// <param name="key">弹幕关键词</param>
-		/// <param name="order">0-倒序， 1-正序</param>
-		/// <returns>筛选结果</returns>
-		Task<List<DanmakuDataBase>> DanmakuBasesQuery(int page, int size, string vid, string author, string startDate,
-			string endDate, int type, string ip,
-			string key, int order);
 	}
 }
