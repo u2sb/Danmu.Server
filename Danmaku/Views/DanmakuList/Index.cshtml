@@ -16,47 +16,50 @@
       <col>
       <col>
       <col>
+      <col>
       @* ReSharper disable once Html.Obsolete *@
       <col width="100">
     </colgroup>
     <thead>
-      <tr>
-        <td>VID</td>
-        <td>数据</td>
-        <td>时间</td>
-        <td>IP</td>
-        <td>网址</td>
-        <td>操作</td>
-      </tr>
+    <tr>
+      <td>VID</td>
+      <td>数据</td>
+      <td>时间</td>
+      <td>IP</td>
+      <td>网址</td>
+      <td>删除</td>
+      <td>操作</td>
+    </tr>
     </thead>
     <tbody>
-      @foreach (var l in Model)
-      {
-        <tr id=@l.Id>
-          <td>@l.Vid</td>
-          <td>@l.DanmakuData.Text</td>
-          <td>@l.Date.ToString("yyyy-MM-dd hh:mm:ss")</td>
-          <td>@l.Ip</td>
-          <td>@l.Referer</td>
-          <td>
-            <div class="layui-btn-group">
-              <button type="button" data-method="btn_edit" class="layui-btn layui-btn-xs">编辑</button>
-              <button type="button" data-method="btn_delete" class="layui-btn layui-btn-danger layui-btn-xs">删除</button>
-            </div>
-          </td>
-        </tr>
-      }
+    @foreach (var l in Model)
+    {
+      <tr id=@l.Id>
+        <td>@l.Vid</td>
+        <td>@l.DanmakuData.Text</td>
+        <td>@l.Date.ToString("yyyy-MM-dd hh:mm:ss")</td>
+        <td>@l.Ip</td>
+        <td>@l.Referer</td>
+        <td>@l.IsDelete</td>
+        <td>
+          <div class="layui-btn-group">
+            <button type="button" data-method="btn_edit" class="layui-btn layui-btn-xs">编辑</button>
+            <button type="button" data-method="btn_delete" class="layui-btn layui-btn-danger layui-btn-xs">删除</button>
+          </div>
+        </td>
+      </tr>
+    }
     </tbody>
   </table>
 </div>
 
 <script>
   layui.use(['layer'],
-    function () {
+    function() {
       var $ = layui.jquery, layer = layui.layer;
       var active = {
         //筛选按钮
-        btn_select: function () {
+        btn_select: function() {
           layer.open({
             type: 2,
             title: '筛选',
@@ -69,53 +72,57 @@
             ],
             content: '/dplayer/danmakulist/select',
             btn: ['关闭'],
-            yes: function () {
+            yes: function() {
               layer.closeAll();
             },
             zIndex: layer.zIndex,
-            success: function (layero) {
+            success: function(layero) {
               //layer.btn_select(layero);
             }
           });
         },
 
         //编辑按钮
-        btn_edit: function () {
-          var id = $(this).parent().parent().parent().attr('id');
+        btn_edit: function() {
+          const id = $(this).parent().parent().parent().attr('id');
           layer.open({
             type: 2,
             title: '编辑',
-            area: ['630px', '650px'],
+            area: ['630px', '780px'],
             shade: 0,
             maxmin: true,
             offset: [
-              $(window).height() / 2 - 325,
+              $(window).height() / 2 - 380,
               $(window).width() / 2 - 315
             ],
-            content: '/dplayer/danmakulist/editor/' + id,
+            content: `/dplayer/danmakulist/editor/${id}`,
             btn: ['关闭'],
-            yes: function () {
+            yes: function() {
               layer.closeAll();
             },
             zIndex: layer.zIndex,
-            success: function (layero) {
+            success: function(layero) {
               //layer.btn_select(layero);
             }
           });
         },
 
         //删除按钮
-        btn_delete: function () {
-          var id = $(this).parent().parent().parent().attr('id');
+        btn_delete: function() {
+          const id = $(this).parent().parent().parent().attr('id');
+          fetch(`/dplayer/danmakulist/delete/${id}`).then(res => res.text()).then(res => {
+            if (res === 'true') {
+              window.location.reload();
+            }
+          });
         }
-
-
       };
 
       //按钮选择
       $('.layui-btn').on('click',
-        function () {
-          var othis = $(this), method = othis.data('method');
+        function() {
+          const othis = $(this);
+          const method = othis.data('method');
           active[method] ? active[method].call(this, othis) : '';
         });
     });

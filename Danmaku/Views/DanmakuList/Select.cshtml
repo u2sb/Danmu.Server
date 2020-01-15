@@ -3,11 +3,11 @@
   ViewData["Title"] = "筛选";
 }
 
-<form class="layui-form form-select" action="">
+<form class="layui-form form-select" action="/dplayer/danmakulist">
   <div class="layui-form-item">
     <label class="layui-form-label">视频ID</label>
     <div class="layui-input-block">
-      <input type="text" name="Vid" lay-verify="Vid" autocomplete="off" placeholder="请输入视频ID" class="layui-input">
+      <input type="text" name="vid" lay-verify="vid" autocomplete="off" placeholder="请输入视频ID" class="layui-input">
     </div>
   </div>
   <div class="layui-form-item">
@@ -25,33 +25,32 @@
   <div class="layui-form-item">
     <label class="layui-form-label">弹幕类型</label>
     <div class="layui-input-block">
-      <select name="Type" lay-filter="Type">
-        <option value=""></option>
+      <select name="type" lay-filter="type">
         <option value="0">滚动弹幕</option>
         <option value="1">顶部弹幕</option>
         <option value="2">底部弹幕</option>
-        <option value="3" selected=""></option>
+        <option value=10 selected="">全部</option>
       </select>
     </div>
   </div>
   <div class="layui-form-item">
     <label class="layui-form-label">IP</label>
     <div class="layui-input-block">
-      <input type="text" name="Ip" lay-verify="Ip" autocomplete="off" placeholder="请输入评论者IP" class="layui-input">
+      <input type="text" name="ip" lay-verify="ip" autocomplete="off" placeholder="请输入评论者IP" class="layui-input">
     </div>
   </div>
 
   <div class="layui-form-item">
     <label class="layui-form-label">关键词</label>
     <div class="layui-input-block">
-      <input type="text" name="Text" lay-verify="Text" autocomplete="off" placeholder="请输入评论关键词" class="layui-input">
+      <input type="text" name="text" lay-verify="text" autocomplete="off" placeholder="请输入评论关键词" class="layui-input">
     </div>
   </div>
 
   <div class="layui-form-item">
     <label class="layui-form-label">排序</label>
     <div class="layui-input-block">
-      <select name="Order" lay-filter="Order">
+      <select name="order" lay-filter="order">
         <option value=""></option>
         <option value="0" selected="">倒序</option>
         <option value="1">正序</option>
@@ -90,7 +89,7 @@
 
       form.on('submit(form1)',
         function(data) {
-
+          
         });
     });
 </script>

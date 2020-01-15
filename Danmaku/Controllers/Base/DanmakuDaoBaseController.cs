@@ -1,5 +1,6 @@
 ﻿using Danmaku.Utils.Dao;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace Danmaku.Controllers.Base
 {
@@ -7,10 +8,12 @@ namespace Danmaku.Controllers.Base
 	public class DanmakuDaoBaseController : Controller
 	{
 		private protected readonly IDanmakuDao Dao;
+		private protected readonly ILogger<DanmakuDaoBaseController> Logger;
 
-		public DanmakuDaoBaseController(IDanmakuDao danmakuDao)
+		public DanmakuDaoBaseController(IDanmakuDao danmakuDao, ILogger<DanmakuDaoBaseController> logger)
 		{
 			Dao = danmakuDao;
+			Logger = logger;
 		}
 	}
 }

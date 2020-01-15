@@ -11,28 +11,38 @@ namespace Danmaku.Model
 {
 	public class DanmakuWebResult
 	{
-		public DanmakuWebResult(){}
+		public DanmakuWebResult()
+		{
+		}
 
-		public DanmakuWebResult(int code) => Code = code;
+		public DanmakuWebResult(int code)
+		{
+			Code = code;
+		}
 
-		public DanmakuWebResult(List<DanmakuData> data) =>
+		public DanmakuWebResult(List<DanmakuData> data)
+		{
 			Data = data.Select(s => new object[]
 				{s.Time, s.Type, s.Color, HttpUtility.HtmlEncode(s.Author), HttpUtility.HtmlEncode(s.Text)}).ToList();
-		
+		}
+
 		/// <summary>
-        ///     代码，0正常 1错误
-        /// </summary>
-        [DefaultValue(0)]
+		///   代码，0正常 1错误
+		/// </summary>
+		[DefaultValue(0)]
 		[JsonPropertyName("code")]
 		public int Code { get; set; }
 
-        /// <summary>
-        ///     数据
-        /// </summary>
-        [JsonPropertyName("data")]
+		/// <summary>
+		///   数据
+		/// </summary>
+		[JsonPropertyName("data")]
 		public List<object[]> Data { get; }
 
-		public static implicit operator string(DanmakuWebResult result) => JsonSerializer.Serialize(result);
+		public static implicit operator string(DanmakuWebResult result)
+		{
+			return JsonSerializer.Serialize(result);
+		}
 	}
 
 	public class DanmakuData
@@ -47,9 +57,15 @@ namespace Danmaku.Model
 
 		[MaxLength(255)] public string Text { get; set; }
 
-		public string ToJson() => JsonSerializer.Serialize(this);
+		public string ToJson()
+		{
+			return JsonSerializer.Serialize(this);
+		}
 
-		public static DanmakuData FromJson(string json) => JsonSerializer.Deserialize<DanmakuData>(json);
+		public static DanmakuData FromJson(string json)
+		{
+			return JsonSerializer.Deserialize<DanmakuData>(json);
+		}
 	}
 
 	public class DanmakuDataInsert : DanmakuData

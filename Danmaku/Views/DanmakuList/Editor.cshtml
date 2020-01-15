@@ -2,71 +2,140 @@
 @{
   Layout = "_Layout";
   ViewData["Title"] = "编辑";
+
+  bool TypeSelected(int i)
+  {
+    return Model.DanmakuData.Type == i ? true : false;
+  }
 }
 
-  <form class="layui-form form-select" action="">
-    <div class="layui-form-item">
-      <label class="layui-form-label">ID</label>
-      <div class="layui-input-block" style="width: 460px;">
-        <input type="text" value="@Model.Id" class="layui-input" readonly>
-      </div>
+<form class="layui-form form-select">
+  <div class="layui-form-item">
+    <label class="layui-form-label">ID</label>
+    <div class="layui-input-block" style="width: 460px">
+      <input type="text" value="@Model.Id" class="layui-input" id="danmaku-id" readonly>
     </div>
-    <div class="layui-form-item">
-      <label class="layui-form-label">VID</label>
-      <div class="layui-input-block">
-        <input type="text" value="@Model.Vid" class="layui-input" readonly>
-      </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">VID</label>
+    <div class="layui-input-block">
+      <input type="text" value="@Model.Vid" class="layui-input" readonly>
     </div>
-    <div class="layui-form-item">
-      <label class="layui-form-label">Referer</label>
-      <div class="layui-input-block">
-        <input type="text" value="@Model.Referer" class="layui-input" readonly>
-      </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">Referer</label>
+    <div class="layui-input-block">
+      <input type="text" value="@Model.Referer" class="layui-input" readonly>
     </div>
-    <div class="layui-form-item">
-      <label class="layui-form-label">IP</label>
-      <div class="layui-input-block">
-        <input type="text" value="@Model.Ip" class="layui-input" readonly>
-      </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">IP</label>
+    <div class="layui-input-block">
+      <input type="text" value="@Model.Ip" class="layui-input" readonly>
     </div>
-    <div class="layui-form-item">
-      <label class="layui-form-label">AUTHOR</label>
-      <div class="layui-input-block">
-        <input type="text" value="@Model.DanmakuData.Author" class="layui-input" readonly>
-      </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">AUTHOR</label>
+    <div class="layui-input-block">
+      <input type="text" value="@Model.DanmakuData.Author" class="layui-input" readonly>
     </div>
-    <div class="layui-form-item">
-      <label class="layui-form-label">DATE</label>
-      <div class="layui-input-inline">
-        <input type="text" value="@Model.Date.ToString("yyyy-MM-dd hh:mm:ss")" class="layui-input" readonly>
-      </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">DATE</label>
+    <div class="layui-input-inline">
+      <input type="text" value="@Model.Date.ToString("yyyy-MM-dd hh:mm:ss")" class="layui-input" readonly>
     </div>
+  </div>
 
-    <div class="layui-form-item">
-      <label class="layui-form-label">弹幕类型</label>
-      <div class="layui-input-block">
-        <select name="Type" lay-filter="Type">
-          <option value=""></option>
-          <option value="0">滚动弹幕</option>
-          <option value="1">顶部弹幕</option>
-          <option value="2">底部弹幕</option>
-          <option value="3" selected=""></option>
-        </select>
-      </div>
-    </div>
 
-    <div class="layui-form-item">
-      <label class="layui-form-label">颜色</label>
-      <div class="layui-input-block">
-        <input type="text" name="Text" lay-verify="Text" autocomplete="off" placeholder="请输入评论关键词" class="layui-input">
-      </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">弹幕时间</label>
+    <div class="layui-input-inline">
+      <input type="text" name="time" lay-verify="time" autocomplete="off" value="@Model.DanmakuData.Time" class="layui-input">
     </div>
-
-<div class="layui-form-item">
-      <div class="layui-input-block">
-        <button class="layui-btn" lay-submit lay-filter="form1">提交</button>
-        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-      </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">弹幕类型</label>
+    <div class="layui-input-block">
+      <select name="type" lay-filter="type">
+        <option value="0" selected="@TypeSelected(0)">滚动弹幕</option>
+        <option value="1" selected="@TypeSelected(1)">顶部弹幕</option>
+        <option value="2" selected="@TypeSelected(2)">底部弹幕</option>
+      </select>
     </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">颜色</label>
+    <div class="layui-input-inline" style="width: 120px;">
+      <input type="text" name="color" lay-verify="color" autocomplete="off" value="#@Model.DanmakuData.Color.ToString("x")" class="layui-input" id="color-form">
+    </div>
+    <div class="layui-inline" style="left: -11px;">
+      <div id="form-color-select"></div>
+    </div>
+  </div>
+  <div class="layui-form-item layui-form-text">
+    <label class="layui-form-label">弹幕内容</label>
+    <div class="layui-input-block">
+      <textarea class="layui-textarea" id="danmaku-text-input">@Model.DanmakuData.Text</textarea>
+    </div>
+  </div>
 
-  </form>
+  <div class="layui-form-item">
+    <div class="layui-input-block">
+      <button type="button" class="layui-btn" lay-submit lay-filter="form1">提交</button>
+      <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+    </div>
+  </div>
+
+</form>
+
+<script>
+  layui.use(['form', 'colorpicker'],
+    function() {
+      const form = layui.form;
+      const layer = layui.layer;
+      var $ = layui.$;
+      const colorpicker = layui.colorpicker;
+
+      form.verify({
+      });
+
+      colorpicker.render({
+        elem: '#form-color-select',
+        color: $('#color-form').val(),
+        predefine: true,
+        colors: ['#000000', '#ffffff', '#E54256', '#FFE133', '#64DD17', '#39CCFF', '#D500F9'],
+        done: function(color) {
+          $('#color-form').val(color);
+        }
+      });
+
+      form.on('submit(form1)',
+        function(data) {
+          const id = { "id": $('#danmaku-id').val() };
+          const text = { "text": $('#danmaku-text-input').val() };
+          Post(".", Object.assign(id, data.field, text));
+        });
+    });
+
+  //模拟表单
+  function Post(url, parameter) {
+    //创建form表单
+    const tempForm = document.createElement("form");
+    tempForm.action = url;
+    tempForm.target = "_self";
+    tempForm.method = "post";
+    tempForm.style.display = "none";
+    for (var item in parameter) {
+      if (Object.prototype.hasOwnProperty.call(parameter, item)) {
+        const opt = document.createElement("textarea");
+        opt.name = item;
+        opt.value = parameter[item];
+        tempForm.appendChild(opt);
+      }
+    }
+    document.body.appendChild(tempForm);
+    //提交数据
+    tempForm.submit();
+  }
+</script>

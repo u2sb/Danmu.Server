@@ -26,7 +26,7 @@ namespace Danmaku.Controllers.Dplayer.V3
 
 		// POST: api/dplayer/v3/
 		[HttpPost]
-		public string Post([FromBody] DanmakuDataInsert data)
+		public async Task<string> Post([FromBody] DanmakuDataInsert data)
 		{
 			if (string.IsNullOrWhiteSpace(data.Id) || string.IsNullOrWhiteSpace(data.Text))
 				return new DanmakuWebResult(1);
@@ -35,8 +35,8 @@ namespace Danmaku.Controllers.Dplayer.V3
 				: Request.HttpContext.Connection.RemoteIpAddress;
 			data.Referer = Request.Headers["Referer"].FirstOrDefault();
 
-			var result = Dao.DanmakuInsert(data);
-			return result == 0 ? new DanmakuWebResult(1) : new DanmakuWebResult(0);
+			var result = await Dao.DanmakuInsert(data);
+			return result ? new DanmakuWebResult(0) : new DanmakuWebResult(1);
 		}
 	}
 }
