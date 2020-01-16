@@ -47,7 +47,7 @@ namespace Danmaku.Utils.Dao
 			await using var con = new DanmakuContext(_configuration);
 			return await con.Danmaku
 				.OrderBy(b => b.Vid).ThenByDescending(b => b.Date)
-				.Skip(size * (page - 1)).Take(size)
+				// .Skip(size * (page - 1)).Take(size)
 				.ToListAsync();
 		}
 
@@ -96,18 +96,20 @@ namespace Danmaku.Utils.Dao
 		{
 			IPAddress dip;
 			DateTime sDate = DateTime.TryParse(startDate, out sDate) ? sDate : DateTime.MinValue;
-			DateTime eDate = DateTime.TryParse(startDate, out eDate) ? eDate : DateTime.MaxValue;
+			DateTime eDate = DateTime.TryParse(endDate, out eDate) ? eDate : DateTime.MaxValue;
 			await using var con = new DanmakuContext(_configuration);
 			var a = con.Danmaku.AsNoTracking().Where(d =>
+					(type == 10 || Equals(d.DanmakuData.Type, type)) &&
+					(string.IsNullOrEmpty(ip) || !IPAddress.TryParse(ip, out dip) || Equals(dip, d.Ip)) &&
+					(string.IsNullOrEmpty(startDate) || DateTime.Compare(sDate, d.Date) < 0) &&
+					(string.IsNullOrEmpty(endDate) || DateTime.Compare(eDate, d.Date) > 0) &&
 					(string.IsNullOrEmpty(vid) || d.Vid.Contains(vid)) &&
 					(string.IsNullOrEmpty(author) || d.DanmakuData.Author.Contains(author)) &&
-					(type == 10 || d.DanmakuData.Type == type) &&
-					(string.IsNullOrEmpty(ip) || !IPAddress.TryParse(ip, out dip) || Equals(dip, d.Ip)) &&
-					d.Date >= sDate && d.Date <= eDate &&
 					(string.IsNullOrEmpty(key) || d.DanmakuData.Text.Contains(key)))
 				.OrderBy(b => b.Vid);
 			a = order == 0 ? a.ThenByDescending(b => b.Date) : a.ThenBy(b => b.Date);
-			return await a.Skip(size * (page - 1)).Take(size).ToListAsync();
+			// return await a.Skip(size * (page - 1)).Take(size).ToListAsync();
+			return await a.ToListAsync();
 		}
 	}
 }

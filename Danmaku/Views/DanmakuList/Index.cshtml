@@ -26,7 +26,7 @@
     </div>
   </div>
 
-  <br />
+  <br/>
 
   <div class="layui-form-item">
     <div class="layui-inline">
@@ -47,7 +47,7 @@
         <option value="0">滚动弹幕</option>
         <option value="1">顶部弹幕</option>
         <option value="2">底部弹幕</option>
-        <option value=10 selected="">全部</option>
+        <option value="10" selected="">全部</option>
       </select>
     </div>
   </div>
@@ -66,6 +66,7 @@
     <div class="layui-input-block">
       <button class="layui-btn" type="submit">查询</button>
       <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+      <button type="button" data-method="btn_clear" class="layui-btn layui-btn-primary">清除筛选</button>
     </div>
   </div>
 </form>
@@ -73,6 +74,7 @@
 <div class="layui-form">
   <table class="layui-table">
     <colgroup>
+      <col >
       <col>
       <col>
       <col>
@@ -84,6 +86,7 @@
     </colgroup>
     <thead>
     <tr>
+      <td></td>
       <td>VID</td>
       <td>数据</td>
       <td>时间</td>
@@ -94,9 +97,11 @@
     </tr>
     </thead>
     <tbody>
-    @foreach (var l in Model)
+    @for (var index = 0; index < Model.Count; index++)
     {
+      var l = Model[index];
       <tr id=@l.Id>
+        <td>@index</td>
         <td>@l.Vid</td>
         <td>@l.DanmakuData.Text</td>
         <td>@l.Date.ToString("yyyy-MM-dd hh:mm:ss")</td>
@@ -118,11 +123,18 @@
 <script>
   layui.use(['layer', 'form', 'laydate'],
     function() {
-      var $ = layui.jquery, layer = layui.layer ,form = layui.form, laydate = layui.laydate;
+      var $ = layui.jquery, layer = layui.layer;
+      const form = layui.form;
+      const laydate = layui.laydate;
       var active = {
-        //编辑按钮
+        // 清除筛选
+        btn_clear: function() {
+          top.location.href = '/dplayer/danmakulist';
+        },
+
+        // 编辑按钮
         btn_edit: function() {
-          var id = $(this).parent().parent().parent().attr('id');
+          const id = $(this).parent().parent().parent().attr('id');
           layer.open({
             type: 2,
             title: '编辑',
@@ -137,6 +149,7 @@
             btn: ['关闭'],
             yes: function() {
               layer.closeAll();
+              top.location.reload();
             },
             zIndex: layer.zIndex,
             success: function(layero) {
@@ -150,7 +163,7 @@
           const id = $(this).parent().parent().parent().attr('id');
           fetch(`/dplayer/danmakulist/delete/${id}`).then(res => res.text()).then(res => {
             if (res === 'true') {
-              window.location.reload();
+              top.location.reload();
             }
           });
         }
