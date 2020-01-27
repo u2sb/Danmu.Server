@@ -1,4 +1,3 @@
-
 trigger:
 - doc-source
 
@@ -12,25 +11,18 @@ steps:
 - task: UseNode@1
   inputs:
     checkLatest: true
-- task: Npm@1
+
+- task: UseNode@1
   inputs:
-    command: 'custom'
-    customCommand: 'install hexo-cli -g'
-- task: Npm@1
-  inputs:
-    command: 'custom'
-    customCommand: 'install --pure-lockfile'
-- task: Npm@1
-  inputs:
-    command: 'custom'
-    customCommand: 'install --pure-lockfile'
-    workingDir: 'themes/hexo-theme-doc/'
+    version: '12.x'
+    checkLatest: true
 
 - task: CmdLine@2
   inputs:
     script: |
-      hexo g
-      cd public
+      yarn install --pure-lockfile
+      yarn docs:build
+      cd 'docs/.vuepress/dist'
       touch .nojekyll
       git config --global user.email "$(EMAIL)"
       git config --global user.name "$(USER)"

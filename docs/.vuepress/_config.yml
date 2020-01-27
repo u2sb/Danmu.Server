@@ -1,0 +1,44 @@
+title: 弹幕服务器文档
+description: MonoLogueChi的弹幕服务器文档
+base: /
+head:
+  - type: link
+    rel: icon
+    href: favicon.png
+
+themeConfig:
+  sidebarDepth: 2
+  smoothScroll: true
+  nav:
+    弹幕服务器:
+      简介: /danmaku/
+      编译: /danmaku/make.html
+      安装: /danmaku/install.html
+      API: /danmaku/api.html
+    直播弹幕服务器:
+      简介: /live/
+      安装: /live/install.html
+      API: /live/api.html
+    其他相关文档:
+      其他文档: /other/
+      PostgreSQL安装: /other/pgsql.html
+      MySQL安装: /other/mysql.html
+      感谢: /other/sponsors.html
+  sidebar:
+    /danmaku/:
+      - make.html
+      - install.html
+      - api.html
+    /live/:
+      - install.html
+      - api.html
+    /other/:
+      - pgsql.html
+      - mysql.html
+      - sponsors.html
+  repo: MonoLogueChi/Dplayer.Danmaku
+  repoLabel: GitHub
+  docsDir: docs
+  docsBranch: doc-source
+  editLinks: true
+  editLinkText: 在 GitHub 上编辑此页
