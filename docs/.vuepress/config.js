@@ -50,25 +50,7 @@ const plugins = [
   ["@vuepress/back-to-top"],
   ["@vuepress/nprogress"],
   ["@vuepress/search", { searchMaxSuggestions: 5 }],
-  ["vuepress-plugin-pangu"],
-  [
-    "vuepress-plugin-comment",
-    {
-      choosen: "gitalk",
-      options: {
-        id: "<%- frontmatter.commentid || frontmatter.permalink %>",
-        title: "「Comment」<%- frontmatter.title %>",
-        body:
-          "<%- frontmatter.title %>：<%-window.location.origin %><%- frontmatter.to.path || window.location.pathname %>",
-        clientID: "b26880b4ce394f432a26",
-        clientSecret: "1460cd44beaa179927701ebc782cf7540eae811b",
-        repo: "gitalk",
-        owner: "MonoLogueChi",
-        admin: ["MonoLogueChi"],
-        distractionFreeMode: false
-      }
-    }
-  ]
+  ["vuepress-plugin-pangu"]
 ];
 
 module.exports = merge(config, { configureWebpack, chainWebpack, markdown, plugins });
