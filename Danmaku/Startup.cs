@@ -21,7 +21,7 @@ namespace Danmaku
 	public class Startup
 	{
 		private readonly string DanmakuAllowSpecificOrigins = "_myAllowSpecificOrigins";
-		private readonly string LiveAllowSpecificOrigins = "_myAllowSpecificOrigins";
+		private readonly string LiveAllowSpecificOrigins = "_myLiveAllowSpecificOrigins";
 
 		public Startup(IConfiguration configuration)
 		{
