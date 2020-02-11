@@ -13,10 +13,13 @@ const configureWebpack = {
 };
 
 const chainWebpack = (config, isServer) => {
-  config.module.rule('vue').uses.store.get('vue-loader').store.get('options').transformAssetUrls = {
-    "silentbox-single": 'src'
+  config.module
+    .rule("vue")
+    .uses.store.get("vue-loader")
+    .store.get("options").transformAssetUrls = {
+    "silentbox-single": "src"
   };
-}
+};
 
 const markdown = {
   lineNumbers: true,
@@ -27,18 +30,6 @@ const markdown = {
     md.use(require("markdown-it-footnote"));
     md.use(require("markdown-it-task-lists"));
     md.use(require("markdown-it-attrs"), {});
-
-    md.renderer.rules.image = function(tokens, idx, options, env, self) {
-      var token = tokens[idx],
-        aIndex = token.attrIndex("src"),
-        src = token.attrs[aIndex][1]
-
-      return (
-        '<silentbox-single src="' + src + '" description="">\n' +
-        '  <img src="' + src + '">\n' +
-        "</silentbox-single>\n"
-      );
-    };
   }
 };
 
@@ -49,8 +40,23 @@ const plugins = [
   ["@vuepress/active-header-links"],
   ["@vuepress/back-to-top"],
   ["@vuepress/nprogress"],
+  [
+    "@vuepress/medium-zoom",
+    {
+      options: {
+        margin: 16,
+        background: "#2B312C",
+        scrollOffset: 100
+      }
+    }
+  ],
   ["@vuepress/search", { searchMaxSuggestions: 5 }],
   ["vuepress-plugin-pangu"]
 ];
 
-module.exports = merge(config, { configureWebpack, chainWebpack, markdown, plugins });
+module.exports = merge(config, {
+  configureWebpack,
+  chainWebpack,
+  markdown,
+  plugins
+});

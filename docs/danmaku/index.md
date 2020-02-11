@@ -20,3 +20,6 @@ title: 简介
 
 简单用的话，不高，但也不低，最起码要有500M内存，内存太低了就要不断GC，体验会特别差，推荐2G以上的内存空间。
 
+## 演示
+
+<dplayer src="/video/s_720.mp4" danmaku-id="C6CC6218F1FB8770" danmaku-addition="https://danmaku.xwhite.studio/api/dplayer/v3/bilibili?cid=73636868"/>

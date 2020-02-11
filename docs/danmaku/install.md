@@ -37,7 +37,7 @@ sudo apt-get install aspnetcore-runtime-3.1
 - [x] PostgreSQL (10 或更高)
 - [x] MySQL (8.0 或更高)
 - [x] SQLite
-- [ ] SQLServer (计划中)
+- [ ] SQLServer (计划中，无限期)
 
 数据库相关设置，可以参考[其他文档](/other/)。
 
@@ -48,6 +48,12 @@ sudo apt-get install aspnetcore-runtime-3.1
 64 位 Linux 系统可下载编译好的[二进制文件](https://github.com/MonoLogueChi/Dplayer.Danmaku/releases)，Windows 系统或其他 Linux 系统需要自行[编译](make.md)。
 
 下载后解压，或编译后拷贝到合适的位置，修改配置文件 appsetting.json
+
+```bash
+tar -xvf linux64.tar.xz
+cd Danmaku
+vim appsetting.json
+```
 
 ### 配置文件解释
 
