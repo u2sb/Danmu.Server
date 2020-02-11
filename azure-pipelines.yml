@@ -10,16 +10,13 @@ variables:
 steps:
 - task: UseNode@1
   inputs:
-    checkLatest: true
-
-- task: UseNode@1
-  inputs:
     version: '12.x'
     checkLatest: true
 
 - task: CmdLine@2
   inputs:
     script: |
+      sudo timedatectl set-timezone Asia/Shanghai
       yarn install --pure-lockfile
       yarn docs:build
       cd 'docs/.vuepress/dist'
