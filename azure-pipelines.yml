@@ -17,7 +17,7 @@ steps:
   inputs:
     script: |
       sudo timedatectl set-timezone Asia/Shanghai
-      yarn install --pure-lockfile
+      yarn install
       yarn docs:build
       cd 'docs/.vuepress/dist'
       touch .nojekyll

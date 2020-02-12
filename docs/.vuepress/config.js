@@ -34,7 +34,7 @@ const markdown = {
 };
 
 const plugins = [
-  ["sitemap", { hostname: "https://doc.video.xwhite.studio" }],
+  ["sitemap", { hostname: "https://dandoc.u2sb.top" }],
   ["@vuepress/google-analytics", { ga: "UA-113200574-2" }],
   ["@vuepress/last-updated"],
   ["@vuepress/active-header-links"],
