@@ -3,9 +3,9 @@ using Danmaku.Model;
 using Danmaku.Utils.BiliBili;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Danmaku.Controllers.Dplayer.V3
+namespace Danmaku.Controllers.ArtPlayer.V1
 {
-    [Route("api/dplayer/v3")]
+    [Route("api/artplayer/v1")]
     [ApiController]
     public class BiliBiliController : ControllerBase
     {
@@ -35,10 +35,9 @@ namespace Danmaku.Controllers.Dplayer.V3
             }
 
             return string.IsNullOrWhiteSpace(cid)
-                    ? new DanmakuWebResult(1)
-                    : date.Length == 0
-                            ? new DanmakuWebResult(await _biliBili.GetBiDanmaku(cid))
-                            : new DanmakuWebResult(await _biliBili.GetBiDanmaku(cid, date));
+                    ? null
+                    : await _biliBili.GetBiDanmakuRaw(cid);
+
         }
     }
 }

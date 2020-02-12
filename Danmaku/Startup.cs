@@ -18,92 +18,92 @@ using Microsoft.Extensions.Hosting;
 
 namespace Danmaku
 {
-	public class Startup
-	{
-		private readonly string DanmakuAllowSpecificOrigins = "_myAllowSpecificOrigins";
-		private readonly string LiveAllowSpecificOrigins = "_myLiveAllowSpecificOrigins";
+    public class Startup
+    {
+        private readonly string DanmakuAllowSpecificOrigins = "_myAllowSpecificOrigins";
+        private readonly string LiveAllowSpecificOrigins = "_myLiveAllowSpecificOrigins";
 
-		public Startup(IConfiguration configuration)
-		{
-			Configuration = configuration;
-		}
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
 
-		public IConfiguration Configuration { get; }
+        public IConfiguration Configuration { get; }
 
-		public void ConfigureServices(IServiceCollection services)
-		{
-			//全局配置文件
-			var config = new AppConfiguration(Configuration);
-			services.AddSingleton<IAppConfiguration>(s => config);
+        public void ConfigureServices(IServiceCollection services)
+        {
+            //全局配置文件
+            var config = new AppConfiguration(Configuration);
+            services.AddSingleton<IAppConfiguration>(s => config);
 
-			//数据库
-			services.AddDbContext<DanmakuContext>();
+            //数据库
+            services.AddDbContext<DanmakuContext>();
 
-			//http请求
-			services.AddHttpClient("gzip").ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
-				{AutomaticDecompression = DecompressionMethods.GZip});
-			services.AddHttpClient("deflate").ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
-				{AutomaticDecompression = DecompressionMethods.Deflate});
+            //http请求
+            services.AddHttpClient("gzip").ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
+                    {AutomaticDecompression = DecompressionMethods.GZip});
+            services.AddHttpClient("deflate").ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
+                    {AutomaticDecompression = DecompressionMethods.Deflate});
 
-			services.AddSingleton<IBiliBiliHelp, BiliBiliHelp>();
-			services.AddSingleton<IDanmakuDao, DanmakuDao>();
-			services.AddControllersWithViews();
-			services.AddSignalR();
+            services.AddSingleton<IBiliBiliHelp, BiliBiliHelp>();
+            services.AddSingleton<IDanmakuDao, DanmakuDao>();
+            services.AddControllersWithViews();
+            services.AddSignalR();
 
-			services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-				.AddCookie(options =>
-				{
-					options.LoginPath = "/account/login";
-					options.LogoutPath = "/account/logout";
-					options.Cookie.Name = "DCookie";
-					options.Cookie.MaxAge = TimeSpan.FromHours(1);
-				});
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                    .AddCookie(options =>
+                     {
+                         options.LoginPath = "/account/login";
+                         options.LogoutPath = "/account/logout";
+                         options.Cookie.Name = "DCookie";
+                         options.Cookie.MaxAge = TimeSpan.FromHours(1);
+                     });
 
-			services.AddTransient<IClaimsTransformation, ClaimsTransformer>();
+            services.AddTransient<IClaimsTransformation, ClaimsTransformer>();
 
-			services.AddCors(options =>
-			{
-				options.AddPolicy(DanmakuAllowSpecificOrigins, builder =>
-					builder.WithOrigins(config.GetAppSetting().WithOrigins)
-						.SetIsOriginAllowedToAllowWildcardSubdomains().WithMethods("GET", "POST", "OPTIONS")
-						.AllowAnyHeader());
+            services.AddCors(options =>
+            {
+                options.AddPolicy(DanmakuAllowSpecificOrigins, builder =>
+                        builder.WithOrigins(config.GetAppSetting().WithOrigins)
+                               .SetIsOriginAllowedToAllowWildcardSubdomains().WithMethods("GET", "POST", "OPTIONS")
+                               .AllowAnyHeader());
 
-				options.AddPolicy(LiveAllowSpecificOrigins, builder =>
-					builder.WithOrigins(config.GetAppSetting().LiveWithOrigins)
-						.SetIsOriginAllowedToAllowWildcardSubdomains().WithMethods("GET", "POST", "OPTIONS")
-						.AllowAnyHeader().AllowCredentials());
-			});
-		}
+                options.AddPolicy(LiveAllowSpecificOrigins, builder =>
+                        builder.WithOrigins(config.GetAppSetting().LiveWithOrigins)
+                               .SetIsOriginAllowedToAllowWildcardSubdomains().WithMethods("GET", "POST", "OPTIONS")
+                               .AllowAnyHeader().AllowCredentials());
+            });
+        }
 
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-		{
-			if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
 
-			app.UseCors(DanmakuAllowSpecificOrigins);
+            app.UseCors(DanmakuAllowSpecificOrigins);
 
-			app.UseStaticFiles();
+            app.UseStaticFiles();
 
-			app.UseForwardedHeaders(new ForwardedHeadersOptions
-			{
-				ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-			});
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
 
-			app.UseRouting();
-			app.UseAuthentication();
-			app.UseAuthorization();
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
-			using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-			{
-				var context = serviceScope.ServiceProvider.GetRequiredService<DanmakuContext>();
-				context.Database.EnsureCreated();
-			}
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetRequiredService<DanmakuContext>();
+                context.Database.EnsureCreated();
+            }
 
-			app.UseEndpoints(endpoints =>
-			{
-				endpoints.MapControllers();
-				endpoints.MapDefaultControllerRoute();
-				endpoints.MapHub<LiveDanmaku>("api/dplayer/live").RequireCors(LiveAllowSpecificOrigins);
-			});
-		}
-	}
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapDefaultControllerRoute();
+                endpoints.MapHub<LiveDanmaku>("api/dplayer/live").RequireCors(LiveAllowSpecificOrigins);
+            });
+        }
+    }
 }

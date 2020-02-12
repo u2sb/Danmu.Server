@@ -47,7 +47,7 @@ namespace Danmaku.Model
 
 	public class DanmakuData
 	{
-		public float Time { get; set; }
+        public float Time { get; set; }
 
 		public int Type { get; set; }
 

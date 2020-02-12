@@ -43,5 +43,12 @@ namespace Danmaku.Utils.BiliBili
         /// <param name="date">历史日期</param>
         /// <returns>弹幕列表</returns>
         Task<List<DanmakuData>> GetBiDanmaku(string cid, string[] date);
+
+        /// <summary>
+        /// 获取弹幕列表
+        /// </summary>
+        /// <param name="cid">视频的cid</param>
+        /// <returns>原始弹幕</returns>
+        Task<string> GetBiDanmakuRaw(string cid);
     }
 }
