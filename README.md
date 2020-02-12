@@ -58,8 +58,8 @@ Dplayer弹幕接口：
 
 ## ArtPlayer弹幕
 
-普通弹幕接口 https://danmaku.xwhite.studio/api/artplayer/v1/?id=C6CC6218F1FB8770
-BiliBili弹幕代理
+普通弹幕接口 https://danmaku.xwhite.studio/api/artplayer/v1/?id=C6CC6218F1FB8770  
+BiliBili弹幕代理  
 - https://danmaku.xwhite.studio/api/artplayer/v1/bilibili/?cid=1176840
 - https://danmaku.xwhite.studio/api/artplayer/v1/bilibili?aid=810872&p=1
 
