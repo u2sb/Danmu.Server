@@ -38,7 +38,7 @@ cd Dplayer.Danmaku
 
 ## 编译
 
-> 因为项目开启 R2R，所以不能交叉编译，想要交叉编译需要关闭 R2R，具体方法为，在 Danmaku/Danmaku.csproj 中找到 <PublishReadyToRun>true</PublishReadyToRun>，删掉这一行，或者改为 false。
+> 因为项目开启 R2R，所以不能交叉编译，想要交叉编译需要关闭 R2R，具体方法为，在 Danmaku/Danmaku.csproj 中找到 `<PublishReadyToRun>true</PublishReadyToRun>`，删掉这一行，或者改为 false。
 
 ### Linux下编译
 
