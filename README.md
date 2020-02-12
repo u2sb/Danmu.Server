@@ -2,7 +2,7 @@
 
 ## 文档
 
-[https://doc.video.xwhite.studio](https://doc.video.xwhite.studio)
+[https://dandoc.u2sb.top](https://dandoc.u2sb.top)
 
 ## 这是什么？
 
@@ -38,7 +38,7 @@
 ## 示例？
 
 简单给一个吧   
-视频：[https://doc.video.xwhite.studio/danmaku/index.html](https://doc.video.xwhite.studio/danmaku/index.html)   
+视频：[https://dandoc.u2sb.top/danmaku/index.html](https://dandoc.u2sb.top/danmaku/index.html)   
 普通弹幕接口 https://danmaku.xwhite.studio/api/dplayer/v3/?id=C6CC6218F1FB8770 （视频设定的id，最大长度32，推荐使用视频的CRC等唯一值作为id）  
 BiliBili弹幕接口：  
 - https://danmaku.xwhite.studio/api/dplayer/v3/bilibili/?cid=28019559
