@@ -26,16 +26,16 @@ themeConfig:
       感谢: /other/sponsors.html
   sidebar:
     /danmaku/:
-      - make.html
-      - install.html
-      - api.html
+      - make
+      - install
+      - api
     /live/:
-      - install.html
-      - api.html
+      - install
+      - api
     /other/:
-      - pgsql.html
-      - mysql.html
-      - sponsors.html
+      - pgsql
+      - mysql
+      - sponsors
   repo: MonoLogueChi/Dplayer.Danmaku
   repoLabel: GitHub
   docsDir: docs

@@ -34,3 +34,7 @@ title: API
   `https://danmaku.xwhite.studio/api/artplayer/v1/bilibili/?cid=1176840`
 - `/api/artplayer/v1/bilibili?aid=[aid]&p=[p]` ，例如  
   `https://danmaku.xwhite.studio/api/artplayer/v1/bilibili?aid=810872&p=1`
+
+<ClientOnly>
+  <Vssue title="API-Danmaku | 弹幕服务器文档" />
+</ClientOnly>

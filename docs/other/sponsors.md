@@ -44,3 +44,7 @@ export default {
   }
 }
 </script>
+
+<ClientOnly>
+  <Vssue title="捐赠-Other | 弹幕服务器文档" />
+</ClientOnly>

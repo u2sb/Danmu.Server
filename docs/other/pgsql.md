@@ -1,5 +1,5 @@
 ---
-title: PostgreSQL
+title: PostgreSQL安装
 ---
 
 > 参考文档：[https://www.postgresql.org/download/](https://www.postgresql.org/download/)
@@ -41,3 +41,7 @@ ALTER USER postgres WITH PASSWORD 'password';
 ```
 
 剩下就是创建新的用户和数据库，到这一步自行百度就可以了。
+
+<ClientOnly>
+  <Vssue title="PostgreSQL-Other | 弹幕服务器文档" />
+</ClientOnly>

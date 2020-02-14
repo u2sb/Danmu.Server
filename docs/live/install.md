@@ -55,3 +55,7 @@ title: 安装
 需要引入我写的 js `livedanmaku.js`，然后配置仿照我上面的写就好了，弹幕服务器地址 `https://danmaku.xwhite.studio/api/dplayer/live`，`cd30ae05-4ad5-5135-bd6d-337ac0de102e` 是你的房间，每个直播间需要唯一，建议使用 uuid，如果是你自己搭建的弹幕服务器，路由都是你自己配的。
 
 通信协议是使用WebSocket，所以需要在反向代理那一层做好设置，允许WebSocket连接。
+
+<ClientOnly>
+  <Vssue title="安装-Live | 弹幕服务器文档" />
+</ClientOnly>

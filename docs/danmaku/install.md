@@ -94,7 +94,7 @@ vim appsetting.json
 具体解释一下
 
 - Logging: 无需更改
-- Urls: `string` 监听地址，Linux 服务器使用 Socket，修改无效，多个地址中间使用 `;` 分割
+- Urls: `string` 监听地址，Linux 服务器使用Unix域套接字，修改无效，多个地址中间使用 `;` 分割
 - AllowedHosts: `string` 允许访问地址，一般不需要修改
 - WithOrigins: `string[]` 允许跨域地址，可以使用通配符匹配
 - LiveWithOrigins: `string[]` 直播弹幕服务允许跨域地址，不可以使用通配符匹配
@@ -236,3 +236,6 @@ stdout_logfile = /www/caddy/log/out.log
   });
 </script>
 ```
+<ClientOnly>
+  <Vssue title="安装-Danmaku | 弹幕服务器文档" />
+</ClientOnly>

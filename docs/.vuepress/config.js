@@ -12,15 +12,6 @@ const configureWebpack = {
   }
 };
 
-const chainWebpack = (config, isServer) => {
-  config.module
-    .rule("vue")
-    .uses.store.get("vue-loader")
-    .store.get("options").transformAssetUrls = {
-    "silentbox-single": "src"
-  };
-};
-
 const markdown = {
   lineNumbers: true,
   extendMarkdown: md => {
@@ -51,12 +42,18 @@ const plugins = [
     }
   ],
   ["@vuepress/search", { searchMaxSuggestions: 5 }],
-  ["vuepress-plugin-pangu"]
+  ["vuepress-plugin-pangu"],
+  ['@vssue/vuepress-plugin-vssue', {
+    platform: 'github-v4',
+    owner: 'MonoLogueChi',
+    repo: 'vssue',
+    clientId: 'b26880b4ce394f432a26',
+    clientSecret: '1460cd44beaa179927701ebc782cf7540eae811b',
+  }]
 ];
 
 module.exports = merge(config, {
   configureWebpack,
-  chainWebpack,
   markdown,
   plugins
 });

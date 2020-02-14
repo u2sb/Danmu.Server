@@ -29,3 +29,7 @@ title: 简介
 ## 演示
 
 <dplayer src="/video/s_720.mp4" danmaku-id="C6CC6218F1FB8770" danmaku-addition="https://danmaku.xwhite.studio/api/dplayer/v3/bilibili?cid=73636868"/>
+
+<ClientOnly>
+  <Vssue title="简介-Danmaku | 弹幕服务器文档" />
+</ClientOnly>
