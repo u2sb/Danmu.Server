@@ -68,3 +68,7 @@ BiliBili弹幕代理
 - [ ] 管理面板
 - [x] 直播弹幕
 - [x] BiliBili历史弹幕叠加
+
+## 反馈
+
+![](https://s2.ax1x.com/2020/02/14/1jAh1U.png)
