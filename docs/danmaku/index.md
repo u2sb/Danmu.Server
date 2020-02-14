@@ -30,6 +30,14 @@ title: 简介
 
 <dplayer src="/video/s_720.mp4" danmaku-id="C6CC6218F1FB8770" danmaku-addition="https://danmaku.xwhite.studio/api/dplayer/v3/bilibili?cid=73636868"/>
 
+## 反馈
+
+[QQ 群](https://shang.qq.com/wpa/qunwpa?idkey=f2a6dba8d97899969101dd29210d972f04febd0ff8cf08ed50dd27790f23c9a9) 159891059
+
+![](@img/danmaku/qq.png =300x300)
+
 <ClientOnly>
   <Vssue title="简介-Danmaku | 弹幕服务器文档" />
 </ClientOnly>
+
+

@@ -21,6 +21,7 @@ const markdown = {
     md.use(require("markdown-it-footnote"));
     md.use(require("markdown-it-task-lists"));
     md.use(require("markdown-it-attrs"), {});
+    md.use(require("markdown-it-imsize"));
   }
 };
 
