@@ -56,6 +56,10 @@ title: 安装
 
 通信协议是使用WebSocket，所以需要在反向代理那一层做好设置，允许WebSocket连接。
 
+livedanmaku.js:
+
+<<< @/docs/.vuepress/public/js/livedanmaku.js{highlightLines}
+
 <ClientOnly>
   <Vssue title="安装-Live | 弹幕服务器文档" />
 </ClientOnly>
