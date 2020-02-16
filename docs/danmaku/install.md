@@ -12,6 +12,10 @@ title: 安装
 
 ## 安装 .net Core
 
+:::tip 提示
+使用独立部署方式无需安装 `asp .net core runtime`
+:::
+
 以下所有安装过程以 Debian10 为例，其他系统请自行判断是否需要其他步骤。
 
 参考 [安装 ASP.NET Core 运行时](https://docs.microsoft.com/zh-cn/dotnet/core/install/linux-package-manager-debian10#install-the-aspnet-core-runtime)
@@ -41,11 +45,17 @@ sudo apt-get install aspnetcore-runtime-3.1
 
 数据库相关设置，可以参考[其他文档](/other/)。
 
-**推荐使用PostgreSQL**，程序开发就是以PostgreSQL为主，SQLite做兼容性测试，MySQL不能保证功能 100% 可用。
+**推荐使用 PostgreSQL**，程序开发就是以 PostgreSQL 为主，SQLite 做兼容性测试，MySQL 不能保证功能 100% 可用。
 
 ## 配置文件
 
-64 位 Linux 系统可下载编译好的[二进制文件](https://github.com/MonoLogueChi/Dplayer.Danmaku/releases)，Windows 系统或其他 Linux 系统需要自行[编译](make.md)。
+下载编译好的[二进制文件](https://github.com/MonoLogueChi/Dplayer.Danmaku/releases)，Windows 系统或其他 Linux 系统需要自行[编译](make.md)。
+
+编译文件说明：
+
+- `arm` : arm 平台
+- `r2r` : ReadyToRun 编译选项，预先 AOT 编译，启动更快，但是二进制文件更大，推荐使用
+- `scd` : 独立部署，无需额外安装 `asp .net core runtime`，开箱即用
 
 下载后解压，或编译后拷贝到合适的位置，修改配置文件 appsetting.json
 
@@ -94,7 +104,7 @@ vim appsetting.json
 具体解释一下
 
 - Logging: 无需更改
-- Urls: `string` 监听地址，Linux 服务器使用Unix域套接字，修改无效，多个地址中间使用 `;` 分割
+- Urls: `string` 监听地址，Linux 服务器使用 Unix 域套接字，修改无效，多个地址中间使用 `;` 分割
 - AllowedHosts: `string` 允许访问地址，一般不需要修改
 - WithOrigins: `string[]` 允许跨域地址，可以使用通配符匹配
 - LiveWithOrigins: `string[]` 直播弹幕服务允许跨域地址，不可以使用通配符匹配
@@ -205,7 +215,10 @@ stdout_logfile = /www/caddy/log/out.log
 ## Dplayer 的简单应用
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dplayer/dist/DPlayer.min.css" />
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/dplayer/dist/DPlayer.min.css"
+/>
 <script src="https://cdn.jsdelivr.net/npm/dplayer/dist/DPlayer.min.js"></script>
 <div id="dplayer"></div>
 <script>
@@ -236,6 +249,7 @@ stdout_logfile = /www/caddy/log/out.log
   });
 </script>
 ```
+
 <ClientOnly>
   <Vssue title="安装-Danmaku | 弹幕服务器文档" />
 </ClientOnly>

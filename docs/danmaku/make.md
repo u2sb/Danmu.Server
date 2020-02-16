@@ -2,7 +2,7 @@
 title: 编译
 ---
 
-Linux环境已有预编译版本发布，无需自己编译，可以直接看[安装](install.md)部分，其他操作系统请自行编译。
+正常情况下[下载](https://github.com/MonoLogueChi/Dplayer.Danmaku/releases)编译完成的版本即可，无需自己编译，可以直接看[安装](install.md)部分，如有特殊需要，请参考以下文本。
 
 Windows 环境下推荐使用 Visual Studio ， Linux 环境下可以按照下面的教程编译。
 
@@ -40,15 +40,13 @@ cd Dplayer.Danmaku
 
 > 因为项目开启 R2R，所以不能交叉编译，想要交叉编译需要关闭 R2R，具体方法为，在 Danmaku/Danmaku.csproj 中找到 `<PublishReadyToRun>true</PublishReadyToRun>`，删掉这一行，或者改为 false。
 
-### Linux下编译
+### 编译Linux版本
 
 ```bash
 dotnet publish -c Release-Linux64 -r linux-x64 --self-contained false --output publish
-
-dotnet publish -c Release-Linux32 -r linux-x86 --self-contained false --output publish
 ```
 
-### Windows下编译
+### 编译Windows版本
 
 ```bash
 dotnet publish -c Release-Win -r win-x64 --self-contained false --output publish
