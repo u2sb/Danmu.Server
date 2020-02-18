@@ -4,7 +4,7 @@ base: /
 head:
   - type: link
     rel: icon
-    href: favicon.png
+    href: /favicon.png
 
 themeConfig:
   sidebarDepth: 2
