@@ -15,15 +15,14 @@ namespace Danmaku.Model
     public class BilibiliDanmakuData
     {
         public BilibiliDanmakuData() { }
+
         public BilibiliDanmakuData(List<DanmakuData> ds)
         {
-
             D = ds.Select(d => new iD
             {
-                P = $"{d.Time},1,25,{d.Color},1512931469,{d.Type},354b5ade,4028451968",
+                P = $"{d.Time},{(d.Type == 2 ? 4 : d.Type == 1 ? 5 : 1)},25,{d.Color},1512931469,1,354b5ade,4028451968",
                 Value = d.Text
             }).ToArray();
-
         }
 
         [XmlElement("d")] public iD[] D { get; set; }
@@ -37,11 +36,12 @@ namespace Danmaku.Model
             return D.Select(s =>
             {
                 var d = s.P.Split(",");
+                var t = int.Parse(d[1]);
                 return new DanmakuData
                 {
                     Time = float.Parse(d[0]),
                     Color = int.Parse(d[3]),
-                    Type = int.Parse(d[5]),
+                    Type = t == 4 ? 2 : t == 5 ? 1 : 0,
                     Author = "",
                     Text = s.Value
                 };
@@ -50,9 +50,9 @@ namespace Danmaku.Model
 
         public string ToXml()
         {
-            using MemoryStream ms = new MemoryStream();
-            XmlSerializer x = new XmlSerializer(typeof(BilibiliDanmakuData));
-            x.Serialize(ms,this);
+            using var ms = new MemoryStream();
+            var x = new XmlSerializer(typeof(BilibiliDanmakuData));
+            x.Serialize(ms, this);
             return Encoding.UTF8.GetString(ms.ToArray());
         }
     }
