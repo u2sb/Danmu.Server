@@ -22,6 +22,8 @@ bld/
 [Bb]in/
 [Oo]bj/
 [Ll]og/
+dist/
+wwwroot/
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
@@ -328,5 +330,14 @@ ASALocalRun/
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
 
-
+# DetaBase
 *.db
+
+# local env files
+.env.local
+.env.*.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

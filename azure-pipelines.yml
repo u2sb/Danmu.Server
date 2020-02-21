@@ -11,6 +11,9 @@ pool:
   vmImage: "ubuntu-latest"
 
 steps:
+  - task: UseNode@1
+    inputs:
+      version: "12.x"
   - task: CmdLine@2
     inputs:
       script: |
@@ -21,7 +24,12 @@ steps:
         sudo apt-get install apt-transport-https
         sudo apt-get update
         sudo apt-get install dotnet-sdk-3.1
-        dotnet remove Danmaku package Microsoft.VisualStudio.Web.CodeGeneration.Design
+        cd $(Build.SourcesDirectory)/Danmaku
+        dotnet remove package Microsoft.VisualStudio.Web.CodeGeneration.Design
+        dotnet remove package VueCliMiddleware
+        cd clientapp
+        npm install
+        npm run build
 
   ##编译Linux版
   - task: DotNetCoreCLI@2
@@ -35,7 +43,7 @@ steps:
     inputs:
       command: publish
       publishWebProjects: True
-      arguments: "-c Release-Linux64 -r linux-x64 --self-contained true --output $(Build.ArtifactStagingDirectory)/Danmaku64-R2R-SCD"
+      arguments: "-c Release-Linux64 -r linux-x64 --self-contained true -p:PublishSingleFile=true --output $(Build.ArtifactStagingDirectory)/Danmaku64-R2R-SCD"
       zipAfterPublish: False
 
   - task: ArchiveFiles@2
@@ -56,10 +64,11 @@ steps:
       archiveFile: "$(Build.ArtifactStagingDirectory)/linux64.r2r.scd.tar.xz"
       replaceExistingArchive: true
 
+  ##删除R2R标志
   - task: CmdLine@2
     inputs:
       script: |
-        sed -i 's/<PublishReadyToRun>true/<PublishReadyToRun>false/g' ./Danmaku/Danmaku.csproj
+        sed -i 's/<PublishReadyToRun>true/<PublishReadyToRun>false/g' $(Build.SourcesDirectory)/Danmaku/Danmaku.csproj
         rm -r ./Danmaku/bin
 
   ##编译Linux版
@@ -74,7 +83,7 @@ steps:
     inputs:
       command: publish
       publishWebProjects: True
-      arguments: "-c Release-Linux64 -r linux-x64 --self-contained true --output $(Build.ArtifactStagingDirectory)/Danmaku64-SCD"
+      arguments: "-c Release-Linux64 -r linux-x64 --self-contained true -p:PublishSingleFile=true --output $(Build.ArtifactStagingDirectory)/Danmaku64-SCD"
       zipAfterPublish: False
 
   - task: ArchiveFiles@2
@@ -107,7 +116,7 @@ steps:
     inputs:
       command: publish
       publishWebProjects: True
-      arguments: "-c Release-Linux32 -r linux-arm --self-contained true --output $(Build.ArtifactStagingDirectory)/Danmaku32-Arm-SCD"
+      arguments: "-c Release-Linux32 -r linux-arm --self-contained true -p:PublishSingleFile=true --output $(Build.ArtifactStagingDirectory)/Danmaku32-Arm-SCD"
       zipAfterPublish: False
 
   - task: ArchiveFiles@2
@@ -140,7 +149,7 @@ steps:
     inputs:
       command: publish
       publishWebProjects: True
-      arguments: "-c Release-Win -r win-x64 --self-contained true --output $(Build.ArtifactStagingDirectory)/Danmaku64-Win-SCD"
+      arguments: "-c Release-Win -r win-x64 --self-contained true -p:PublishSingleFile=true --output $(Build.ArtifactStagingDirectory)/Danmaku64-Win-SCD"
       zipAfterPublish: False
 
   - task: ArchiveFiles@2

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net;
 using System.Net.Http;
 using Danmaku.Model;
@@ -15,6 +15,9 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+#if DEBUG
+using VueCliMiddleware;
+#endif
 
 namespace Danmaku
 {
@@ -81,14 +84,16 @@ namespace Danmaku
 
             app.UseCors(DanmakuAllowSpecificOrigins);
 
+            app.UseDefaultFiles();
             app.UseStaticFiles();
+
+            app.UseRouting();
 
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
 
-            app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
 
@@ -104,6 +109,15 @@ namespace Danmaku
                 endpoints.MapDefaultControllerRoute();
                 endpoints.MapHub<LiveDanmaku>("api/dplayer/live").RequireCors(LiveAllowSpecificOrigins);
             });
+
+#if DEBUG
+            if (env.IsDevelopment())
+                app.UseSpa(spa =>
+                {
+                    spa.Options.SourcePath = "ClientApp";
+                    spa.UseVueCli();
+                });
+#endif
         }
     }
 }
