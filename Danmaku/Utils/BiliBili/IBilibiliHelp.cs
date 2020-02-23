@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Danmaku.Model;
 
@@ -49,6 +50,6 @@ namespace Danmaku.Utils.BiliBili
         /// </summary>
         /// <param name="cid">视频的cid</param>
         /// <returns>原始弹幕</returns>
-        Task<string> GetBiDanmakuRaw(string cid);
+        Task<Stream> GetBiDanmakuRaw(string cid);
     }
 }

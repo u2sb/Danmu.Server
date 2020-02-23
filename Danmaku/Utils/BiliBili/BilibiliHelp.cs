@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using System.Xml;
-using System.Xml.Serialization;
 using Danmaku.Model;
 using Danmaku.Utils.AppConfiguration;
 
@@ -13,20 +11,22 @@ namespace Danmaku.Utils.BiliBili
 {
     public class BiliBiliHelp : IBiliBiliHelp
     {
-        private readonly IHttpClientFactory _httpClientFactory;
         private readonly AppSettings _settings;
+        private readonly HttpClient _deflateClient;
+        private readonly HttpClient _gzipClient;
 
         public BiliBiliHelp(IAppConfiguration appConfiguration, IHttpClientFactory httpClientFactory)
         {
             _settings = appConfiguration.GetAppSetting();
-            _httpClientFactory = httpClientFactory;
+            _deflateClient = httpClientFactory.CreateClient("deflate");
+            _gzipClient = httpClientFactory.CreateClient("gzip");
+            if (!string.IsNullOrEmpty(_settings.BCookie)) _deflateClient.DefaultRequestHeaders.Add("Cookie", _settings.BCookie);
         }
 
         public async Task<List<BilibiliPage>> GetBilibiliPage(string aid)
         {
-            var client = _httpClientFactory.CreateClient("gzip");
-            var result = await client.GetStringAsync($"https://www.bilibili.com/widget/getPageList?aid={aid}");
-            var pages = JsonSerializer.Deserialize<List<BilibiliPage>>(result);
+            var result = _gzipClient.GetStreamAsync($"https://www.bilibili.com/widget/getPageList?aid={aid}");
+            var pages = await JsonSerializer.DeserializeAsync<List<BilibiliPage>>(await result);
             return pages;
         }
 
@@ -47,36 +47,28 @@ namespace Danmaku.Utils.BiliBili
 
         public async Task<List<DanmakuData>> GetBiDanmaku(string cid)
         {
-            return (await GetBiDanmakuDataAsync($"https://api.bilibili.com/x/v1/dm/list.so?oid={cid}", null)).ToList();
+            return (await GetBiDanmakuDataAsync($"https://api.bilibili.com/x/v1/dm/list.so?oid={cid}")).ToList();
         }
 
-        public async Task<List<DanmakuData>> GetBiDanmaku(string cid, string[] date)
+        public Task<List<DanmakuData>> GetBiDanmaku(string cid, string[] date)
         {
-            return await Task.Run(() => date.Select(async s => await GetBiDanmakuDataAsync(
-                    $"https://api.bilibili.com/x/v2/dm/history?type=1&oid={cid}&date={s}",
-                    _settings.BCookie)).SelectMany(s => s.Result).ToList());
+            return Task.Run(() => date.Select(async s => await GetBiDanmakuDataAsync(
+                    $"https://api.bilibili.com/x/v2/dm/history?type=1&oid={cid}&date={s}")).SelectMany(s => s.Result).ToList());
         }
 
-        public async Task<string> GetBiDanmakuRaw(string cid)
+        public Task<Stream> GetBiDanmakuRaw(string cid)
         {
-            return await GetBiDanmakuDataRawAsync($"https://api.bilibili.com/x/v1/dm/list.so?oid={cid}", null);
+            return GetBiDanmakuDataRawAsync($"https://api.bilibili.com/x/v1/dm/list.so?oid={cid}");
         }
 
-
-
-        private async Task<string> GetBiDanmakuDataRawAsync(string url, string cookie)
+        private Task<Stream> GetBiDanmakuDataRawAsync(string url)
         {
-            var client = _httpClientFactory.CreateClient("deflate");
-            if (!string.IsNullOrEmpty(cookie)) client.DefaultRequestHeaders.Add("Cookie", cookie);
-            return await client.GetStringAsync(url);
+            return _deflateClient.GetStreamAsync(url);
         }
 
-        private async Task<IEnumerable<DanmakuData>> GetBiDanmakuDataAsync(string url, string cookie)
+        private async Task<IEnumerable<DanmakuData>> GetBiDanmakuDataAsync(string url)
         {
-            var result = GetBiDanmakuDataRawAsync(url, cookie);
-            using var sr = new StringReader(await result);
-            var mySerializer = new XmlSerializer(typeof(BilibiliDanmakuData));
-            var bd = (BilibiliDanmakuData) mySerializer.Deserialize(sr);
+            var bd = new BilibiliDanmakuData(await GetBiDanmakuDataRawAsync(url));
             return bd.ToDanmakuDataList();
         }
     }

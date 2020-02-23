@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+using System.IO;
+using System.Threading.Tasks;
 using Danmaku.Model;
 using Danmaku.Utils.BiliBili;
 using Microsoft.AspNetCore.Mvc;
@@ -16,9 +17,8 @@ namespace Danmaku.Controllers.ArtPlayer.V1
             _biliBili = biliBiliHelp;
         }
 
-        // GET: api/dplayer/v3/bilibili
         [HttpGet("bilibili")]
-        public async Task<string> Get()
+        public async Task<Stream> Get()
         {
             var request = Request.Query;
 
@@ -27,10 +27,10 @@ namespace Danmaku.Controllers.ArtPlayer.V1
             if (string.IsNullOrEmpty(cid))
             {
                 var aid = request["aid"];
-                if (string.IsNullOrEmpty(aid)) return new DanmakuWebResult(1);
+                if (string.IsNullOrEmpty(aid)) return null;
                 string p = request["p"];
                 p = string.IsNullOrEmpty(p) ? "1" : p;
-                if (!int.TryParse(p, out var page)) return new DanmakuWebResult(1);
+                if (!int.TryParse(p, out var page)) return null;
                 cid = (await _biliBili.GetCid(aid, page)).ToString();
             }
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -16,6 +16,10 @@ namespace Danmaku.Model
     {
         public BilibiliDanmakuData() { }
 
+        /// <summary>
+        ///     从Dplayer弹幕格式转换
+        /// </summary>
+        /// <param name="ds"></param>
         public BilibiliDanmakuData(List<DanmakuData> ds)
         {
             D = ds.Select(d => new iD
@@ -23,6 +27,17 @@ namespace Danmaku.Model
                 P = $"{d.Time},{(d.Type == 2 ? 4 : d.Type == 1 ? 5 : 1)},25,{d.Color},1512931469,1,354b5ade,4028451968",
                 Value = d.Text
             }).ToArray();
+        }
+
+        /// <summary>
+        ///     反序列化
+        /// </summary>
+        /// <param name="s"></param>
+        public BilibiliDanmakuData(Stream s)
+        {
+            var serializer = new XmlSerializer(typeof(BilibiliDanmakuData));
+            var bd = (BilibiliDanmakuData) serializer.Deserialize(s);
+            D = bd.D;
         }
 
         [XmlElement("d")] public iD[] D { get; set; }
@@ -48,6 +63,10 @@ namespace Danmaku.Model
             });
         }
 
+        /// <summary>
+        ///     转xml格式
+        /// </summary>
+        /// <returns></returns>
         public string ToXml()
         {
             using var ms = new MemoryStream();
