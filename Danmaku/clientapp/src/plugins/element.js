@@ -11,7 +11,8 @@ import {
   Select,
   Form,
   FormItem,
-  Input
+  Input,
+  Link,
 } from 'element-ui'
 
 Vue.use(Container)
@@ -24,3 +25,4 @@ Vue.use(Select)
 Vue.use(Form)
 Vue.use(FormItem)
 Vue.use(Input)
+Vue.use(Link)

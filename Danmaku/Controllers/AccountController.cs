@@ -1,16 +1,21 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Danmaku.Model;
 using Danmaku.Utils.AppConfiguration;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Danmaku.Controllers
 {
-    
-    public class AccountController : Controller
+    [Route("api/")]
+    [ApiController]
+    public class AccountController : ControllerBase
     {
         private readonly Admin _admin;
 
@@ -19,18 +24,20 @@ namespace Danmaku.Controllers
             _admin = configuration.GetAppSetting().Admin;
         }
 
-        public ActionResult Login()
+        [HttpPost("login")]
+        public async Task<dynamic> Login([FromBody] dynamic data)
         {
-            return View();
-        }
+            var userName = data.TryGetProperty("name", out JsonElement a) ? a.GetString() : null;
+            var password = data.TryGetProperty("password", out JsonElement b) ? b.GetString() : null;
+            var returnUrl = data.TryGetProperty("url", out JsonElement c) ? c.GetString() : null;
 
-        [HttpPost]
-        public async Task<IActionResult> Login(string userName, string password, string returnUrl = null)
-        {
-            ViewData["ReturnUrl"] = returnUrl;
+            using var md5Hash = MD5.Create();
+            var md5Data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(_admin.Password));
+            var sBuilder = new StringBuilder();
+            foreach (var t in md5Data)
+                sBuilder.Append(t.ToString("x2"));
 
-            // Normally Identity handles sign in, but you can do it directly
-            if (userName == _admin.User && password == _admin.Password)
+            if (userName == _admin.User && password == sBuilder.ToString())
             {
                 var claims = new List<Claim>
                 {
@@ -38,26 +45,22 @@ namespace Danmaku.Controllers
                     new Claim("role", "Member")
                 };
 
-                await HttpContext.SignInAsync(new ClaimsPrincipal(new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme, "user", "role")));
+                await HttpContext.SignInAsync(new ClaimsPrincipal(new ClaimsIdentity(claims,
+                        CookieAuthenticationDefaults.AuthenticationScheme, "user", "role")));
 
-                if (Url.IsLocalUrl(returnUrl))
-                {
-                    return Redirect(returnUrl);
-                }
-                else
-                {
-                    return Redirect("/");
-                }
+                if (Url.IsLocalUrl(returnUrl)) return new {code = 0, url = returnUrl};
+                return new {code = 0, url = "/"};
             }
 
-            return View();
+            return new {code = 1, url = returnUrl};
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Logout()
+        [HttpGet("logout")]
+        public void Logout()
         {
-            await HttpContext.SignOutAsync();
-            return Redirect("/");
+            HttpContext.SignOutAsync();
+            Response.Headers.Add("Location", "/");
+            Response.StatusCode = 302;
         }
     }
 }

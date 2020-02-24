@@ -20,12 +20,7 @@
         <el-col :span="12">
           <div style="float: right;">
             <div class="p-box">
-              <el-form
-                ref="form"
-                :model="form"
-                :rules="rules"
-                label-width="80px"
-              >
+              <el-form ref="form" :model="form" :rules="rules" label-width="80px">
                 <el-form-item label="用户名" prop="name">
                   <el-input v-model="form.name" placeholder="请输入用户名"></el-input>
                 </el-form-item>
@@ -46,6 +41,9 @@
 </template>
 
 <script>
+import crypto from 'crypto'
+import {Notification} from 'element-ui'
+
 export default {
   name: 'login',
   data() {
@@ -64,10 +62,26 @@ export default {
     onSubmit(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          alert('submit!')
-          window.console.log(this.form.name)
+          let md5 = crypto.createHash('md5')
+          let formData = {
+            name: this.form.name,
+            password: md5.update(this.form.password).digest('hex'),
+            url: this.$route.query.url || '/'
+          }
+          window.console.log(formData)
+          this.$http.post('/api/login', formData).then(res => {
+            let dataObj = eval(res.data)
+            if (dataObj.code === 0) {
+              this.$router.push({ path: dataObj.url })
+            } else {
+              Notification.error({
+                title: '错误',
+                message: '用户名或密码错误',
+                position: 'bottom-right'
+              })
+            }
+          })
         } else {
-          window.console.log('error submit!!')
           return false
         }
       })
@@ -97,7 +111,7 @@ export default {
 .header-link {
   margin-right: 30px;
   color: white;
-  text-decoration : none;
+  text-decoration: none;
 }
 
 .p-box {
