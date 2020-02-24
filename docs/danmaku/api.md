@@ -28,13 +28,13 @@ title: API
 
 ### 请求弹幕
 
-- `/api/dplayer/v1/` ，例如 `https://danmaku.xwhite.studio/api/artplayer/v1/?id=C6CC6218F1FB8770`
+- `/api/artplayer/v1/` ，例如 `https://danmaku.xwhite.studio/api/artplayer/v1/?id=C6CC6218F1FB8770`
 
 ### 发送弹幕
 
 发送弹幕使用了类似 Dplayer 的接口
 
-- 接口 `/api/dplayer/v1/`
+- 接口 `/api/artplayer/v1/`
 - 方法 `POST`
 - 类型 `application/json`
 - 参数
