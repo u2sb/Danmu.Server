@@ -68,11 +68,10 @@ export default {
             password: md5.update(this.form.password).digest('hex'),
             url: this.$route.query.url || '/'
           }
-          window.console.log(formData)
           this.$http.post('/api/login', formData).then(res => {
             let dataObj = eval(res.data)
             if (dataObj.code === 0) {
-              this.$router.push({ path: dataObj.url })
+              this.$router.push({ path: dataObj.data.url })
             } else {
               Notification.error({
                 title: '错误',

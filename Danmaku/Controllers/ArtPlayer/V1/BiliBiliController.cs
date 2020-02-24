@@ -1,6 +1,5 @@
 using System.IO;
 using System.Threading.Tasks;
-using Danmaku.Model;
 using Danmaku.Utils.BiliBili;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,9 +9,9 @@ namespace Danmaku.Controllers.ArtPlayer.V1
     [ApiController]
     public class BiliBiliController : ControllerBase
     {
-        private readonly IBiliBiliHelp _biliBili;
+        private readonly BiliBiliHelp _biliBili;
 
-        public BiliBiliController(IBiliBiliHelp biliBiliHelp)
+        public BiliBiliController(BiliBiliHelp biliBiliHelp)
         {
             _biliBili = biliBiliHelp;
         }
@@ -37,7 +36,6 @@ namespace Danmaku.Controllers.ArtPlayer.V1
             return string.IsNullOrWhiteSpace(cid)
                     ? null
                     : await _biliBili.GetBiDanmakuRaw(cid);
-
         }
     }
 }

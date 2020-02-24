@@ -1,4 +1,4 @@
-﻿using Danmaku.Model;
+using Danmaku.Model;
 
 namespace Danmaku.Utils.AppConfiguration
 {

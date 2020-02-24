@@ -5,10 +5,10 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Danmaku.Model;
+using Danmaku.Model.WebResult;
 using Danmaku.Utils.AppConfiguration;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Danmaku.Controllers
@@ -25,7 +25,7 @@ namespace Danmaku.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<dynamic> Login([FromBody] dynamic data)
+        public async Task<WebResult> Login([FromBody] dynamic data)
         {
             var userName = data.TryGetProperty("name", out JsonElement a) ? a.GetString() : null;
             var password = data.TryGetProperty("password", out JsonElement b) ? b.GetString() : null;
@@ -48,11 +48,11 @@ namespace Danmaku.Controllers
                 await HttpContext.SignInAsync(new ClaimsPrincipal(new ClaimsIdentity(claims,
                         CookieAuthenticationDefaults.AuthenticationScheme, "user", "role")));
 
-                if (Url.IsLocalUrl(returnUrl)) return new {code = 0, url = returnUrl};
-                return new {code = 0, url = "/"};
+                if (Url.IsLocalUrl(returnUrl)) return new WebResult(0) {Data = new {url = returnUrl}};
+                return new WebResult(0) {Data = new {url = "/"}};
             }
 
-            return new {code = 1, url = returnUrl};
+            return new WebResult(1) {Data = new {url = returnUrl}};
         }
 
         [HttpGet("logout")]

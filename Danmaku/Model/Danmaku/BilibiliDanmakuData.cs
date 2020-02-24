@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace Danmaku.Model
+namespace Danmaku.Model.Danmaku
 {
-    [SerializableAttribute]
+    [Serializable]
     [DesignerCategory("code")]
     [XmlType(AnonymousType = true)]
     [XmlRoot("i", Namespace = "", IsNullable = false)]
@@ -76,7 +76,7 @@ namespace Danmaku.Model
         }
     }
 
-    [SerializableAttribute]
+    [Serializable]
     [DesignerCategory("code")]
     [XmlType(AnonymousType = true)]
     // ReSharper disable once InconsistentNaming

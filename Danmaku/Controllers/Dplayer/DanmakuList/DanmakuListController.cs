@@ -11,7 +11,7 @@ namespace Danmaku.Controllers.Dplayer.DanmakuList
     [Authorize]
     public class DanmakuListController : DanmakuDaoBaseController
     {
-        public DanmakuListController(IDanmakuDao danmakuDao, ILogger<DanmakuListController> logger) : base(danmakuDao,
+        public DanmakuListController(DanmakuDao danmakuDao, ILogger<DanmakuListController> logger) : base(danmakuDao,
                 logger) { }
 
         public async Task<ActionResult> Index(int page = 1, int size = 20, string vid = null, string author = null,

@@ -2,7 +2,8 @@
 using System.Net;
 using System.Threading.Tasks;
 using Danmaku.Controllers.Base;
-using Danmaku.Model;
+using Danmaku.Model.Danmaku;
+using Danmaku.Model.WebResult;
 using Danmaku.Utils.Dao;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,7 +13,7 @@ namespace Danmaku.Controllers.Dplayer.V3
     [ApiController]
     public class DplayerController : DanmakuDaoBaseApiController
     {
-        public DplayerController(IDanmakuDao danmakuDao) : base(danmakuDao) { }
+        public DplayerController(DanmakuDao danmakuDao) : base(danmakuDao) { }
 
         // GET: api/dplayer/v3/
         [HttpGet]

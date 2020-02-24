@@ -2,6 +2,7 @@ using System;
 using System.Net;
 using System.Net.Http;
 using Danmaku.Model;
+using Danmaku.Model.DbContext;
 using Danmaku.Utils;
 using Danmaku.Utils.AppConfiguration;
 using Danmaku.Utils.BiliBili;
@@ -48,8 +49,8 @@ namespace Danmaku
             services.AddHttpClient("deflate").ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
                     {AutomaticDecompression = DecompressionMethods.Deflate});
 
-            services.AddSingleton<IBiliBiliHelp, BiliBiliHelp>();
-            services.AddSingleton<IDanmakuDao, DanmakuDao>();
+            services.AddSingleton<BiliBiliHelp>();
+            services.AddSingleton<DanmakuDao>();
             services.AddControllersWithViews();
             services.AddSignalR();
 
