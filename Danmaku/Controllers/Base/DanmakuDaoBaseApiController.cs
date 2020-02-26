@@ -1,4 +1,4 @@
-﻿using Danmaku.Utils.Dao;
+using Danmaku.Utils.Dao;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Danmaku.Controllers.Base

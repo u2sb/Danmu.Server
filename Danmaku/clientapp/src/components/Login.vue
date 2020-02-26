@@ -1,12 +1,14 @@
 <template>
-  <div id="login" class="big-div">
+  <div id="login">
     <el-container>
       <el-header>
         <div class="header-box">
           <div style="float: right;">
             <p>
-              <router-link :to="'/'" class="header-link">主页</router-link>
-              <a href="https://dandoc.u2sb.top" target="_blank" class="header-link">文档</a>
+              <router-link :to="'/'" style="text-decoration: none">
+                <el-link>主页</el-link>
+              </router-link>
+              <el-link href="https://dandoc.u2sb.top" target="_blank">文档</el-link>
             </p>
           </div>
         </div>
@@ -42,7 +44,7 @@
 
 <script>
 import crypto from 'crypto'
-import {Notification} from 'element-ui'
+import { Notification } from 'element-ui'
 
 export default {
   name: 'login',
@@ -66,12 +68,17 @@ export default {
           let formData = {
             name: this.form.name,
             password: md5.update(this.form.password).digest('hex'),
-            url: this.$route.query.url || '/'
+            url: this.$route.query.ReturnUrl || '/'
           }
           this.$http.post('/api/login', formData).then(res => {
             let dataObj = eval(res.data)
             if (dataObj.code === 0) {
               this.$router.push({ path: dataObj.data.url })
+              Notification({
+                title: '提示',
+                message: '登录成功',
+                position: 'bottom-right'
+              })
             } else {
               Notification.error({
                 title: '错误',
@@ -92,35 +99,34 @@ export default {
 }
 </script>
 
-<style scoped>
-.big-div {
+<style lang="scss">
+#login {
   background: url(/img/banner.png),
     linear-gradient(103deg, rgba(32, 157, 230, 1), rgba(55, 222, 242, 1));
   background-repeat: no-repeat, no-repeat;
   background-position: center bottom;
-  min-height: 800px;
-}
+  min-height: 820px;
 
-.header-box {
-  height: 60px;
-  width: 100%;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.header-link {
-  margin-right: 30px;
-  color: white;
-  text-decoration: none;
-}
-
-.p-box {
-  background: white;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
-  margin-right: 50px;
-  margin-top: 100px;
-  height: 250px;
-  width: 350px;
-  padding: 50px 20px 0px 10px;
+  .header-box {
+    height: 60px;
+    width: 100%;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  .el-link {
+    margin-right: 30px;
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+  }
+  .p-box {
+    background: white;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    margin-right: 50px;
+    margin-top: 100px;
+    height: 250px;
+    width: 350px;
+    padding: 50px 20px 0px 10px;
+  }
 }
 </style>

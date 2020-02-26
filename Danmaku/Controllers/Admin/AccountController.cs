@@ -1,27 +1,37 @@
+using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Danmaku.Model;
 using Danmaku.Model.WebResult;
 using Danmaku.Utils.AppConfiguration;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Danmaku.Controllers
+namespace Danmaku.Controllers.Admin
 {
     [Route("api/")]
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly Admin _admin;
+        private readonly Model.Admin _admin;
 
         public AccountController(IAppConfiguration configuration)
         {
             _admin = configuration.GetAppSetting().Admin;
+        }
+
+        [HttpGet("login")]
+        public WebResult NoAuth()
+        {
+            return new WebResult(1)
+            {
+                Data = "没有权限"
+            };
         }
 
         [HttpPost("login")]
@@ -48,6 +58,14 @@ namespace Danmaku.Controllers
                 await HttpContext.SignInAsync(new ClaimsPrincipal(new ClaimsIdentity(claims,
                         CookieAuthenticationDefaults.AuthenticationScheme, "user", "role")));
 
+                HttpContext.Response.Cookies.Append("ClientAuth", "0", new CookieOptions
+                {
+                    HttpOnly = false,
+                    MaxAge = TimeSpan.FromMinutes(_admin.MaxAge),
+                    SameSite = SameSiteMode.Lax
+                });
+
+
                 if (Url.IsLocalUrl(returnUrl)) return new WebResult(0) {Data = new {url = returnUrl}};
                 return new WebResult(0) {Data = new {url = "/"}};
             }
@@ -59,6 +77,7 @@ namespace Danmaku.Controllers
         public void Logout()
         {
             HttpContext.SignOutAsync();
+            HttpContext.Response.Cookies.Delete("ClientAuth");
             Response.Headers.Add("Location", "/");
             Response.StatusCode = 302;
         }

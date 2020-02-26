@@ -59,18 +59,27 @@ namespace Danmaku.Utils.Dao
         }
 
         /// <summary>
+        /// 查询弹幕总数量
+        /// </summary>
+        /// <returns></returns>
+        public int DanmakuBaseQuery()
+        {
+            using var con = new DanmakuContext(_configuration);
+            return con.Danmaku.Count();
+        }
+
+        /// <summary>
         ///     全部弹幕查询
         /// </summary>
         /// <param name="page"></param>
         /// <param name="size"></param>
         /// <returns></returns>
-        public async Task<List<DanmakuDataBase>> DanmakuBaseQuery(int page, int size)
+        public async Task<DanmakuDataBase[]> DanmakuBaseQuery(int page, int size)
         {
             await using var con = new DanmakuContext(_configuration);
-            return await con.Danmaku
-                            .OrderBy(b => b.Vid).ThenByDescending(b => b.Date)
-                             // .Skip(size * (page - 1)).Take(size)
-                            .ToListAsync();
+            return await con.Danmaku.OrderBy(b => b.Date)
+                            .Skip(size * (page - 1)).Take(size)
+                            .ToArrayAsync();
         }
 
         /// <summary>
@@ -139,7 +148,7 @@ namespace Danmaku.Utils.Dao
         /// <param name="key">弹幕关键词</param>
         /// <param name="order">0-倒序， 1-正序</param>
         /// <returns>筛选结果</returns>
-        public async Task<List<DanmakuDataBase>> DanmakuBasesQuery(int page, int size, string vid, string author,
+        public async Task<DanmakuDataBase[]> DanmakuBaseQuery(int page, int size, string vid, string author,
                                                                    string startDate,
                                                                    string endDate, int type, string ip,
                                                                    string key, int order)
@@ -159,7 +168,7 @@ namespace Danmaku.Utils.Dao
                        .OrderBy(b => b.Vid);
             a = order == 0 ? a.ThenByDescending(b => b.Date) : a.ThenBy(b => b.Date);
             // return await a.Skip(size * (page - 1)).Take(size).ToListAsync();
-            return await a.ToListAsync();
+            return await a.ToArrayAsync();
         }
     }
 }

@@ -1,7 +1,7 @@
 using System;
 using System.Net;
 using System.Net.Http;
-using Danmaku.Model;
+using Danmaku.Model.Danmaku.Converter;
 using Danmaku.Model.DbContext;
 using Danmaku.Utils;
 using Danmaku.Utils.AppConfiguration;
@@ -13,11 +13,13 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 #if DEBUG
 using VueCliMiddleware;
+
 #endif
 
 namespace Danmaku
@@ -49,21 +51,34 @@ namespace Danmaku
             services.AddHttpClient("deflate").ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
                     {AutomaticDecompression = DecompressionMethods.Deflate});
 
+            // 注册单例
             services.AddSingleton<BiliBiliHelp>();
             services.AddSingleton<DanmakuDao>();
-            services.AddControllersWithViews();
+            services.AddControllers(opt =>
+            {
+                opt.InputFormatters.Add(new XmlSerializerInputFormatter(opt));
+                opt.OutputFormatters.Add(new XmlSerializerOutputFormatter());
+            }).AddJsonOptions(opt => { opt.JsonSerializerOptions.Converters.Add(new IPAddressConverter()); });
             services.AddSignalR();
 
+            // 权限
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                     .AddCookie(options =>
                      {
-                         options.LoginPath = "/account/login";
-                         options.LogoutPath = "/account/logout";
+                         options.LoginPath = "/api/login";
+                         options.LogoutPath = "/api/logout";
                          options.Cookie.Name = "DCookie";
-                         options.Cookie.MaxAge = TimeSpan.FromHours(1);
+                         options.Cookie.MaxAge = TimeSpan.FromMinutes(config.GetAppSetting().Admin.MaxAge);
                      });
 
             services.AddTransient<IClaimsTransformation, ClaimsTransformer>();
+
+            // 转接头
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders =
+                        ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+            });
 
             services.AddCors(options =>
             {
@@ -77,23 +92,24 @@ namespace Danmaku
                                .SetIsOriginAllowedToAllowWildcardSubdomains().WithMethods("GET", "POST", "OPTIONS")
                                .AllowAnyHeader().AllowCredentials());
             });
+
+            // SPA根目录
+            services.AddSpaStaticFiles(opt => opt.RootPath = "wwwroot");
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseForwardedHeaders();
+
             if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
 
             app.UseCors(DanmakuAllowSpecificOrigins);
+
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
 
             app.UseRouting();
-
-            app.UseForwardedHeaders(new ForwardedHeadersOptions
-            {
-                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-            });
 
             app.UseAuthentication();
             app.UseAuthorization();
@@ -111,14 +127,14 @@ namespace Danmaku
                 endpoints.MapHub<LiveDanmaku>("api/dplayer/live").RequireCors(LiveAllowSpecificOrigins);
             });
 
+
+            app.UseSpa(spa =>
+            {
 #if DEBUG
-            if (env.IsDevelopment())
-                app.UseSpa(spa =>
-                {
-                    spa.Options.SourcePath = "ClientApp";
-                    spa.UseVueCli();
-                });
+                spa.Options.SourcePath = "ClientApp";
+                spa.UseVueCli();
 #endif
+            });
         }
     }
 }
