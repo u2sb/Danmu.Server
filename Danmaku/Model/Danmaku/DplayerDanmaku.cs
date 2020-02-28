@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace Danmaku.Model.Danmaku
 {
-    public class DanmakuData
+    public class DplayerDanmaku
     {
         public float Time { get; set; }
 
@@ -21,13 +21,13 @@ namespace Danmaku.Model.Danmaku
             return JsonSerializer.Serialize(this);
         }
 
-        public static DanmakuData FromJson(string json)
+        public static DplayerDanmaku FromJson(string json)
         {
-            return JsonSerializer.Deserialize<DanmakuData>(json);
+            return JsonSerializer.Deserialize<DplayerDanmaku>(json);
         }
     }
 
-    public class DanmakuDataInsert : DanmakuData
+    public class DplayerDanmakuInsert : DplayerDanmaku
     {
         [MaxLength(36)] public string Id { get; set; }
 

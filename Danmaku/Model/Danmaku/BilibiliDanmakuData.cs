@@ -20,7 +20,7 @@ namespace Danmaku.Model.Danmaku
         ///     从Dplayer弹幕格式转换
         /// </summary>
         /// <param name="ds"></param>
-        public BilibiliDanmakuData(List<DanmakuData> ds)
+        public BilibiliDanmakuData(List<DplayerDanmaku> ds)
         {
             D = ds.Select(d => new iD
             {
@@ -43,21 +43,42 @@ namespace Danmaku.Model.Danmaku
         [XmlElement("d")] public iD[] D { get; set; }
 
         /// <summary>
-        ///     转通用Data
+        ///     转Dplayer弹幕格式
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<DanmakuData> ToDanmakuDataList()
+        public IEnumerable<DplayerDanmaku> ToDplayerDanmakus()
         {
             return D.Select(s =>
             {
                 var d = s.P.Split(",");
                 var t = int.Parse(d[1]);
-                return new DanmakuData
+                return new DplayerDanmaku
                 {
                     Time = float.Parse(d[0]),
                     Color = int.Parse(d[3]),
                     Type = t == 4 ? 2 : t == 5 ? 1 : 0,
                     Author = "",
+                    Text = s.Value
+                };
+            });
+        }
+
+        /// <summary>
+        ///     转ArtPlayer弹幕格式
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<ArtPlayerDanmaku> ToArtPlayerDanmakus()
+        {
+            return D.Select(s =>
+            {
+                var d = s.P.Split(",");
+                var t = int.Parse(d[1]);
+                return new ArtPlayerDanmaku
+                {
+                    Time = float.Parse(d[0]),
+                    Color = $"#{int.Parse(d[3]):X}",
+                    Size = int.Parse(d[2]),
+                    Mode = t == 1 ? 0 : 1,
                     Text = s.Value
                 };
             });

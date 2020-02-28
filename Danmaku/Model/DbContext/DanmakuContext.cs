@@ -23,8 +23,8 @@ namespace Danmaku.Model.DbContext
                                 .HasConversion(v => v.ToString(), v => Guid.Parse(v));
                     modelBuilder.Entity<DanmakuDataBase>().Property(e => e.Ip).HasColumnType("varchar(40)")
                                 .HasConversion(v => v.ToString(), v => IPAddress.Parse(v));
-                    modelBuilder.Entity<DanmakuDataBase>().Property(e => e.DanmakuData).HasColumnType("json")
-                                .HasConversion(v => v.ToJson(), v => DanmakuData.FromJson(v));
+                    modelBuilder.Entity<DanmakuDataBase>().Property(e => e.DplayerDanmaku).HasColumnType("json")
+                                .HasConversion(v => v.ToJson(), v => DplayerDanmaku.FromJson(v));
                     break;
                 case SqlType.SQLite:
                     modelBuilder.Entity<DanmakuDataBase>().Property(e => e.Id).HasColumnType("TEXT")
@@ -33,8 +33,8 @@ namespace Danmaku.Model.DbContext
                                 .HasConversion(v => v.ToString(), v => IPAddress.Parse(v));
                     modelBuilder.Entity<DanmakuDataBase>().Property(e => e.Date).HasColumnType("TEXT")
                                 .HasConversion(v => v.ToString("yyyy-MM-dd hh:mm:ss"), v => DateTime.Parse(v));
-                    modelBuilder.Entity<DanmakuDataBase>().Property(e => e.DanmakuData).HasColumnType("TEXT")
-                                .HasConversion(v => v.ToJson(), v => DanmakuData.FromJson(v));
+                    modelBuilder.Entity<DanmakuDataBase>().Property(e => e.DplayerDanmaku).HasColumnType("TEXT")
+                                .HasConversion(v => v.ToJson(), v => DplayerDanmaku.FromJson(v));
                     break;
             }
 

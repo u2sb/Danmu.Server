@@ -31,9 +31,9 @@ namespace Danmaku.Controllers.Admin
         [HttpPost("edit")]
         public async Task<WebResult> EditDanmaku(DanmakuDataBase data)
         {
-            var result = await Dao.DanmakuEdit(data.Id, data.DanmakuData.Time, data.DanmakuData.Type,
-                    data.DanmakuData.Color,
-                    data.DanmakuData.Text);
+            var result = await Dao.DanmakuEdit(data.Id, data.DplayerDanmaku.Time, data.DplayerDanmaku.Type,
+                    data.DplayerDanmaku.Color,
+                    data.DplayerDanmaku.Text);
             return result == null ? new WebResult(1) : new WebResult {Data = result};
         }
 

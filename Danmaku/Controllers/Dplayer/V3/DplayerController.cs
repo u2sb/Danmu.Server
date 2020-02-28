@@ -26,7 +26,7 @@ namespace Danmaku.Controllers.Dplayer.V3
 
         // POST: api/dplayer/v3/
         [HttpPost]
-        public async Task<string> Post([FromBody] DanmakuDataInsert data)
+        public async Task<string> Post([FromBody] DplayerDanmakuInsert data)
         {
             if (string.IsNullOrWhiteSpace(data.Id) || string.IsNullOrWhiteSpace(data.Text))
                 return new DanmakuWebResult(1);

@@ -1,4 +1,3 @@
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -8,19 +7,31 @@ using Danmaku.Model.WebResult;
 using Danmaku.Utils.Dao;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Danmaku.Controllers.ArtPlayer.V1
+namespace Danmaku.Controllers.ArtPlayer.V2
 {
-    [Route("api/artplayer/v1")]
+    [Route("api/artplayer/v2")]
+    [FormatFilter]
     [ApiController]
     public class ArtPlayerController : DanmakuDaoBaseApiController
     {
         public ArtPlayerController(DanmakuDao danmakuDao) : base(danmakuDao) { }
 
         [HttpGet]
-        public async Task<BilibiliDanmakuData> Get(string id)
+        [HttpGet("{id}.{format?}")]
+        public async Task<dynamic> Get(string id, string format)
         {
+            var d = await Dao.DanmakuQuery(id);
+            if (format == "json")
+            {
+                var a = d.Select(s => new ArtPlayerDanmaku(s));
+                return new WebResult
+                {
+                    Data = a
+                };
+            }
+
             HttpContext.Request.Headers["Accept"] = "application/xml";
-            return string.IsNullOrEmpty(id) ? null : new BilibiliDanmakuData(await Dao.DanmakuQuery(id));
+            return string.IsNullOrEmpty(id) ? null : new BilibiliDanmakuData(d);
         }
 
         // POST: api/artplayer/v1/

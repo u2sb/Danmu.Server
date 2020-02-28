@@ -24,10 +24,10 @@ namespace Danmaku.Utils.Dao
         /// </summary>
         /// <param name="id">视频vid</param>
         /// <returns>弹幕列表</returns>
-        public async Task<List<DanmakuData>> DanmakuQuery(string id)
+        public async Task<List<DplayerDanmaku>> DanmakuQuery(string id)
         {
             await using var con = new DanmakuContext(_configuration);
-            return await con.Danmaku.Where(e => e.Vid == id && e.IsDelete == false).Select(s => s.DanmakuData)
+            return await con.Danmaku.Where(e => e.Vid == id && e.IsDelete == false).Select(s => s.DplayerDanmaku)
                             .ToListAsync();
         }
 
@@ -36,7 +36,7 @@ namespace Danmaku.Utils.Dao
         /// </summary>
         /// <param name="date">弹幕数据</param>
         /// <returns></returns>
-        public async Task<bool> DanmakuInsert(DanmakuDataInsert date)
+        public async Task<bool> DanmakuInsert(DplayerDanmakuInsert date)
         {
             await using var con = new DanmakuContext(_configuration);
             var dateBase = new DanmakuDataBase(date);
@@ -97,11 +97,11 @@ namespace Danmaku.Utils.Dao
             await using var con = new DanmakuContext(_configuration);
 
             var dataBase = await con.Danmaku.Where(e => e.Id == id).FirstOrDefaultAsync();
-            dataBase.DanmakuData = new DanmakuData
+            dataBase.DplayerDanmaku = new DplayerDanmaku
             {
-                Author = dataBase.DanmakuData.Author,
+                Author = dataBase.DplayerDanmaku.Author,
                 Color = color,
-                Text = text ?? dataBase.DanmakuData.Text,
+                Text = text ?? dataBase.DplayerDanmaku.Text,
                 Time = time,
                 Type = type
             };
@@ -154,13 +154,13 @@ namespace Danmaku.Utils.Dao
             DateTime eDate = DateTime.TryParse(endDate, out eDate) ? eDate : DateTime.MaxValue;
             await using var con = new DanmakuContext(_configuration);
             var a = con.Danmaku.AsNoTracking().Where(d =>
-                                (type == 10 || Equals(d.DanmakuData.Type, type)) &&
+                                (type == 10 || Equals(d.DplayerDanmaku.Type, type)) &&
                                 (string.IsNullOrEmpty(ip) || !IPAddress.TryParse(ip, out dip) || Equals(dip, d.Ip)) &&
                                 (string.IsNullOrEmpty(startDate) || DateTime.Compare(sDate, d.Date) < 0) &&
                                 (string.IsNullOrEmpty(endDate) || DateTime.Compare(eDate, d.Date) > 0) &&
                                 (string.IsNullOrEmpty(vid) || d.Vid.Contains(vid)) &&
-                                (string.IsNullOrEmpty(author) || d.DanmakuData.Author.Contains(author)) &&
-                                (string.IsNullOrEmpty(key) || d.DanmakuData.Text.Contains(key)))
+                                (string.IsNullOrEmpty(author) || d.DplayerDanmaku.Author.Contains(author)) &&
+                                (string.IsNullOrEmpty(key) || d.DplayerDanmaku.Text.Contains(key)))
                        .OrderBy(b => b.Vid);
             a = order == 0 ? a.ThenByDescending(b => b.Date) : a.ThenBy(b => b.Date);
             // return await a.Skip(size * (page - 1)).Take(size).ToListAsync();

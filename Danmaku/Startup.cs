@@ -85,7 +85,6 @@ namespace Danmaku
                         builder.WithOrigins(config.GetAppSetting().LiveWithOrigins)
                                .SetIsOriginAllowedToAllowWildcardSubdomains().WithMethods("GET", "POST", "OPTIONS")
                                .AllowAnyHeader().AllowCredentials());
-
             });
 
             // SPA根目录
@@ -102,6 +101,7 @@ namespace Danmaku
             app.UseSpaStaticFiles();
 
             app.UseRouting();
+
 
             app.UseCors();
 

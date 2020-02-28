@@ -5,7 +5,7 @@
 
   bool TypeSelected(int i)
   {
-    return Model.DanmakuData.Type == i ? true : false;
+    return Model.DplayerDanmaku.Type == i ? true : false;
   }
 }
 
@@ -37,7 +37,7 @@
   <div class="layui-form-item">
     <label class="layui-form-label">AUTHOR</label>
     <div class="layui-input-block">
-      <input type="text" value="@Model.DanmakuData.Author" class="layui-input" readonly>
+      <input type="text" value="@Model.DplayerDanmaku.Author" class="layui-input" readonly>
     </div>
   </div>
   <div class="layui-form-item">
@@ -51,7 +51,7 @@
   <div class="layui-form-item">
     <label class="layui-form-label">弹幕时间</label>
     <div class="layui-input-inline">
-      <input type="text" name="time" lay-verify="time" autocomplete="off" value="@Model.DanmakuData.Time" class="layui-input">
+      <input type="text" name="time" lay-verify="time" autocomplete="off" value="@Model.DplayerDanmaku.Time" class="layui-input">
     </div>
   </div>
   <div class="layui-form-item">
@@ -67,7 +67,7 @@
   <div class="layui-form-item">
     <label class="layui-form-label">颜色</label>
     <div class="layui-input-inline" style="width: 120px;">
-      <input type="text" name="color" lay-verify="color" autocomplete="off" value="#@Model.DanmakuData.Color.ToString("x")" class="layui-input" id="color-form">
+      <input type="text" name="color" lay-verify="color" autocomplete="off" value="#@Model.DplayerDanmaku.Color.ToString("x")" class="layui-input" id="color-form">
     </div>
     <div class="layui-inline" style="left: -11px;">
       <div id="form-color-select"></div>
@@ -76,7 +76,7 @@
   <div class="layui-form-item layui-form-text">
     <label class="layui-form-label">弹幕内容</label>
     <div class="layui-input-block">
-      <textarea name="text" class="layui-textarea" id="danmaku-text-input">@Model.DanmakuData.Text</textarea>
+      <textarea name="text" class="layui-textarea" id="danmaku-text-input">@Model.DplayerDanmaku.Text</textarea>
     </div>
   </div>
 

@@ -11,7 +11,7 @@ namespace Danmaku.Model.WebResult
 
         public DanmakuWebResult(int code) : base(code) { }
 
-        public DanmakuWebResult(List<DanmakuData> data)
+        public DanmakuWebResult(List<DplayerDanmaku> data)
         {
             Data = data.Select(s => new object[]
             {

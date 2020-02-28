@@ -67,7 +67,7 @@ namespace Danmaku.Utils.BiliBili
         /// </summary>
         /// <param name="cid">视频的cid</param>
         /// <returns>弹幕列表</returns>
-        public async Task<List<DanmakuData>> GetBiDanmaku(string cid)
+        public async Task<List<DplayerDanmaku>> GetBiDanmaku(string cid)
         {
             return (await GetBiDanmakuDataAsync($"https://api.bilibili.com/x/v1/dm/list.so?oid={cid}")).ToList();
         }
@@ -78,11 +78,28 @@ namespace Danmaku.Utils.BiliBili
         /// <param name="cid">视频的cid</param>
         /// <param name="date">历史日期</param>
         /// <returns>弹幕列表</returns>
-        public Task<List<DanmakuData>> GetBiDanmaku(string cid, string[] date)
+        public Task<List<DplayerDanmaku>> GetBiDanmaku(string cid, string[] date)
         {
             return Task.Run(() => date.Select(async s => await GetBiDanmakuDataAsync(
                                                $"https://api.bilibili.com/x/v2/dm/history?type=1&oid={cid}&date={s}"))
                                       .SelectMany(s => s.Result).ToList());
+        }
+
+        /// <summary>
+        ///     获取B站历史弹幕
+        /// </summary>
+        /// <returns></returns>
+        public async Task<BilibiliDanmakuData> GetBiDanmakuStream(string cid, string[] date)
+        {
+            var a = date.Select(async s =>
+            {
+                var b = await GetBiDanmakuDataRawAsync(
+                        $"https://api.bilibili.com/x/v2/dm/history?type=1&oid={cid}&date={s}");
+                return new BilibiliDanmakuData(b);
+            });
+            var c = new BilibiliDanmakuData();
+            foreach (var v in a) c.D = c.D.Concat((await v).D).ToArray();
+            return c;
         }
 
         /// <summary>
@@ -100,10 +117,10 @@ namespace Danmaku.Utils.BiliBili
             return _deflateClient.GetStreamAsync(url);
         }
 
-        private async Task<IEnumerable<DanmakuData>> GetBiDanmakuDataAsync(string url)
+        private async Task<IEnumerable<DplayerDanmaku>> GetBiDanmakuDataAsync(string url)
         {
             var bd = new BilibiliDanmakuData(await GetBiDanmakuDataRawAsync(url));
-            return bd.ToDanmakuDataList();
+            return bd.ToDplayerDanmakus();
         }
     }
 }

@@ -11,14 +11,14 @@ namespace Danmaku.Model.Danmaku
     {
         public DanmakuDataBase() { }
 
-        public DanmakuDataBase(DanmakuDataInsert date)
+        public DanmakuDataBase(DplayerDanmakuInsert date)
         {
             if (date != null)
             {
                 Ip = date.Ip;
                 Vid = date.Id;
                 Referer = date.Referer;
-                DanmakuData = new DanmakuData
+                DplayerDanmaku = new DplayerDanmaku
                 {
                     Time = date.Time,
                     Type = date.Type,
@@ -33,9 +33,9 @@ namespace Danmaku.Model.Danmaku
 
         [MaxLength(36)] [Required] public string Vid { get; set; }
 
-        [Column(TypeName = "jsonb")]
+        [Column("DanmakuData",TypeName = "jsonb")]
         [Required]
-        public DanmakuData DanmakuData { get; set; }
+        public DplayerDanmaku DplayerDanmaku { get; set; }
 
         [JsonConverter(typeof(IPAddressConverter))]
         public IPAddress Ip { get; set; }
