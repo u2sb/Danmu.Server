@@ -34,6 +34,7 @@ namespace Danmaku.Model.Danmaku
         [MaxLength(36)] [Required] public string Vid { get; set; }
 
         [Column("DanmakuData",TypeName = "jsonb")]
+        [JsonPropertyName("danmakuData")]
         [Required]
         public DplayerDanmaku DplayerDanmaku { get; set; }
 
