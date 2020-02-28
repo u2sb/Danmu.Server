@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Danmaku.Model;
+using Danmaku.Model.WebResult;
 using Danmaku.Utils.BiliBili;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,9 +9,9 @@ namespace Danmaku.Controllers.Dplayer.V3
     [ApiController]
     public class BiliBiliController : ControllerBase
     {
-        private readonly IBiliBiliHelp _biliBili;
+        private readonly BiliBiliHelp _biliBili;
 
-        public BiliBiliController(IBiliBiliHelp biliBiliHelp)
+        public BiliBiliController(BiliBiliHelp biliBiliHelp)
         {
             _biliBili = biliBiliHelp;
         }

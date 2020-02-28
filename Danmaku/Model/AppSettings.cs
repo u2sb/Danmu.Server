@@ -1,11 +1,14 @@
-﻿using System;
+using System;
 using Microsoft.Extensions.Configuration;
 
 namespace Danmaku.Model
 {
     public class AppSettings
     {
-        public AppSettings(IConfiguration configuration) => configuration.Bind(this);
+        public AppSettings(IConfiguration configuration)
+        {
+            configuration.Bind(this);
+        }
 
         public string[] WithOrigins { get; set; }
         public string[] LiveWithOrigins { get; set; }
@@ -37,5 +40,6 @@ namespace Danmaku.Model
     {
         public string User { get; set; }
         public string Password { get; set; }
+        public int MaxAge { get; set; }
     }
 }

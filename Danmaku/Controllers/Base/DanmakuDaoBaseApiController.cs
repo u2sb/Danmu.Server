@@ -1,16 +1,16 @@
-﻿using Danmaku.Utils.Dao;
+using Danmaku.Utils.Dao;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Danmaku.Controllers.Base
 {
-	[ApiController]
-	public class DanmakuDaoBaseApiController : ControllerBase
-	{
-		private protected readonly IDanmakuDao Dao;
+    [ApiController]
+    public class DanmakuDaoBaseApiController : ControllerBase
+    {
+        private protected readonly DanmakuDao Dao;
 
-		public DanmakuDaoBaseApiController(IDanmakuDao danmakuDao)
-		{
-			Dao = danmakuDao;
-		}
-	}
+        public DanmakuDaoBaseApiController(DanmakuDao danmakuDao)
+        {
+            Dao = danmakuDao;
+        }
+    }
 }
