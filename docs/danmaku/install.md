@@ -95,7 +95,8 @@ vim appsetting.json
   },
   "Admin": {
     "User": "MonoLogueChi",
-    "Password": "000000"
+    "Password": "000000",
+    "MaxAge": 60
   },
   "BCookie": ""
 }
@@ -119,6 +120,7 @@ vim appsetting.json
 - Admin:
   - User: `string` 管理后台用户名
   - Password: `string` 管理后台密码
+  - MaxAge: `int` 登录有效时间，分钟
 - BCookie: `string` BiliBili Cookie，仅用于历史弹幕获取，不需要历史弹幕不需要填写
 
 ### 获取 BCookie 的方法

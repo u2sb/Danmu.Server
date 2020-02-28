@@ -23,7 +23,6 @@ title: 捐赠
 
 > 感谢 `*永虎` 捐赠的 50 元。
 > 感谢 `天空铃音` 捐赠的 13.32 元。
-> 其他捐赠共计 5.36 元。
 
 
 <script>
@@ -32,7 +31,8 @@ const year = date.getFullYear();
 const month = date.getMonth() + 1;
 
 const pay = 344;
-const receivables = 50 + 13.32 + 5.36;
+const otherReceivables = 5.36 + 5;
+const receivables = 50 + 13.32 + otherReceivables;
 
 export default {
   data() {
