@@ -3,11 +3,13 @@ using Danmaku.Controllers.Base;
 using Danmaku.Model.WebResult;
 using Danmaku.Utils.Dao;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Danmaku.Controllers.Admin
 {
     [Route("api/admin/danmakulist")]
+    [DisableCors]
     [Authorize]
     public class DanmakuListController : DanmakuDaoBaseApiController
     {
@@ -17,14 +19,20 @@ namespace Danmaku.Controllers.Admin
         public WebResult GetCount()
         {
             var count = Dao.DanmakuBaseQuery();
-            return new WebResult {Data = count};
+            return new WebResult
+            {
+                Data = new
+                {
+                    count
+                }
+            };
         }
 
         [HttpGet]
         public async Task<WebResult> Get(int page = 1, int size = 50)
         {
             var data = await Dao.DanmakuBaseQuery(page, size);
-            return new WebResult {Data = data};
+            return data.Length == 0 ? new WebResult(1) : new WebResult {Data = data};
         }
     }
 }

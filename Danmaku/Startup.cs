@@ -1,7 +1,6 @@
 using System;
 using System.Net;
 using System.Net.Http;
-using Danmaku.Model.Danmaku.Converter;
 using Danmaku.Model.DbContext;
 using Danmaku.Utils;
 using Danmaku.Utils.AppConfiguration;
@@ -13,7 +12,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -54,19 +52,15 @@ namespace Danmaku
             // 注册单例
             services.AddSingleton<BiliBiliHelp>();
             services.AddSingleton<DanmakuDao>();
-            services.AddControllers(opt =>
-            {
-                opt.InputFormatters.Add(new XmlSerializerInputFormatter(opt));
-                opt.OutputFormatters.Add(new XmlSerializerOutputFormatter());
-            }).AddJsonOptions(opt => { opt.JsonSerializerOptions.Converters.Add(new IPAddressConverter()); });
+            services.AddControllers().AddXmlSerializerFormatters();
             services.AddSignalR();
 
             // 权限
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                     .AddCookie(options =>
                      {
-                         options.LoginPath = "/api/login";
-                         options.LogoutPath = "/api/logout";
+                         options.LoginPath = "/api/admin/login";
+                         options.LogoutPath = "/api/admin/logout";
                          options.Cookie.Name = "DCookie";
                          options.Cookie.MaxAge = TimeSpan.FromMinutes(config.GetAppSetting().Admin.MaxAge);
                      });
@@ -91,6 +85,7 @@ namespace Danmaku
                         builder.WithOrigins(config.GetAppSetting().LiveWithOrigins)
                                .SetIsOriginAllowedToAllowWildcardSubdomains().WithMethods("GET", "POST", "OPTIONS")
                                .AllowAnyHeader().AllowCredentials());
+
             });
 
             // SPA根目录
@@ -103,13 +98,12 @@ namespace Danmaku
 
             if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
 
-            app.UseCors(DanmakuAllowSpecificOrigins);
-
-
             app.UseDefaultFiles();
-            app.UseStaticFiles();
+            app.UseSpaStaticFiles();
 
             app.UseRouting();
+
+            app.UseCors();
 
             app.UseAuthentication();
             app.UseAuthorization();
@@ -122,8 +116,7 @@ namespace Danmaku
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
-                endpoints.MapDefaultControllerRoute();
+                endpoints.MapControllers().RequireCors(DanmakuAllowSpecificOrigins);
                 endpoints.MapHub<LiveDanmaku>("api/dplayer/live").RequireCors(LiveAllowSpecificOrigins);
             });
 

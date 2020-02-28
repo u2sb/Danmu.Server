@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -59,7 +58,7 @@ namespace Danmaku.Utils.Dao
         }
 
         /// <summary>
-        /// 查询弹幕总数量
+        ///     查询弹幕总数量
         /// </summary>
         /// <returns></returns>
         public int DanmakuBaseQuery()
@@ -73,13 +72,15 @@ namespace Danmaku.Utils.Dao
         /// </summary>
         /// <param name="page"></param>
         /// <param name="size"></param>
+        /// <param name="descending"></param>
         /// <returns></returns>
-        public async Task<DanmakuDataBase[]> DanmakuBaseQuery(int page, int size)
+        public async Task<DanmakuDataBase[]> DanmakuBaseQuery(int page, int size, bool descending = true)
         {
             await using var con = new DanmakuContext(_configuration);
-            return await con.Danmaku.OrderBy(b => b.Date)
-                            .Skip(size * (page - 1)).Take(size)
-                            .ToArrayAsync();
+            var dan = con.Danmaku;
+            var order = descending ? dan.OrderByDescending(b => b.Date) : dan.OrderBy(b => b.Date);
+            return await order.Skip(size * (page - 1)).Take(size)
+                              .ToArrayAsync();
         }
 
         /// <summary>
@@ -91,26 +92,21 @@ namespace Danmaku.Utils.Dao
         /// <param name="color"></param>
         /// <param name="text"></param>
         /// <returns></returns>
-        public async Task<DanmakuDataBase> DanmakuEdit(string id, float time, int type, string color, string text)
+        public async Task<DanmakuDataBase> DanmakuEdit(Guid id, float time, int type, int color, string text)
         {
             await using var con = new DanmakuContext(_configuration);
-            if (Guid.TryParse(id, out var guid))
+
+            var dataBase = await con.Danmaku.Where(e => e.Id == id).FirstOrDefaultAsync();
+            dataBase.DanmakuData = new DanmakuData
             {
-                var dataBase = await con.Danmaku.Where(e => e.Id == guid).FirstOrDefaultAsync();
-                color = color.Replace("#", "");
-                dataBase.DanmakuData = new DanmakuData
-                {
-                    Author = dataBase.DanmakuData.Author,
-                    Color = int.TryParse(color, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var c)
-                            ? c
-                            : dataBase.DanmakuData.Color,
-                    Text = text ?? dataBase.DanmakuData.Text,
-                    Time = time,
-                    Type = type
-                };
-                con.Danmaku.Update(dataBase);
-                if (await con.SaveChangesAsync() > 0) return dataBase;
-            }
+                Author = dataBase.DanmakuData.Author,
+                Color = color,
+                Text = text ?? dataBase.DanmakuData.Text,
+                Time = time,
+                Type = type
+            };
+            con.Danmaku.Update(dataBase);
+            if (await con.SaveChangesAsync() > 0) return dataBase;
 
             return null;
         }
@@ -149,9 +145,9 @@ namespace Danmaku.Utils.Dao
         /// <param name="order">0-倒序， 1-正序</param>
         /// <returns>筛选结果</returns>
         public async Task<DanmakuDataBase[]> DanmakuBaseQuery(int page, int size, string vid, string author,
-                                                                   string startDate,
-                                                                   string endDate, int type, string ip,
-                                                                   string key, int order)
+                                                              string startDate,
+                                                              string endDate, int type, string ip,
+                                                              string key, int order)
         {
             IPAddress dip;
             DateTime sDate = DateTime.TryParse(startDate, out sDate) ? sDate : DateTime.MinValue;
