@@ -23,6 +23,7 @@
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
     "install": "^0.13.0",
+    "linq": "^3.2.1",
     "node-sass": "^4.9.2",
     "npm": "^6.13.7",
     "sass-loader": "^7.0.3",

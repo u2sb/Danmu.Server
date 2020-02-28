@@ -19,14 +19,14 @@
               >
                 <el-menu-item index="1">所有弹幕</el-menu-item>
                 <el-submenu index="2">
-                  <template slot="title">弹幕管理</template>
-                  <el-menu-item index="2-1">视频检索</el-menu-item>
-                  <el-menu-item index="2-2">时间检索</el-menu-item>
-                  <el-menu-item index="2-3">复杂检索</el-menu-item>
+                  <template slot="title">弹幕检索</template>
+                  <el-menu-item index="2-1" disabled>视频检索</el-menu-item>
+                  <el-menu-item index="2-2" disabled>时间检索</el-menu-item>
+                  <el-menu-item index="2-3" disabled>复杂检索</el-menu-item>
                 </el-submenu>
                 <el-menu-item index="3" disabled>用户中心</el-menu-item>
                 <el-menu-item index="4">
-                  <el-link href="/api/logout" :underline="false">退出登录</el-link>
+                  <el-link href="/api/admin/logout" :underline="false">退出登录</el-link>
                 </el-menu-item>
               </el-menu>
             </el-col>
@@ -105,7 +105,8 @@ export default {
 
   .el-main {
     color: #333;
-    min-height: 90vh;
+    text-align: center;
+    min-height: 80vh;
   }
 
   body > .el-container {
@@ -121,6 +122,12 @@ export default {
   .el-container:nth-child(7) {
     .el-aside {
       line-height: 320px;
+    }
+  }
+
+  .el-table__body{
+    td {
+      padding: 6px 0px
     }
   }
 }

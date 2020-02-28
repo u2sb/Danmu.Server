@@ -11,11 +11,10 @@
       <router-link :to="'/login'">登录</router-link>
     </p>
     <p>
-      <a href="/api/logout">退出</a>
+      <a href="/api/admin/logout">退出</a>
     </p>
   </div>
 </template>
-
 
 <script>
 export default {

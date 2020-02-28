@@ -10,6 +10,7 @@ import {
   Col,
   Row,
   Button,
+  ButtonGroup,
   Select,
   Form,
   FormItem,
@@ -20,7 +21,22 @@ import {
   MenuItem,
   MenuItemGroup,
   Tabs,
-  TabPane
+  TabPane,
+  Table,
+  TableColumn,
+  DatePicker,
+  TimeSelect,
+  TimePicker,
+  ColorPicker,
+  Popover,
+  Option,
+  Pagination,
+  Dialog,
+  Notification,
+  Popconfirm,
+  MessageBox,
+  Message,
+  Loading
 } from 'element-ui'
 
 Vue.use(Container)
@@ -31,6 +47,7 @@ Vue.use(Footer)
 Vue.use(Col)
 Vue.use(Row)
 Vue.use(Button)
+Vue.use(ButtonGroup)
 Vue.use(Select)
 Vue.use(Form)
 Vue.use(FormItem)
@@ -42,3 +59,24 @@ Vue.use(MenuItem)
 Vue.use(MenuItemGroup)
 Vue.use(Tabs)
 Vue.use(TabPane)
+Vue.use(Table)
+Vue.use(TableColumn)
+Vue.use(DatePicker)
+Vue.use(TimeSelect)
+Vue.use(TimePicker)
+Vue.use(ColorPicker)
+Vue.use(Popover)
+Vue.use(Option)
+Vue.use(Pagination)
+Vue.use(Dialog)
+Vue.use(Popconfirm)
+
+Vue.use(Loading.directive)
+
+Vue.prototype.$loading = Loading.service
+Vue.prototype.$notify = Notification
+Vue.prototype.$msgbox = MessageBox
+Vue.prototype.$alert = MessageBox.alert
+Vue.prototype.$confirm = MessageBox.confirm
+Vue.prototype.$prompt = MessageBox.prompt
+Vue.prototype.$message = Message

@@ -44,7 +44,6 @@
 
 <script>
 import crypto from 'crypto'
-import { Notification } from 'element-ui'
 
 export default {
   name: 'login',
@@ -70,17 +69,17 @@ export default {
             password: md5.update(this.form.password).digest('hex'),
             url: this.$route.query.ReturnUrl || '/'
           }
-          this.$http.post('/api/login', formData).then(res => {
+          this.$http.post('/api/admin/login', formData).then(res => {
             let dataObj = eval(res.data)
             if (dataObj.code === 0) {
               this.$router.push({ path: dataObj.data.url })
-              Notification({
+              this.$notify({
                 title: '提示',
                 message: '登录成功',
                 position: 'bottom-right'
               })
             } else {
-              Notification.error({
+              this.$notify.error({
                 title: '错误',
                 message: '用户名或密码错误',
                 position: 'bottom-right'
