@@ -9,12 +9,14 @@ using Danmaku.Model.WebResult;
 using Danmaku.Utils.AppConfiguration;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Danmaku.Controllers.Admin
 {
-    [Route("api/")]
+    [Route("api/admin")]
+    [DisableCors]
     [ApiController]
     public class AccountController : ControllerBase
     {
@@ -28,9 +30,12 @@ namespace Danmaku.Controllers.Admin
         [HttpGet("login")]
         public WebResult NoAuth()
         {
-            return new WebResult(1)
+            return new WebResult(401)
             {
-                Data = "没有权限"
+                Data = new
+                {
+                    desc = "没有权限"
+                }
             };
         }
 

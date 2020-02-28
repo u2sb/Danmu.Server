@@ -2,6 +2,8 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Net;
+using System.Text.Json.Serialization;
+using Danmaku.Model.Danmaku.Converter;
 
 namespace Danmaku.Model.Danmaku
 {
@@ -35,6 +37,7 @@ namespace Danmaku.Model.Danmaku
         [Required]
         public DanmakuData DanmakuData { get; set; }
 
+        [JsonConverter(typeof(IPAddressConverter))]
         public IPAddress Ip { get; set; }
 
         public DateTime Date { get; set; } = DateTime.Now;
