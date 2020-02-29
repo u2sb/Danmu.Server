@@ -6,7 +6,7 @@ title: PostgreSQL安装
 
 以 Debian10 为例，其他系统请看官方文档，与 Debian10 类似，其他 Linux 系统请看官方文档。
 
-## 添加apt源
+## 添加 apt 源
 
 ```bash
 touch /etc/apt/sources.list.d/pgdg.list
@@ -15,7 +15,9 @@ vim /etc/apt/sources.list.d/pgdg.list
 
 写入内容
 
-```apt /etc/apt/sources.list.d/pgdg.list
+`/etc/apt/sources.list.d/pgdg.list`
+
+```
 deb http://apt.postgresql.org/pub/repos/apt/ buster-pgdg main
 ```
 

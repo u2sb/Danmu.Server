@@ -26,4 +26,4 @@ steps:
       git init
       git add .
       git commit -m update
-      git push --force --quiet https://$(TOKEN)@github.com/MonoLogueChi/Dplayer.Danmaku.git master:gh-pages
+      git push --force --quiet https://$(TOKEN)@github.com/MonoLogueChi/Danmu.Server.git master:gh-pages

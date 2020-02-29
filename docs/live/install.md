@@ -17,7 +17,7 @@ title: 安装
   <script src="https://cdn.jsdelivr.net/npm/dplayer/dist/DPlayer.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/flv.js/dist/flv.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@microsoft/signalr/dist/browser/signalr.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/MonoLogueChi/Dplayer.Danmaku@gh-pages/js/livedanmaku.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/MonoLogueChi/Danmu.Server@gh-pages/js/livedanmaku.js"></script>
 </head>
 <body>
   <div id="dplayer" oncontextmenu="return false"></div>

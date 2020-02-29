@@ -2,7 +2,7 @@
 title: 编译
 ---
 
-正常情况下[下载](https://github.com/MonoLogueChi/Dplayer.Danmaku/releases)编译完成的版本即可，无需自己编译，可以直接看[安装](install.md)部分，如有特殊需要，请参考以下文本。
+正常情况下[下载](https://github.com/MonoLogueChi/Danmu.Server/releases)编译完成的版本即可，无需自己编译，可以直接看[安装](install.md)部分，如有特殊需要，请参考以下文本。
 
 Windows 环境下推荐使用 Visual Studio ， Linux 环境下可以按照下面的教程编译。
 
@@ -32,8 +32,8 @@ Windows 环境请参考[相关文档](https://docs.microsoft.com/zh-cn/dotnet/co
 ## 源码
 
 ```
-git clone https://github.com/MonoLogueChi/Dplayer.Danmaku -b master --depth 1
-cd Dplayer.Danmaku
+git clone https://github.com/MonoLogueChi/Danmu.Server -b master --depth 1
+cd Danmu.Server
 ```
 
 ## 编译

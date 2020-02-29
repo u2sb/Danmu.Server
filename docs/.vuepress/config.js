@@ -38,7 +38,7 @@ const plugins = [
       options: {
         margin: 16,
         background: "#2B312C",
-        scrollOffset: 100
+        scrollOffset: 60
       }
     }
   ],

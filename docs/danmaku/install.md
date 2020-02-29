@@ -49,7 +49,7 @@ sudo apt-get install aspnetcore-runtime-3.1
 
 ## 配置文件
 
-下载编译好的[二进制文件](https://github.com/MonoLogueChi/Dplayer.Danmaku/releases)，Windows 系统或其他 Linux 系统需要自行[编译](make.md)。
+下载编译好的[二进制文件](https://github.com/MonoLogueChi/Danmu.Server/releases)，Windows 系统或其他 Linux 系统需要自行[编译](make.md)。
 
 编译文件说明：
 
@@ -164,7 +164,7 @@ touch config/xxxxx.caddyfile
 
 修改配置文件
 
-```caddy xxxxx.caddyfile
+```
 https://danmaku.xwhite.studio {
     gzip
     tls youmail@xxx.com

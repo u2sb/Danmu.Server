@@ -1,5 +1,6 @@
 title: 弹幕服务器文档
-description: MonoLogueChi的弹幕服务器文档
+description: Danmu.Server 弹幕服务器文档
+theme: thindark
 base: /
 head:
   - type: link
@@ -36,7 +37,7 @@ themeConfig:
       - pgsql
       - mysql
       - sponsors
-  repo: MonoLogueChi/Dplayer.Danmaku
+  repo: MonoLogueChi/Danmu.Server
   repoLabel: GitHub
   docsDir: docs
   docsBranch: doc-source
