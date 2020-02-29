@@ -4,9 +4,9 @@ using Danmaku.Model.WebResult;
 using Danmaku.Utils.BiliBili;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Danmaku.Controllers.ArtPlayer.V2
+namespace Danmaku.Controllers.ArtPlayer
 {
-    [Route("api/artplayer/v2")]
+    [Route("api/artplayer")]
     [FormatFilter]
     [ApiController]
     public class BiliBiliController : ControllerBase
@@ -19,8 +19,7 @@ namespace Danmaku.Controllers.ArtPlayer.V2
         }
 
         [HttpGet("bilibili")]
-        [HttpGet("bilibili/danmaku")]
-        [HttpGet("bilibili/danmaku.{format}")]
+        [HttpGet("bilibili.{format}")]
         public async Task<dynamic> Get(string format)
         {
             var request = Request.Query;
@@ -37,21 +36,16 @@ namespace Danmaku.Controllers.ArtPlayer.V2
                 cid = (await _biliBili.GetCid(aid, page)).ToString();
             }
 
-            if (string.IsNullOrWhiteSpace(cid))
-            {
-                return null;
-            }
+            if (string.IsNullOrWhiteSpace(cid)) return null;
 
             if (date.Length > 0)
             {
-                var bd = await _biliBili.GetBiDanmakuStream(cid, date);
+                var bd = _biliBili.GetBiDanmakuStream(cid, date);
                 if (format == "json")
-                {
                     return new WebResult
                     {
                         Data = bd.ToArtPlayerDanmakus()
                     };
-                }
 
                 return bd;
             }
@@ -67,6 +61,7 @@ namespace Danmaku.Controllers.ArtPlayer.V2
                     Data = danmakus
                 };
             }
+
             return await rawStream;
         }
     }

@@ -20,6 +20,12 @@ namespace Danmaku.Controllers.ArtPlayer.V2
         [HttpGet("{id}.{format?}")]
         public async Task<dynamic> Get(string id, string format)
         {
+            if (string.IsNullOrEmpty(id))
+            {
+                id = Request.Query["id"];
+                if (string.IsNullOrEmpty(id)) return new WebResult(1);
+            }
+
             var d = await Dao.DanmakuQuery(id);
             if (format == "json")
             {
@@ -30,8 +36,9 @@ namespace Danmaku.Controllers.ArtPlayer.V2
                 };
             }
 
-            HttpContext.Request.Headers["Accept"] = "application/xml";
-            return string.IsNullOrEmpty(id) ? null : new BilibiliDanmakuData(d);
+            if (string.IsNullOrEmpty(format)) HttpContext.Request.Headers["Accept"] = "application/xml";
+
+            return new BilibiliDanmakuData(d);
         }
 
         // POST: api/artplayer/v1/

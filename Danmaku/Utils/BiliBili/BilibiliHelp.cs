@@ -89,17 +89,18 @@ namespace Danmaku.Utils.BiliBili
         ///     获取B站历史弹幕
         /// </summary>
         /// <returns></returns>
-        public async Task<BilibiliDanmakuData> GetBiDanmakuStream(string cid, string[] date)
+        public BilibiliDanmakuData GetBiDanmakuStream(string cid, string[] date)
         {
             var a = date.Select(async s =>
             {
                 var b = await GetBiDanmakuDataRawAsync(
                         $"https://api.bilibili.com/x/v2/dm/history?type=1&oid={cid}&date={s}");
                 return new BilibiliDanmakuData(b);
-            });
-            var c = new BilibiliDanmakuData();
-            foreach (var v in a) c.D = c.D.Concat((await v).D).ToArray();
-            return c;
+            }).SelectMany(s => s.Result.D);
+            return new BilibiliDanmakuData
+            {
+                D = a.ToArray()
+            };
         }
 
         /// <summary>
