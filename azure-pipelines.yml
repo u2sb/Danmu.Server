@@ -175,7 +175,7 @@ steps:
     displayName: "Edit GitHub Release"
     inputs:
       gitHubConnection: MonoLogueChiToken
-      repositoryName: MonoLogueChi/Dplayer.Danmaku
+      repositoryName: MonoLogueChi/Danmu.Server
       action: create
       tag: $(Build.BuildNumber)
       assets: $(Build.ArtifactStagingDirectory)/*.tar.xz
