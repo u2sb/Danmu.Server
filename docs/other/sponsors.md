@@ -15,7 +15,7 @@ title: 捐赠
 
 <center style="display:flex; justify-content:space-around;">
 <img src="@img/other/alipay.png">
-<img src="@img/other/wechatpay.png"> 
+<img src="@img/other/wechatpay.png">
 </center>
 
 截至 {{date}}，本项目共收到捐款 {{receivables}} 元
