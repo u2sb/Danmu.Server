@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29806.167
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Danmu", "Danmu\Danmu.csproj", "{B9C588D4-1F1B-47C6-8DFD-8434978890A7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release-Linux32|Any CPU = Release-Linux32|Any CPU
+		Release-Linux64|Any CPU = Release-Linux64|Any CPU
+		Release-Win|Any CPU = Release-Win|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B9C588D4-1F1B-47C6-8DFD-8434978890A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9C588D4-1F1B-47C6-8DFD-8434978890A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9C588D4-1F1B-47C6-8DFD-8434978890A7}.Release-Linux32|Any CPU.ActiveCfg = Release-Linux32|Any CPU
+		{B9C588D4-1F1B-47C6-8DFD-8434978890A7}.Release-Linux32|Any CPU.Build.0 = Release-Linux32|Any CPU
+		{B9C588D4-1F1B-47C6-8DFD-8434978890A7}.Release-Linux64|Any CPU.ActiveCfg = Release-Linux64|x64
+		{B9C588D4-1F1B-47C6-8DFD-8434978890A7}.Release-Linux64|Any CPU.Build.0 = Release-Linux64|x64
+		{B9C588D4-1F1B-47C6-8DFD-8434978890A7}.Release-Win|Any CPU.ActiveCfg = Release-Win|Any CPU
+		{B9C588D4-1F1B-47C6-8DFD-8434978890A7}.Release-Win|Any CPU.Build.0 = Release-Win|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {123045BC-218E-445A-8A75-BB2EC747A128}
+	EndGlobalSection
+EndGlobal
