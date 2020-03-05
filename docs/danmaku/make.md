@@ -8,7 +8,6 @@ Windows 环境下推荐使用 Visual Studio ， Linux 环境下可以按照下�
 
 以下所有安装过程以 Debian10 为例，其他系统请自行判断是否需要其他步骤。
 
-
 ## 开发环境
 
 参考 [安装 .NET Core SDK](https://docs.microsoft.com/zh-cn/dotnet/core/install/linux-package-manager-debian10#install-the-net-core-sdk)
@@ -31,22 +30,21 @@ Windows 环境请参考[相关文档](https://docs.microsoft.com/zh-cn/dotnet/co
 
 ## 源码
 
-```
-git clone https://github.com/MonoLogueChi/Danmu.Server -b master --depth 1
-cd Danmu.Server
-```
+下载最新的 [tag](https://github.com/MonoLogueChi/Danmu.Server/releases/latest)，然后解压源码
+
+:::warning 警告
+不要直接从 GitHub 上 Clone 源码，未进入 tag 的源码都是正在开发中的。
+:::
 
 ## 编译
 
-> 因为项目开启 R2R，所以不能交叉编译，想要交叉编译需要关闭 R2R，具体方法为，在 Danmaku/Danmaku.csproj 中找到 `<PublishReadyToRun>true</PublishReadyToRun>`，删掉这一行，或者改为 false。
-
-### 编译Linux版本
+### 编译 Linux 版本
 
 ```bash
 dotnet publish -c Release-Linux64 -r linux-x64 --self-contained false --output publish
 ```
 
-### 编译Windows版本
+### 编译 Windows 版本
 
 ```bash
 dotnet publish -c Release-Win -r win-x64 --self-contained false --output publish
