@@ -9,8 +9,8 @@ title: PostgreSQL安装
 ## 添加 apt 源
 
 ```bash
-touch /etc/apt/sources.list.d/pgdg.list
-vim /etc/apt/sources.list.d/pgdg.list
+sudo touch /etc/apt/sources.list.d/pgdg.list
+sudo vim /etc/apt/sources.list.d/pgdg.list
 ```
 
 写入内容
@@ -31,18 +31,30 @@ wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-
 
 ```bash
 sudo apt-get update
-apt-get install postgresql-12
+sudo apt-get install postgresql-12
 ```
 
 ## 设置 PostgreSQL 密码
 
 ```bash
 sudo -u postgres psql
+```
 
+```sql
 ALTER USER postgres WITH PASSWORD 'password';
 ```
 
-剩下就是创建新的用户和数据库，到这一步自行百度就可以了。
+## 创建新用户和数据库
+
+```sql
+CREATE ROLE "danmu" LOGIN PASSWORD 'danmu';
+
+CREATE DATABASE "danmu"
+WITH
+  OWNER = "danmu"
+  ENCODING = 'UTF8'
+;
+```
 
 <ClientOnly>
   <Vssue title="PostgreSQL-Other | 弹幕服务器文档" />

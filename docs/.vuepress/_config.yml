@@ -23,7 +23,6 @@ themeConfig:
     其他相关文档:
       其他文档: /other/
       PostgreSQL安装: /other/pgsql.html
-      MySQL安装: /other/mysql.html
       感谢: /other/sponsors.html
   sidebar:
     /danmaku/:

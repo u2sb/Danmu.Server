@@ -174,8 +174,8 @@ https://danmu.u2sb.top {
     gzip
     tls youmail@xxx.com
     supervisor {
-        command ./Danmaku
-        dir /www/dotnet/Danmaku/
+        command ./Danmu
+        dir /www/danmu/Dammu
         redirect_stdout stdout
         redirect_stderr stderr
     }
