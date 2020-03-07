@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Danmu.Controllers.Danmu.Common.V1
 {
-    [Route("api/danmu/v1/bilibili")]
+    [Route("/api/danmu/v1/bilibili")]
     public class BiliBiliController : BiliBiliBaseController
     {
         public BiliBiliController(BiliBiliHelp bilibili) : base(bilibili) { }

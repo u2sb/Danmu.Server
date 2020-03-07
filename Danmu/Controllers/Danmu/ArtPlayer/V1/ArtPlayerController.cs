@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Danmu.Controllers.Danmu.ArtPlayer.V1
 {
-    [Route("api/danmu/artplayer/v1")]
+    [Route("/api/danmu/artplayer/v1")]
     [FormatFilter]
     public class ArtPlayerController : DanmuBaseController
     {
@@ -46,7 +46,7 @@ namespace Danmu.Controllers.Danmu.ArtPlayer.V1
             data.Ip = IPAddress.TryParse(Request.Headers["X-Real-IP"], out var ip)
                     ? ip
                     : Request.HttpContext.Connection.RemoteIpAddress;
-            data.Referer = Request.Headers["Referer"].FirstOrDefault();
+            data.Referer ??= Request.Headers["Referer"].FirstOrDefault();
 
             var video = await VideoDao.InsertAsync(data.Id, new Uri(data.Referer));
             var danmu = new DanmuTable

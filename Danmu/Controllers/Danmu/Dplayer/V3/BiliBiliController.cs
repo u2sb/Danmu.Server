@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Danmu.Controllers.Danmu.Dplayer.V3
 {
-    [Route("api/danmu/dplayer/v3")]
+    [Route("/api/danmu/dplayer/v3")]
     public class BiliBiliController : BiliBiliBaseController
     {
         public BiliBiliController(BiliBiliHelp bilibili) : base(bilibili) { }

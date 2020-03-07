@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Danmu.Controllers.Danmu.ArtPlayer.V1
 {
-    [Route("api/danmu/artplayer/v1/bilibili")]
+    [Route("/api/danmu/artplayer/v1/bilibili")]
     public class BiliBiliController : BiliBiliBaseController
     {
         public BiliBiliController(BiliBiliHelp bilibili) : base(bilibili) { }
