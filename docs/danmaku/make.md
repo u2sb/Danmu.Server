@@ -38,6 +38,14 @@ Windows 环境请参考[相关文档](https://docs.microsoft.com/zh-cn/dotnet/co
 
 ## 编译
 
+先生成静态文件
+
+```bash
+cd /path/to/clientapp/
+npm install
+npm run build
+```
+
 ### 编译 Linux 版本
 
 ```bash

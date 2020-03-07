@@ -13,7 +13,7 @@ title: 安装
 ## 安装 .net Core
 
 :::tip 提示
-使用独立部署方式无需安装 `asp .net core runtime`
+使用独立部署方式无需安装 `asp .net core runtime`，相关信息见[安装程序](#安装程序)
 :::
 
 以下所有安装过程以 Debian10 为例，其他系统请自行判断是否需要其他步骤。
@@ -39,15 +39,15 @@ sudo apt-get install aspnetcore-runtime-3.1
 目前数据库支持情况：
 
 - [x] PostgreSQL (10 或更高)
-- [x] MySQL (8.0 或更高)
-- [x] SQLite
-- [ ] SQLServer (计划中，无限期)
+- [x] ~~MySQL (8.0 或更高)~~
+- [ ] SQLite
+- [ ] ~~SQLServer (计划中，无限期)~~
 
 数据库相关设置，可以参考[其他文档](/other/)。
 
 **推荐使用 PostgreSQL**，程序开发就是以 PostgreSQL 为主，SQLite 做兼容性测试，MySQL 不能保证功能 100% 可用。
 
-## 配置文件
+## 安装程序
 
 下载编译好的[二进制文件](https://github.com/MonoLogueChi/Danmu.Server/releases)，Windows 系统或其他 Linux 系统需要自行[编译](make.md)。
 
@@ -76,22 +76,25 @@ vim appsetting.json
       "Microsoft.Hosting.Lifetime": "Information"
     }
   },
-  "Urls": "http://localhost:5000;http://localhost:5001",
-  "AllowedHosts": "*",
-  "WithOrigins": ["*", "*.xwhite.studio", "https://doc.video.xwhite.stduio"],
+  "KestrelSettings": {
+    "Port": [5000],
+    "UnixSocketPath": ["/tmp/danmu.sock"]
+  },
+  "WithOrigins": ["*"],
   "LiveWithOrigins": [
     "http://localhost",
     "http://localhost:4000",
     "https://doc.video.xwhite.studio"
   ],
-  "DanmakuSQL": {
+  "AdminWithOrigins": ["http://localhost:5000"],
+  "DanmuSql": {
     "Sql": 0,
     "Host": "127.0.0.1",
     "Port": 0,
     "UserName": "danmaku",
     "PassWord": "danmaku",
     "DataBase": "danmaku",
-    "Version": "8.0.16"
+    "PoolSize": 16
   },
   "Admin": {
     "User": "MonoLogueChi",
@@ -105,18 +108,20 @@ vim appsetting.json
 具体解释一下
 
 - Logging: 无需更改
-- Urls: `string` 监听地址，Linux 服务器使用 Unix 域套接字，修改无效，多个地址中间使用 `;` 分割
-- AllowedHosts: `string` 允许访问地址，一般不需要修改
+- KestrelSettings:
+  - Port: `string[]` 程序运行端口
+  - UnixSocketPath: `string[]` Unix 域套接字地址
 - WithOrigins: `string[]` 允许跨域地址，可以使用通配符匹配
 - LiveWithOrigins: `string[]` 直播弹幕服务允许跨域地址，不可以使用通配符匹配
+- AdminWithOrigins: `string[]` 管理地址跨域，不做二次开发不建议配置，不可以使用通配符匹配
 - DanmakuSQL:
-  - Sql: `enum` 使用数据库类型，填写编号(`int`)或名称(`string`)，0 - PostgreSQL、1 - MySQL、2 - SQLite
+  - Sql: `enum` 使用数据库类型，填写编号(`int`)或名称(`string`)，0 - PostgreSQL、~~1 -SQLite~~
   - Host: `string` 数据库连接地址
   - Port: `int` 数据库连接端口，0 为默认端口
   - UserName: `string` 数据库连接用户名，SQLite 填写无效
   - PassWord: `string` 数据库连接密码，SQLite 填写无效
   - DataBase: `string` 连接数据库
-  - Version: `string` 版本号，仅在使用 MySQL 时生效
+  - PoolSize: `int` 连接池
 - Admin:
   - User: `string` 管理后台用户名
   - Password: `string` 管理后台密码
@@ -165,7 +170,7 @@ touch config/xxxxx.caddyfile
 修改配置文件
 
 ```
-https://danmaku.xwhite.studio {
+https://danmu.u2sb.top {
     gzip
     tls youmail@xxx.com
     supervisor {
@@ -174,7 +179,7 @@ https://danmaku.xwhite.studio {
         redirect_stdout stdout
         redirect_stderr stderr
     }
-    proxy / unix:/tmp/dplayer.danmaku.sock {
+    proxy / unix:/tmp/danmu.sock {
         websocket
         transparent
     }
@@ -214,6 +219,30 @@ stdout_logfile = /www/caddy/log/out.log
 
 根据自己的情况创建配置文件，具体关于 Supervisor 的使用请自行百度。
 
+### 使用Nginx
+
+Nginx配置较caddy稍麻烦，下面只是一个示例
+
+```nginx
+location /
+{
+    proxy_pass unix:/tmp/danmu.sock;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header REMOTE-HOST $remote_addr;
+    
+    proxy_connect_timeout 15s;
+    proxy_read_timeout 1800s;
+    proxy_send_timeout 20s;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+
+    add_header X-Cache $upstream_cache_status;
+}
+```
+
 ## Dplayer 的简单应用
 
 ```html
@@ -234,9 +263,9 @@ stdout_logfile = /www/caddy/log/out.log
     },
     danmaku: {
       id: "视频的ID，建议使用视频Hash值，例如CRC64",
-      api: "https://danmaku.xwhite.studio/api/dplayer/", //你自己的api
+      api: "https://danmu.u2sb.top/api/danmu/dplayer/", //你自己的api
       addition: [
-        "https://danmaku.xwhite.studio/api/dplayer/v3/bilibili/?cid=73636868"
+        "https://danmu.u2sb.top/api/danmu/dplayer/v3/bilibili/?cid=73636868"
       ] //解析BiliBili弹幕
     }
   });

@@ -31,7 +31,7 @@ wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-
 
 ```bash
 sudo apt-get update
-apt-get install postgresql-11
+apt-get install postgresql-12
 ```
 
 ## 设置 PostgreSQL 密码

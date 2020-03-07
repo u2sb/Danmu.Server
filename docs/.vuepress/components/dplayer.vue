@@ -27,7 +27,7 @@ export default {
     },
     danmakuApi: {
       type: String,
-      default: "https://danmaku.xwhite.studio/api/dplayer/"
+      default: "https://danmu.u2sb.top/api/dplayer/"
     },
     danmakuAddition: {
       type: String,
