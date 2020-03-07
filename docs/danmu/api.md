@@ -62,7 +62,7 @@ title: API
 
 ### BiliBili 历史弹幕接口
 
-> 需配合 [BCookie](/danmaku/install.html#配置文件解释) 使用
+> 需配合 [BCookie](/danmu/install.html#配置文件解释) 使用
 
 - `/api/danmu/dplayer/v3/bilibili/?cid=[cid]&date=[date]` ，例如  
   `https://danmu.u2sb.top/api/danmu/dplayer/v3/bilibili/?cid=73636868&date=2019-07-26`
@@ -112,7 +112,7 @@ title: API
 
 ### BiliBili 历史弹幕接口
 
-> 需配合 [BCookie](/danmaku/install.html#配置文件解释) 使用
+> 需配合 [BCookie](/danmu/install.html#配置文件解释) 使用
 
 - `/api/danmu/artplayer/v1/bilibili/?cid=[cid]&date=[date0]&date=[date1]`  
   `/api/danmu/artplayer/v1/bilibili/danmu.xml?cid=[cid]date=[date0]&date=[date1]`  
@@ -177,5 +177,5 @@ var art = new Artplayer({
 ```
 
 <ClientOnly>
-  <Vssue title="API-Danmaku | 弹幕服务器文档" />
+  <Vssue title="API-danmu | 弹幕服务器文档" />
 </ClientOnly>

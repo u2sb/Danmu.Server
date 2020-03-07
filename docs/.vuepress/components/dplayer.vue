@@ -21,23 +21,23 @@ export default {
       type: String,
       default: ""
     },
-    danmakuId: {
+    danmuId: {
       type: String,
       default: ""
     },
-    danmakuApi: {
+    danmuApi: {
       type: String,
       default: "https://danmu.u2sb.top/api/dplayer/"
     },
-    danmakuAddition: {
+    danmuAddition: {
       type: String,
       default: ""
     },
-    danmakuAddition1: {
+    danmuAddition1: {
       type: String,
       default: null
     },
-    danmakuAddition2: {
+    danmuAddition2: {
       type: String,
       default: null
     },
@@ -113,13 +113,13 @@ export default {
                 bottom: "2%"
               }
             : null,
-          danmaku: {
-            id: this.danmakuId,
-            api: this.danmakuApi,
+          danmu: {
+            id: this.danmuId,
+            api: this.danmuApi,
             addition: [
-              this.danmakuAddition,
-              this.danmakuAddition1,
-              this.danmakuAddition2
+              this.danmuAddition,
+              this.danmuAddition1,
+              this.danmuAddition2
             ].filter(function(s) {
               return s && s.trim();
             }),

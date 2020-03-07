@@ -2,7 +2,7 @@
 home: true
 heroImage: "/img/logo_black.png"
 actionText: 快速开始 →
-actionLink: /danmaku/
+actionLink: /danmu/
 ---
 
 ---

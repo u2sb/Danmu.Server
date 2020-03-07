@@ -61,7 +61,7 @@ sudo apt-get install aspnetcore-runtime-3.1
 
 ```bash
 tar -xvf linux64.tar.xz
-cd Danmaku
+cd danmu
 vim appsetting.json
 ```
 
@@ -91,9 +91,9 @@ vim appsetting.json
     "Sql": 0,
     "Host": "127.0.0.1",
     "Port": 0,
-    "UserName": "danmaku",
-    "PassWord": "danmaku",
-    "DataBase": "danmaku",
+    "UserName": "danmu",
+    "PassWord": "danmu",
+    "DataBase": "danmu",
     "PoolSize": 16
   },
   "Admin": {
@@ -114,7 +114,7 @@ vim appsetting.json
 - WithOrigins: `string[]` 允许跨域地址，可以使用通配符匹配
 - LiveWithOrigins: `string[]` 直播弹幕服务允许跨域地址，不可以使用通配符匹配
 - AdminWithOrigins: `string[]` 管理地址跨域，不做二次开发不建议配置，不可以使用通配符匹配
-- DanmakuSQL:
+- danmuSQL:
   - Sql: `enum` 使用数据库类型，填写编号(`int`)或名称(`string`)，0 - PostgreSQL、~~1 -SQLite~~
   - Host: `string` 数据库连接地址
   - Port: `int` 数据库连接端口，0 为默认端口
@@ -135,16 +135,16 @@ vim appsetting.json
 - F12 F5，在 Network 选项卡中找到相应的请求，复制 Cookie 出来；
 - 当 Cookie 过期以后，再重复上面的步骤，填写新的 Cookie 进去。
 
-![](@img/danmaku/cookie.png)
+![](@img/danmu/cookie.png)
 
 > PS: 当你登录账号的电脑上退出登录，或者登录过期的时候，你就需要重新填写 Cookie 进去了，填写完新的 Cookie 别忘了重启一下程序。
 
 ## 运行测试
 
 ```bash
-./Danmaku
+./danmu
 or
-dotnet Danmaku.dll
+dotnet danmu.dll
 ```
 
 检查是否能够正常运行，数据库是否正常创建。
@@ -261,7 +261,7 @@ location /
     subtitle: {
       url: "demo.vtt"
     },
-    danmaku: {
+    danmu: {
       id: "视频的ID，建议使用视频Hash值，例如CRC64",
       api: "https://danmu.u2sb.top/api/danmu/dplayer/", //你自己的api
       addition: [
@@ -282,5 +282,5 @@ location /
 ```
 
 <ClientOnly>
-  <Vssue title="安装-Danmaku | 弹幕服务器文档" />
+  <Vssue title="安装-danmu | 弹幕服务器文档" />
 </ClientOnly>

@@ -63,5 +63,5 @@ dotnet publish -c Release-Win -r win-x86 --self-contained false --output publish
 编译后会在 `publish` 目录下生成二进制文件，具体参数请参考[相关文档](https://docs.microsoft.com/zh-cn/dotnet/core/deploying/deploy-with-cli)，看不懂没关系，微软的文档只有看的多了才能看得懂。
 
 <ClientOnly>
-  <Vssue title="编译-Danmaku | 弹幕服务器文档" />
+  <Vssue title="编译-danmu | 弹幕服务器文档" />
 </ClientOnly>

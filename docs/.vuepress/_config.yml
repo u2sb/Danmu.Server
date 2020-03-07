@@ -12,10 +12,10 @@ themeConfig:
   smoothScroll: true
   nav:
     弹幕服务器:
-      简介: /danmaku/
-      编译: /danmaku/make.html
-      安装: /danmaku/install.html
-      API: /danmaku/api.html
+      简介: /danmu/
+      编译: /danmu/make.html
+      安装: /danmu/install.html
+      API: /danmu/api.html
     直播弹幕服务器:
       简介: /live/
       安装: /live/install.html
@@ -25,7 +25,7 @@ themeConfig:
       PostgreSQL安装: /other/pgsql.html
       感谢: /other/sponsors.html
   sidebar:
-    /danmaku/:
+    /danmu/:
       - make
       - install
       - api
@@ -34,7 +34,6 @@ themeConfig:
       - api
     /other/:
       - pgsql
-      - mysql
       - sponsors
   repo: MonoLogueChi/Danmu.Server
   repoLabel: GitHub
