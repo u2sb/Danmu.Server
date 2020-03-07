@@ -16,12 +16,7 @@ namespace Danmu.Controllers.Danmu.Common.V1
     [FormatFilter]
     public class CommonController : DanmuBaseController
     {
-        private readonly UserDao _userDao;
-
-        public CommonController(DanmuDao danmuDao, VideoDao videoDao, UserDao userDao) : base(danmuDao, videoDao)
-        {
-            _userDao = userDao;
-        }
+        public CommonController(DanmuDao danmuDao, VideoDao videoDao) : base(danmuDao, videoDao) { }
 
         [HttpGet]
         [HttpGet("{id}.{format?}")]
@@ -30,7 +25,7 @@ namespace Danmu.Controllers.Danmu.Common.V1
             id ??= Request.Query["id"];
             if (string.IsNullOrEmpty(id)) return new WebResult(1);
 
-            var result = await DanmuDao.QueryByVidAsync(id);
+            var result = await DanmuDao.QueryDanmusByVidAsync(id);
 
             if (!string.IsNullOrEmpty(format) && format.Equals("xml")) return (DanmuDataBiliBili) result;
 
@@ -46,15 +41,15 @@ namespace Danmu.Controllers.Danmu.Common.V1
                     ? ip
                     : Request.HttpContext.Connection.RemoteIpAddress;
             data.Referer = Request.Headers["Referer"].FirstOrDefault();
-
+            var video = await VideoDao.InsertAsync(data.Id, new Uri(data.Referer));
             var danmu = new DanmuTable
             {
                 Vid = data.Id,
                 Data = data,
-                Ip = data.Ip
+                Ip = data.Ip,
+                Video = video
             };
-            var result = await DanmuDao.InsertAsync(danmu);
-            await VideoDao.InsertAsync(data.Id, new Uri(data.Referer));
+            var result = await DanmuDao.InsertDanmuAsync(danmu);
             return new WebResult(result ? 0 : 1);
         }
     }

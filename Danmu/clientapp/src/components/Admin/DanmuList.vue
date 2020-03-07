@@ -1,5 +1,5 @@
 <template>
-  <div id="danmakulist">
+  <div id="danmulist">
     <el-table
       v-loading="loading"
       :data="tableData"
@@ -10,9 +10,9 @@
       <el-table-column fixed prop="num" label width="40"></el-table-column>
       <el-table-column fixed prop="vid" label="Vid" width="250" show-overflow-tooltip></el-table-column>
       <el-table-column prop="text" label="数据" width="400"></el-table-column>
-      <el-table-column prop="date" label="时间" width="220" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="ip" label="IP" width="150" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="referer" label="网址" width="800" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="updateTime" label="修改时间" width="160" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="createTime" label="创建时间" width="160" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="ip" label="IP" width="140" show-overflow-tooltip></el-table-column>
       <el-table-column fixed="right" prop="isDelete" label="删除" width="50"></el-table-column>
       <el-table-column fixed="right" label="操作" width="120">
         <template slot-scope="scope">
@@ -46,20 +46,25 @@
         ></el-pagination>
       </div>
     </div>
-    <danmaku-edit
-      v-bind:id="danmakuEditId"
+    <danmu-edit
+      v-bind:id="danmuEditId"
       v-bind:dialogFormVisible="dialogFormVisible"
       @close="DialogClose"
-    ></danmaku-edit>
+    ></danmu-edit>
   </div>
 </template>
 
 
 <script>
 import Enumerable from 'linq'
-import DanmakuEdit from './Edit/DanmakuEdit'
+import danmuEdit from './Edit/DanmuEdit'
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+
+dayjs.extend(utc)
+
 export default {
-  name: 'danmakulist',
+  name: 'danmulist',
   data() {
     return {
       count: 0,
@@ -68,7 +73,7 @@ export default {
       pageSize: 30,
       currentPage: 1,
       dialogFormVisible: false,
-      danmakuEditId: '',
+      danmuEditId: '',
       loading: true
     }
   },
@@ -86,7 +91,7 @@ export default {
       this.GetData(this.pageSize, this.currentPage)
     },
     handleEdit(row) {
-      this.danmakuEditId = row.id
+      this.danmuEditId = row.id
       this.dialogFormVisible = true
     },
     handleDelete(row) {
@@ -97,7 +102,7 @@ export default {
       })
         .then(() => {
           this.$http
-            .get('/api/admin/danmakuedit/delete', {
+            .get('/api/admin/danmuedit/delete', {
               params: {
                 id: row.id
               }
@@ -129,19 +134,19 @@ export default {
         })
     },
     GetCount() {
-      this.$http.get('/api/admin/danmakulist/count').then(res => {
+      this.$http.get('/api/admin/danmulist/count').then(res => {
         let dataObj = eval(res.data)
         if (dataObj.code === 0) {
           this.count = dataObj.data.count
-        } else {
-          this.$router.push({ path: '/login', query: { ReturnUrl: this.$router.fullPath } })
+        } else if (dataObj.code === 401) {
+          this.$router.push({ path: '/login', query: { url: this.$router.fullPath } })
         }
       })
     },
     GetData(size, page) {
       this.loading = true
       this.$http
-        .get('/api/admin/danmakulist', {
+        .get('/api/admin/danmulist', {
           params: {
             size: size,
             page: page
@@ -155,16 +160,16 @@ export default {
                 num: i,
                 id: s.id,
                 vid: s.vid,
-                text: s.danmakuData.text,
+                text: s.data.text,
                 ip: s.ip,
-                date: s.date,
-                referer: s.referer,
+                createTime: dayjs.utc(s.createTime).local().format('YYYY-MM-DD HH:mm:ss'),
+                updateTime: dayjs.utc(s.updateTime).local().format('YYYY-MM-DD HH:mm:ss'),
                 isDelete: s.isDelete ? '是' : '否'
               }))
               .toArray()
             this.loading = false
           } else if (dataObj.code === 401) {
-            this.$router.push({ path: '/login', query: { ReturnUrl: this.$router.fullPath } })
+            this.$router.push({ path: '/login', query: { url: this.$router.fullPath } })
           }
         })
     },
@@ -176,7 +181,7 @@ export default {
     }
   },
   components: {
-    'danmaku-edit': DanmakuEdit
+    'danmu-edit': danmuEdit
   }
 }
 </script>

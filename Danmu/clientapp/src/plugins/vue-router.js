@@ -5,7 +5,7 @@ import VueCookies from 'vue-cookies'
 import Home from '../components/Home'
 import Login from '../components/Login'
 import Admin from '../components/Admin/Admin'
-import DanmakuList from '../components/Admin/DanmakuList'
+import DanmuList from '../components/Admin/DanmuList'
 
 Vue.use(VueCookies)
 Vue.use(VueRouter)
@@ -16,11 +16,20 @@ const routesBase = [
     path: '/login',
     component: Login,
     meta: { title: '登录' },
-    props: route => ({ query: route.query.ReturnUrl })
+    props: route => ({ query: route.query.url })
   },
-  { path: '/admin', component: Admin, meta : { title : '弹幕列表' }, children: [{
-    path: 'danmakulist', component: DanmakuList, meta : { title : '弹幕列表' }
-  }] }
+  {
+    path: '/admin',
+    component: Admin,
+    meta: { title: '弹幕列表', auth: ['SuperAdmin', 'Admin'] },
+    children: [
+      {
+        path: 'danmulist',
+        component: DanmuList,
+        meta: { title: '弹幕列表', auth: ['SuperAdmin', 'Admin'] }
+      }
+    ]
+  }
 ]
 
 const routesReg = [{ path: '*', redirect: '/' }]
@@ -33,16 +42,20 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  if ((/^\/admin/).test(to.path) && !Vue.$cookies.isKey('ClientAuth')) {
+  if (
+    /^\/admin/.test(to.path) &&
+    (!Vue.$cookies.isKey('ClientAuth') ||
+      (to.meta.auth && to.meta.auth.indexOf(Vue.$cookies.get('ClientAuth'))< 0))
+  ) {
     next({
       path: '/login',
-      query: { ReturnUrl: to.fullPath }
+      query: { url: to.fullPath }
     })
   }
-  if (to.path == '/login' && !to.query.ReturnUrl) {
+  if (to.path == '/login' && !to.query.url) {
     next({
       path: to.fullPath,
-      query: { ReturnUrl: from.fullPath }
+      query: { url: from.fullPath }
     })
   }
   if (to.meta.title) {

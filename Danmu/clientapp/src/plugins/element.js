@@ -30,6 +30,7 @@ import {
   ColorPicker,
   Popover,
   Option,
+  OptionGroup,
   Pagination,
   Dialog,
   Notification,
@@ -70,6 +71,7 @@ Vue.use(Option)
 Vue.use(Pagination)
 Vue.use(Dialog)
 Vue.use(Popconfirm)
+Vue.use(OptionGroup)
 
 Vue.use(Loading.directive)
 

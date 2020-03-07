@@ -19,7 +19,7 @@ namespace Danmu.Model.Danmu.DanmuData
         /// <summary>
         ///     弹幕大小
         /// </summary>
-        public int Size { get; set; }
+        public int Size { get; set; } = 25;
 
         /// <summary>
         ///     弹幕颜色

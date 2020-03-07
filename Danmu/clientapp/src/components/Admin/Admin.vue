@@ -6,7 +6,7 @@
           <el-row>
             <el-col :span="8">
               <div>
-                <p>Danmaku</p>
+                <p>danmu</p>
               </div>
             </el-col>
             <el-col :span="16">
@@ -41,7 +41,7 @@
           <div style="float: right;">
             <p>
               <el-link
-                href="https://github.com/MonoLogueChi/Dplayer.Danmaku"
+                href="https://github.com/MonoLogueChi/Dplayer.danmu"
                 target="_blank"
                 :underline="false"
               >问题反馈</el-link>
@@ -61,7 +61,7 @@ export default {
     return {
       activeIndex: '1',
       menuRoutes: {
-        '1': '/admin/danmakulist',
+        '1': '/admin/danmulist',
         '2-1': '/admin',
         '2-2': '/admin',
         '2-3': '/admin'

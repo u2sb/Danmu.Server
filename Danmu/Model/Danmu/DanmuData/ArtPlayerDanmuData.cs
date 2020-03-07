@@ -50,11 +50,31 @@ namespace Danmu.Model.Danmu.DanmuData
         public static explicit operator ArtPlayerDanmuData(BaseDanmuData data)
         {
             var t = data.Mode;
-            if (t > 7) return null;
+            switch (t)
+            {
+                case 4:
+                    t = 1;
+                    break;
+                case 5:
+                    t = 1;
+                    break;
+                case 7:
+                    t = 0;
+                    data.Text = data.Text.Split(",")[4];
+                    break;
+                case 8:
+                    t = 0;
+                    data.Text = null;
+                    break;
+                default:
+                    t = 0;
+                    break;
+            }
+
             return new ArtPlayerDanmuData
             {
                 Time = data.Time,
-                Mode = t == 4 || t == 5 ? 1 : 0,
+                Mode = t,
                 Color = $"#{data.Color:X}",
                 Size = data.Size,
                 Text = data.Text

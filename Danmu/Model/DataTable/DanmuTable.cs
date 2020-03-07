@@ -14,7 +14,7 @@ namespace Danmu.Model.DataTable
         /// </summary>
         [Key]
         [Column("Id")]
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = new Guid();
 
         /// <summary>
         ///     弹幕所在视频
@@ -44,13 +44,21 @@ namespace Danmu.Model.DataTable
         public bool IsDelete { get; set; } = false;
 
         /// <summary>
+        ///     关联到video表
+        /// </summary>
+        [Column("VideoId")]
+        public VideoTable Video { get; set; }
+
+        /// <summary>
         ///     生成时间 UTC
         /// </summary>
+        [Column(TypeName = "timestamp(0)")]
         public DateTime CreateTime { get; set; } = DateTime.UtcNow;
 
         /// <summary>
         ///     修改时间 UTC
         /// </summary>
-        public DateTime UpDateTime { get; set; } = DateTime.UtcNow;
+        [Column(TypeName = "timestamp(0)")]
+        public DateTime UpdateTime { get; set; } = DateTime.UtcNow;
     }
 }

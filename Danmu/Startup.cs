@@ -71,6 +71,7 @@ namespace Danmu
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(builder => builder.WithMethods("GET", "POST", "OPTIONS"));
+
                 options.AddPolicy(DanmuAllowSpecificOrigins, builder =>
                         builder.WithOrigins(config.GetAppSetting().WithOrigins)
                                .SetIsOriginAllowedToAllowWildcardSubdomains().WithMethods("GET", "POST", "OPTIONS")
@@ -100,9 +101,9 @@ namespace Danmu
                     .AddCookie(options =>
                      {
                          options.ReturnUrlParameter = "url";
-                         options.AccessDeniedPath = "/admin/noAuth";
-                         options.LoginPath = "/admin/login";
-                         options.LogoutPath = "/admin/logout";
+                         options.AccessDeniedPath = "/api/admin/noAuth";
+                         options.LoginPath = "/api/admin/login";
+                         options.LogoutPath = "/api/admin/logout";
                          options.Cookie.Name = "DCookie";
                          options.Cookie.MaxAge = TimeSpan.FromMinutes(config.GetAppSetting().Admin.MaxAge);
                      });

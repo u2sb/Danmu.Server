@@ -16,7 +16,7 @@
       <el-main>
         <el-col :span="12">
           <div>
-            <p>Danmaku，一个开源弹幕服务器</p>
+            <p>danmu，一个开源弹幕服务器</p>
           </div>
         </el-col>
         <el-col :span="12">
@@ -67,7 +67,7 @@ export default {
           let formData = {
             name: this.form.name,
             password: md5.update(this.form.password).digest('hex'),
-            url: this.$route.query.ReturnUrl || '/'
+            url: this.$route.query.url || '/'
           }
           this.$http.post('/api/admin/login', formData).then(res => {
             let dataObj = eval(res.data)

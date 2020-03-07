@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json;
 
 namespace Danmu.Model.DataTable
 {
@@ -27,11 +28,13 @@ namespace Danmu.Model.DataTable
         /// <summary>
         ///     生成时间 UTC
         /// </summary>
+        [Column(TypeName = "timestamp(3)")]
         public DateTime CreateTime { get; set; } = DateTime.UtcNow;
 
         /// <summary>
         ///     修改时间 UTC
         /// </summary>
+        [Column(TypeName = "timestamp(3)")]
         public DateTime UpDateTime { get; set; } = DateTime.UtcNow;
     }
 
@@ -39,15 +42,7 @@ namespace Danmu.Model.DataTable
     {
         public Referer() { }
 
-        public Referer(string u)
-        {
-            var uri = new Uri(u);
-            Protocol = uri.Scheme;
-            Host = uri.Host;
-            Port = uri.Port;
-            Path = uri.AbsolutePath;
-            Fragment = uri.Fragment;
-        }
+        public Referer(string u) : this(new Uri(u)) { }
 
         public Referer(Uri uri)
         {
@@ -55,6 +50,7 @@ namespace Danmu.Model.DataTable
             Host = uri.Host;
             Port = uri.Port;
             Path = uri.AbsolutePath;
+            Query = uri.Query;
             Fragment = uri.Fragment;
         }
 
@@ -84,14 +80,32 @@ namespace Danmu.Model.DataTable
         public string Query { get; set; }
 
         /// <summary>
-        ///     参数
+        ///     Fragment
         /// </summary>
         public string Fragment { get; set; }
 
+        /// <summary>
+        ///     json序列化
+        /// </summary>
+        /// <returns></returns>
+        public string ToJson()
+        {
+            return JsonSerializer.Serialize(this);
+        }
+
+        /// <summary>
+        ///     json反序列化
+        /// </summary>
+        /// <param name="json"></param>
+        /// <returns></returns>
+        public static Referer FromJson(string json)
+        {
+            return JsonSerializer.Deserialize<Referer>(json);
+        }
+
         public Uri ToUri()
         {
-            return new Uri(
-                    $"{Protocol}://{Host}:{Port}{Path}{(string.IsNullOrEmpty(Query) ? null : $"?{Query}")}{(string.IsNullOrEmpty(Fragment) ? null : $"?{Fragment}")}");
+            return new Uri($"{Protocol}://{Host}:{Port}{Path}{Query}{Fragment}");
         }
     }
 }

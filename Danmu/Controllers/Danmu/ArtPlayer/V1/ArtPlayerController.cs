@@ -25,7 +25,7 @@ namespace Danmu.Controllers.Danmu.ArtPlayer.V1
             id ??= Request.Query["id"];
             if (string.IsNullOrEmpty(id)) return new WebResult(1);
 
-            var result = await DanmuDao.QueryByVidAsync(id);
+            var result = await DanmuDao.QueryDanmusByVidAsync(id);
 
             if (!string.IsNullOrEmpty(format) && format.Equals("json"))
             {
@@ -48,14 +48,15 @@ namespace Danmu.Controllers.Danmu.ArtPlayer.V1
                     : Request.HttpContext.Connection.RemoteIpAddress;
             data.Referer = Request.Headers["Referer"].FirstOrDefault();
 
+            var video = await VideoDao.InsertAsync(data.Id, new Uri(data.Referer));
             var danmu = new DanmuTable
             {
                 Vid = data.Id,
                 Data = data.ToBaseDanmuData(),
-                Ip = data.Ip
+                Ip = data.Ip,
+                Video = video
             };
-            var result = await DanmuDao.InsertAsync(danmu);
-            await VideoDao.InsertAsync(data.Id, new Uri(data.Referer));
+            var result = await DanmuDao.InsertDanmuAsync(danmu);
             return new WebResult(result ? 0 : 1);
         }
     }

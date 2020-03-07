@@ -1,4 +1,4 @@
-<template id="danmaku-edit">
+<template id="danmu-edit">
   <div>
     <el-dialog title="编辑弹幕" :visible.sync="dialogFormVisible" width="850px">
       <el-form :model="form">
@@ -15,9 +15,16 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="12">
+          <el-col :span="24">
             <el-form-item label="Referer" :label-width="formLabelWidth">
               <el-input v-model="form.referer" disabled></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="Author" :label-width="formLabelWidth">
+              <el-input v-model="form.data.author" disabled></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -28,40 +35,46 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="Author" :label-width="formLabelWidth">
-              <el-input v-model="form.danmakuData.author" disabled></el-input>
+            <el-form-item label="UpdateTime" :label-width="formLabelWidth">
+              <el-input v-model="form.updateTime" disabled></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="Date" :label-width="formLabelWidth">
-              <el-input v-model="form.date" disabled></el-input>
+            <el-form-item label="CreateTime" :label-width="formLabelWidth">
+              <el-input v-model="form.createTime" disabled></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="9">
             <el-form-item label="弹幕时间" :label-width="formLabelWidth">
-              <el-input v-model="form.danmakuData.time"></el-input>
+              <el-input v-model="form.data.time"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="9">
             <el-form-item label="弹幕类型" :label-width="formLabelWidth">
-              <el-select v-model="form.danmakuData.type">
-                <el-option label="滚动" value="滚动"></el-option>
-                <el-option label="顶部" value="顶部"></el-option>
-                <el-option label="底部" value="底部"></el-option>
+              <el-select v-model="form.data.mode">
+                <el-option
+                  v-for="item in danmuModes"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                  <span style="float: left">{{ item.value }}</span>
+                  <span style="float: right; color: #8492a6; font-size: 13px">{{ item.label }}</span>
+                </el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="颜色" :label-width="formLabelWidth">
-              <el-color-picker v-model="form.danmakuData.color" :predefine="predefineColors"></el-color-picker>
+              <el-color-picker v-model="form.data.color" :predefine="predefineColors"></el-color-picker>
             </el-form-item>
           </el-col>
         </el-row>
 
         <el-form-item label="弹幕内容" :label-width="formLabelWidth">
-          <el-input type="textarea" v-model="form.danmakuData.text"></el-input>
+          <el-input type="textarea" v-model="form.data.text"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -73,8 +86,13 @@
 </template>
 
 <script>
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+
+dayjs.extend(utc)
+
 export default {
-  name: 'danmakuEdit',
+  name: 'danmuEdit',
   props: {
     id: {
       type: String,
@@ -89,14 +107,64 @@ export default {
   },
   data() {
     return {
-      danmakuData: {
-        danmakuData: {}
+      danmuData: {
+        data: {}
       },
       form: {
-        danmakuData: {}
+        data: {}
       },
       formLabelWidth: '100px',
-      predefineColors: ['#000000', '#FFFFFF', '#E54256', '#FFE133', '#64DD17', '#39CCFF', '#D500F9']
+      predefineColors: [
+        '#000000',
+        '#FFFFFF',
+        '#E54256',
+        '#FFE133',
+        '#64DD17',
+        '#39CCFF',
+        '#D500F9'
+      ],
+      danmuModes: [
+        {
+          value: 0,
+          label: ''
+        },
+        {
+          value: 1,
+          label: '滚动弹幕'
+        },
+        {
+          value: 2,
+          label: ''
+        },
+        {
+          value: 3,
+          label: ''
+        },
+        {
+          value: 4,
+          label: '底部弹幕'
+        },
+        {
+          value: 5,
+          label: '顶部弹幕'
+        },
+        {
+          value: 6,
+          label: ''
+        },
+        {
+          value: 7,
+          label: ''
+        },
+        {
+          value: 8,
+          label: '高级弹幕'
+        },
+        {
+          value: 9,
+          label: '特殊弹幕'
+        }
+      ]
     }
   },
   methods: {
@@ -104,8 +172,8 @@ export default {
       this.$emit('close')
     },
     OnClickEnter() {
-      this.danmakuData = this.Form2Data(this.form)
-      this.$http.post('/api/admin/danmakuedit/edit', this.danmakuData).then(res => {
+      this.danmuData = this.Form2Data(this.form)
+      this.$http.post('/api/admin/danmuedit/edit', this.danmuData).then(res => {
         let dataObj = eval(res.data)
         if (dataObj.code === 0) {
           this.$notify({
@@ -125,7 +193,7 @@ export default {
     },
     GetData(id) {
       this.$http
-        .get('/api/admin/danmakuedit/get', {
+        .get('/api/admin/danmuedit/get', {
           params: {
             id: id
           }
@@ -133,23 +201,33 @@ export default {
         .then(res => {
           let dataObj = eval(res.data)
           if (dataObj.code === 0) {
-            this.danmakuData = dataObj.data
+            this.danmuData = dataObj.data
             this.form = this.Data2Form(dataObj.data)
           } else if (dataObj.code === 401) {
-            this.$router.push({ path: '/login', query: { ReturnUrl: this.$router.fullPath } })
+            this.$router.push({ path: '/login', query: { url: this.$router.fullPath } })
           }
         })
     },
     Data2Form(data) {
       let f = JSON.parse(JSON.stringify(data))
-      f.danmakuData.color = `#${f.danmakuData.color.toString(16)}`
-      f.danmakuData.type = { 0: '滚动', 1: '顶部', 2: '底部' }[f.danmakuData.type]
+      let v = f.video.referer
+      f.data.color = `#${f.data.color.toString(16)}`
+      f.referer = `${v.protocol}://${v.host}:${v.port}${v.path}${v.query}`
+      f.createTime = dayjs
+        .utc(f.createTime)
+        .local()
+        .format('YYYY-MM-DD HH:mm:ss')
+      f.updateTime = dayjs
+        .utc(f.updateTime)
+        .local()
+        .format('YYYY-MM-DD HH:mm:ss')
       return f
     },
     Form2Data(form) {
       let f = JSON.parse(JSON.stringify(form))
-      f.danmakuData.type = { 滚动: 0, 顶部: 1, 底部: 2 }[f.danmakuData.type]
-      f.danmakuData.color = parseInt(f.danmakuData.color.substring(1), 16)
+      f.data.color = parseInt(f.data.color.substring(1), 16)
+      f.createTime = dayjs.utc(f.createTime)
+      f.updateTime = dayjs.utc()
       return f
     }
   },

@@ -3,30 +3,31 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Danmu.Controllers.Base;
 using Danmu.Model.DataTable;
 using Danmu.Model.WebResult;
 using Danmu.Utils.Configuration;
 using Danmu.Utils.Dao;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using static Danmu.Utils.Global.VariableDictionary;
 
 namespace Danmu.Controllers.Account
 {
-    [Route("/admin")]
-    [EnableCors(AdminAllowSpecificOrigins)]
-    public class AccountController : ControllerBase
+    [Route("/api/admin")]
+    [AllowAnonymous]
+    public class AccountBaseController : AdminBaseController
     {
         private readonly Model.Config.Admin _admin;
         private readonly UserDao _userDao;
 
-        public AccountController(AppConfiguration configuration, UserDao dao)
+        public AccountBaseController(AppConfiguration configuration, UserDao userDao, DanmuDao danmuDao,
+                                     VideoDao videoDao) : base(danmuDao, videoDao)
         {
             _admin = configuration.GetAppSetting().Admin;
-            _userDao = dao;
+            _userDao = userDao;
         }
 
         [HttpGet("login")]
