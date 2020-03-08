@@ -1,12 +1,19 @@
 # Dplayer弹幕服务器C#版
 
+## 公告
+
+> 使用旧版服务器的，请尽快迁移到新版服务器，相关API更改可以看[文档](https://dandoc.u2sb.top)，同时，旧版弹幕服务器将于半年后停止服务，旧版服务器上数据将在适当时候迁移，迁移过程中可能会丢失部分数据。
+
 ## 文档
 
 [https://dandoc.u2sb.top](https://dandoc.u2sb.top)
 
 ## 这是什么？
 
-这是[Dplayer播放器](https://github.com/MoePlayer/DPlayer)的弹幕服务器
+这是一个通用弹幕服务器，包括但不限于以下播放器可以使用：
+
+- [x] [Dplayer](https://github.com/MoePlayer/DPlayer)
+- [x] [ArtPlayer](https://github.com/zhw2590582/ArtPlayer)
 
 ## 为什么要做这个东西？
 
