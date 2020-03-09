@@ -2,6 +2,39 @@
 title: 安装
 ---
 
+# 最简部署
+
+## 快速部署
+
+1. 安装PostgreSQL，详情见[PostgreSQL安装](/other/pgsql.html)
+1. 下载带有 `scd` 标记的[最新预编译文件](https://github.com/MonoLogueChi/Danmu.Server/releases/latest)
+1. 解压到合适位置
+1. 修改配置文件
+1. 测试能否正常启动
+1. 配置http代理工具和进程守护
+
+```bash
+//1 省略，见后面的文档
+
+//2 地址只是示例，请自行看最新版地址
+wget https://github.com/MonoLogueChi/Danmu.Server/releases/download/1.0.0.beta2/linux64.r2r.scd.tar.xz
+
+//3
+tar -xvf linux64.tar.xz
+
+//4 配置文件每一项的解释见后面的文档
+cd Danmu
+vim appsettings.json
+
+//5
+./Danmu
+
+//6
+省略，见后面的文档
+```
+
+# 完整概述
+
 ## 环境要求
 
 - Linux (推荐) 或 Windows 服务器
@@ -45,7 +78,7 @@ sudo apt-get install aspnetcore-runtime-3.1
 
 数据库相关设置，可以参考[其他文档](/other/)。
 
-**推荐使用 PostgreSQL**，程序开发就是以 PostgreSQL 为主，SQLite 做兼容性测试，MySQL 不能保证功能 100% 可用。
+**推荐使用 PostgreSQL**，程序开发就是以 PostgreSQL 为主，SQLite 做兼容性测试，SQLite 不能保证功能 100% 可用。
 
 ## 安装程序
 
@@ -232,9 +265,9 @@ location /
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_set_header REMOTE-HOST $remote_addr;
     
-    proxy_connect_timeout 15s;
+    proxy_connect_timeout 30s;
     proxy_read_timeout 1800s;
-    proxy_send_timeout 20s;
+    proxy_send_timeout 35s;
     proxy_http_version 1.1;
     proxy_set_header Upgrade $http_upgrade;
     proxy_set_header Connection "upgrade";
