@@ -294,7 +294,7 @@ location /
     subtitle: {
       url: "demo.vtt"
     },
-    danmu: {
+    danmaku: {
       id: "视频的ID，建议使用视频Hash值，例如CRC64",
       api: "https://danmu.u2sb.top/api/danmu/dplayer/", //你自己的api
       addition: [

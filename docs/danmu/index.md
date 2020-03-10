@@ -32,7 +32,7 @@ title: 简介
 
 ## 演示
 
-<dplayer src="/video/s_720.mp4" danmu-id="C6CC6218F1FB8770" danmu-addition="https://danmu.u2sb.top/api/dplayer/v3/bilibili?cid=73636868"/>
+<dplayer src="/video/s_720.mp4" danmu-id="C6CC6218F1FB8770" danmu-addition="https://danmu.u2sb.top/api/danmu/dplayer/v3/bilibili?cid=73636868"/>
 
 ## 反馈
 

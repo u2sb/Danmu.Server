@@ -33,7 +33,7 @@ title: 安装
           "http://live.xwhite.studio/live?port=1935&app=live&stream=streamname",
         type: "flv"
       },
-      danmu: true,
+      danmaku: true,
       apiBackend: liveDan(
         "https://danmu.u2sb.top/api/live/danmu",
         "cd30ae05-4ad5-5135-bd6d-337ac0de102e",
