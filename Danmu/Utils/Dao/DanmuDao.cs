@@ -86,13 +86,10 @@ namespace Danmu.Utils.Dao
         public async Task<DanmuTable> EditDanmuAsync(Guid id, float time, int mode, int color, string text)
         {
             var dataBase = await _con.Danmu.Where(e => e.Id.Equals(id)).FirstOrDefaultAsync();
-            dataBase.Data = new BaseDanmuData
-            {
-                Time = time,
-                Mode = mode,
-                Color = color,
-                Text = text ?? dataBase.Data.Text
-            };
+            dataBase.Data.Time = time;
+            dataBase.Data.Mode = mode;
+            dataBase.Data.Color = color;
+            dataBase.Data.Text = text ?? dataBase.Data.Text;
             dataBase.UpdateTime = DateTime.UtcNow;
             _con.Update(dataBase);
             if (await _con.SaveChangesAsync() > 0) return dataBase;

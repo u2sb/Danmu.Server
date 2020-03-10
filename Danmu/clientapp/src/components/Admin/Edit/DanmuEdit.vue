@@ -212,7 +212,8 @@ export default {
       let f = JSON.parse(JSON.stringify(data))
       let v = f.video.referer
       f.data.color = `#${f.data.color.toString(16)}`
-      f.referer = `${v.protocol}://${v.host}:${v.port}${v.path}${v.query}`
+      f.referer = new URL(`${v.protocol}://${v.host}:${v.port}${v.path}${v.query}`).toString()
+      //f.referer = `${v.protocol}://${v.host}:${v.port}${v.path}${v.query}`
       f.createTime = dayjs
         .utc(f.createTime)
         .local()
