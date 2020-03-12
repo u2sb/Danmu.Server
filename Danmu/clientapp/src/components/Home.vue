@@ -5,7 +5,7 @@
       <a href="https://dandoc.u2sb.top" target="_blank">文档</a>
     </p>
     <p>
-      <router-link :to="'/admin'">管理</router-link>
+      <router-link :to="'/admin/danmulist'">管理</router-link>
     </p>
     <p>
       <router-link :to="'/login'">登录</router-link>

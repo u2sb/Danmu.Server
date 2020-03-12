@@ -78,6 +78,7 @@ export default {
     }
   },
   mounted: function() {
+    this.$store.commit('changeShowVidSelect', false)
     this.GetData(this.pageSize, this.currentPage)
     this.GetCount()
   },
@@ -162,8 +163,14 @@ export default {
                 vid: s.vid,
                 text: s.data.text,
                 ip: s.ip,
-                createTime: dayjs.utc(s.createTime).local().format('YYYY-MM-DD HH:mm:ss'),
-                updateTime: dayjs.utc(s.updateTime).local().format('YYYY-MM-DD HH:mm:ss'),
+                createTime: dayjs
+                  .utc(s.createTime)
+                  .local()
+                  .format('YYYY-MM-DD HH:mm:ss'),
+                updateTime: dayjs
+                  .utc(s.updateTime)
+                  .local()
+                  .format('YYYY-MM-DD HH:mm:ss'),
                 isDelete: s.isDelete ? '是' : '否'
               }))
               .toArray()

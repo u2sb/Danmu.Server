@@ -60,5 +60,14 @@ namespace Danmu.Utils.Dao
                 return a.Entity;
             return null;
         }
+
+        /// <summary>
+        ///     获取vid列表
+        /// </summary>
+        /// <returns></returns>
+        public async Task<string[]> GetVidsAsync()
+        {
+            return await _con.Video.Select(e => e.Vid).Distinct().ToArrayAsync();
+        }
     }
 }

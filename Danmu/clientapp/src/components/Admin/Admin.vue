@@ -3,32 +3,45 @@
     <el-container direction="vertical">
       <el-header>
         <div class="header-box">
-          <el-row>
-            <el-col :span="8">
+          <el-row type="flex" justify="end">
+            <el-col :xs="0" :sm="2" :md="5" :lg="7" :xl="9">
               <div>
-                <p>danmu</p>
+                <p>
+                  <router-link :to="'/'" style="text-decoration: none">
+                    <el-link>Danmu</el-link>
+                  </router-link>
+                </p>
               </div>
             </el-col>
-            <el-col :span="16">
-              <el-menu
-                :default-active="activeIndex"
-                class="el-menu-demo"
-                mode="horizontal"
-                @select="handleSelect"
-                style="float: right;"
-              >
-                <el-menu-item index="1">所有弹幕</el-menu-item>
-                <el-submenu index="2">
-                  <template slot="title">弹幕检索</template>
-                  <el-menu-item index="2-1" disabled>视频检索</el-menu-item>
-                  <el-menu-item index="2-2" disabled>时间检索</el-menu-item>
-                  <el-menu-item index="2-3" disabled>复杂检索</el-menu-item>
-                </el-submenu>
-                <el-menu-item index="3" disabled>用户中心</el-menu-item>
-                <el-menu-item index="4">
-                  <el-link href="/api/admin/logout" :underline="false">退出登录</el-link>
-                </el-menu-item>
-              </el-menu>
+            <el-col :span="8">
+              <div v-show="showVidSelect" style="float: right; margin-top: 8px">
+                <el-select v-model="vid" filterable allow-create placeholder="请输入vid">
+                  <el-option v-for="item in vids" :key="item" :label="item" :value="item"></el-option>
+                </el-select>
+              </div>
+              <p></p>
+            </el-col>
+            <el-col :xs="20" :sm="14" :md="11" :lg="9" :xl="7">
+              <div style="float: right;">
+                <el-menu
+                  :default-active="activeIndex"
+                  class="el-menu-demo"
+                  mode="horizontal"
+                  @select="handleSelect"
+                >
+                  <el-menu-item index="1">所有弹幕</el-menu-item>
+                  <el-submenu index="2">
+                    <template slot="title">弹幕检索</template>
+                    <el-menu-item index="2-1">视频检索</el-menu-item>
+                    <el-menu-item index="2-2" disabled>时间检索</el-menu-item>
+                    <el-menu-item index="2-3" disabled>复杂检索</el-menu-item>
+                  </el-submenu>
+                  <el-menu-item index="3" disabled>用户中心</el-menu-item>
+                  <el-menu-item index="4">
+                    <el-link href="/api/admin/logout" :underline="false">退出登录</el-link>
+                  </el-menu-item>
+                </el-menu>
+              </div>
             </el-col>
           </el-row>
         </div>
@@ -61,20 +74,47 @@ export default {
     return {
       activeIndex: '1',
       menuRoutes: {
-        '1': '/admin/danmulist',
-        '2-1': '/admin',
-        '2-2': '/admin',
-        '2-3': '/admin'
+        '1': { name: 'danmulist' },
+        '2-1': { name: 'danmulistbyvid', params: { vid: '' } },
+        '2-2': { name: 'danmulistbyvid', params: { vid: '' } },
+        '2-3': { name: 'danmulistbyvid', params: { vid: '' } }
+      }
+    }
+  },
+  computed: {
+    showVidSelect: {
+      get() {
+        return this.$store.state.admin.showVidSelect
+      },
+      set(value) {
+        this.$store.commit('changeShowVidSelect', value)
+      }
+    },
+    vid: {
+      get() {
+        return this.$store.state.admin.vid
+      },
+      set(value) {
+        this.$store.commit('changeVid', value)
+      }
+    },
+    vids: {
+      get() {
+        return this.$store.state.admin.vids
+      },
+      set(value) {
+        this.$store.commit('changeVids', value)
       }
     }
   },
   methods: {
     handleSelect(key) {
       let route = this.menuRoutes[key]
-      if (route && this.$route.path != route) {
+      if (route && this.$route.name != route.name) {
         this.$router.push(route)
       }
-    }
+    },
+    QueryByVid() {}
   }
 }
 </script>
@@ -125,9 +165,9 @@ export default {
     }
   }
 
-  .el-table__body{
+  .el-table__body {
     td {
-      padding: 6px 0px
+      padding: 6px 0px;
     }
   }
 }

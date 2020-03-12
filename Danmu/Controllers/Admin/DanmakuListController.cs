@@ -32,10 +32,49 @@ namespace Danmu.Controllers.Admin
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<WebResult<DanmuTable[]>> GetDanmuList(int page, int size, bool descending = true)
+        public async Task<WebResult<DanmuTable[]>> GetDanmuList(int page = 1, int size = 30, bool descending = true)
         {
             var allDanmu = await DanmuDao.GetAllDanmuAsync(page, size, descending);
             return new WebResult<DanmuTable[]>(allDanmu);
+        }
+
+        /// <summary>
+        ///     通过vid查询到的弹幕总数
+        /// </summary>
+        /// <param name="vid"></param>
+        /// <returns></returns>
+        [HttpGet("count" + "by" + "vid")]
+        public async Task<WebResult<int>> GetCountByVid(string vid)
+        {
+            var count = await DanmuDao.GetDanmuByVidAsync(vid);
+            return new WebResult<int>
+            {
+                Code = 0,
+                Data = count
+            };
+        }
+
+        /// <summary>
+        ///     通过vid查询弹幕
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("query" + "by" + "vid")]
+        public async Task<WebResult<DanmuTable[]>> GetDanmuListByVid(string vid, int page = 1, int size = 30,
+                                                                     bool descending = true)
+        {
+            var danmu = await DanmuDao.GetDanmuByVidAsync(vid, page, size, descending);
+            return new WebResult<DanmuTable[]>(danmu);
+        }
+
+        /// <summary>
+        ///     获取vid集合
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("vids")]
+        public async Task<WebResult<string[]>> GetVidList()
+        {
+            var vids = await VideoDao.GetVidsAsync();
+            return new WebResult<string[]>(vids);
         }
     }
 }
