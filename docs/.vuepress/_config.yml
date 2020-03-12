@@ -15,6 +15,7 @@ themeConfig:
       简介: /danmu/
       编译: /danmu/make.html
       安装: /danmu/install.html
+      管理: /danmu/admin.html
       API: /danmu/api.html
     直播弹幕服务器:
       简介: /live/
@@ -29,6 +30,7 @@ themeConfig:
     /danmu/:
       - make
       - install
+      - admin
       - api
     /live/:
       - install
