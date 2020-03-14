@@ -71,8 +71,8 @@ namespace Danmu.Controllers.Account
                 });
 
 
-                if (Url.IsLocalUrl(url)) return new WebResult(0) {Data = new {url = url}};
-                return new WebResult(0) {Data = new {url = "/"}};
+                if (Url.IsLocalUrl(url)) return new WebResult(0) {Data = new {url = url, uid = r.uid}};
+                return new WebResult(0) {Data = new {url = "/", uid = r.uid } };
             }
 
             return new WebResult(1) {Data = new {url = url}};

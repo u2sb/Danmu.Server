@@ -23,7 +23,7 @@ namespace Danmu.Utils.Dao
         /// <returns>通用弹幕列表</returns>
         public async Task<BaseDanmuData[]> QueryDanmusByVidAsync(string vid)
         {
-            return await _con.Danmu.Where(e => e.Vid.Equals(vid) && !e.IsDelete).Select(s => s.Data).ToArrayAsync();
+            return await _con.Danmu.AsNoTracking().Where(e => e.Vid.Equals(vid) && !e.IsDelete).Select(s => s.Data).ToArrayAsync();
         }
 
         /// <summary>

@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Danmu.Model.DataTable;
 using Microsoft.EntityFrameworkCore;
@@ -26,7 +27,7 @@ namespace Danmu.Utils.Dao
         /// <returns></returns>
         public async Task<DanmuTable[]> GetAllDanmuAsync(int page, int size, bool descending = true)
         {
-            var allDanmu = _con.Danmu;
+            var allDanmu = _con.Danmu.AsNoTracking();
             var order = descending
                     ? allDanmu.OrderByDescending(b => b.CreateTime)
                     : allDanmu.OrderBy(b => b.CreateTime);
@@ -41,7 +42,8 @@ namespace Danmu.Utils.Dao
         public async Task<DanmuTable> QueryDanmuByIdAsync(string id)
         {
             if (Guid.TryParse(id, out var guid))
-                return await _con.Danmu.Where(e => e.Id.Equals(guid)).Include(e => e.Video).FirstOrDefaultAsync();
+                return await _con.Danmu.AsNoTracking().Where(e => e.Id.Equals(guid)).Include(e => e.Video)
+                                 .FirstOrDefaultAsync();
             return new DanmuTable();
         }
 
@@ -93,7 +95,7 @@ namespace Danmu.Utils.Dao
         /// <returns></returns>
         public async Task<int> GetDanmuByVidAsync(string vid)
         {
-            return await _con.Danmu.Where(e => e.Vid.Equals(vid)).CountAsync();
+            return await _con.Danmu.AsNoTracking().Where(e => e.Vid.Equals(vid)).CountAsync();
         }
 
         /// <summary>
@@ -107,11 +109,68 @@ namespace Danmu.Utils.Dao
         public async Task<DanmuTable[]> GetDanmuByVidAsync(string vid, int page, int size,
                                                            bool descending = true)
         {
-            var allDanmu = _con.Danmu.Where(e => e.Vid.Equals(vid));
+            var allDanmu = _con.Danmu.AsNoTracking().Where(e => e.Vid.Equals(vid));
             var order = descending
                     ? allDanmu.OrderByDescending(b => b.CreateTime)
                     : allDanmu.OrderBy(b => b.CreateTime);
             return await order.Skip(size * (page - 1)).Take(size).ToArrayAsync();
+        }
+
+        /// <summary>
+        ///     时间检索
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="size"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="descending"></param>
+        /// <returns></returns>
+        public async Task<DanmuTable[]> DateSelectAsync(int page = 1, int size = 30, string startDate = null,
+                                                   string endDate = null, bool descending = true)
+        {
+            DateTime sDate = DateTime.TryParse(startDate, out sDate) ? sDate : DateTime.MinValue;
+            DateTime eDate = DateTime.TryParse(endDate, out eDate) ? eDate : DateTime.MaxValue;
+            var a = _con.Danmu.AsNoTracking().Where(d =>
+                    (string.IsNullOrEmpty(startDate) || DateTime.Compare(sDate, d.CreateTime) < 0) &&
+                    (string.IsNullOrEmpty(endDate) || DateTime.Compare(eDate, d.CreateTime) > 0));
+            a = descending ? a.OrderByDescending(b => b.UpdateTime) : a.OrderBy(b => b.UpdateTime);
+            return await a.Skip(size * (page - 1)).Take(size).ToArrayAsync();
+        }
+
+        /// <summary>
+        ///     复杂检索
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="size"></param>
+        /// <param name="vid"></param>
+        /// <param name="author"></param>
+        /// <param name="authorId"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="mode"></param>
+        /// <param name="ip"></param>
+        /// <param name="key"></param>
+        /// <param name="descending"></param>
+        /// <returns></returns>
+        public async Task<DanmuTable[]> DanmuBasesSelect(int page, int size, string vid, string author, int authorId,
+                                                         string startDate,
+                                                         string endDate, int mode, string ip,
+                                                         string key, bool descending = true)
+        {
+            IPAddress dip;
+            DateTime sDate = DateTime.TryParse(startDate, out sDate) ? sDate : DateTime.MinValue;
+            DateTime eDate = DateTime.TryParse(endDate, out eDate) ? eDate : DateTime.MaxValue;
+            var a = _con.Danmu.AsNoTracking().Where(d =>
+                    (mode >= 10 || d.Data.Mode.Equals(mode)) &&
+                    (string.IsNullOrEmpty(ip) || !IPAddress.TryParse(ip, out dip) || d.Ip.Equals(dip)) &&
+                    (string.IsNullOrEmpty(startDate) || DateTime.Compare(sDate, d.CreateTime) < 0) &&
+                    (string.IsNullOrEmpty(endDate) || DateTime.Compare(eDate, d.CreateTime) > 0) &&
+                    (string.IsNullOrEmpty(vid) || d.Vid.Contains(vid)) &&
+                    (string.IsNullOrEmpty(author) || d.Data.Author.Contains(author)) &&
+                    (authorId < 0 || d.Data.AuthorId.Equals(authorId)) &&
+                    (string.IsNullOrEmpty(key) || d.Data.Text.Contains(key)));
+            a = descending ? a.OrderByDescending(b => b.UpdateTime) : a.OrderBy(b => b.UpdateTime);
+            return await a.Skip(size * (page - 1)).Take(size).ToArrayAsync();
         }
     }
 }

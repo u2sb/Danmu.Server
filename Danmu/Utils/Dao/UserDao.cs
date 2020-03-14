@@ -38,10 +38,15 @@ namespace Danmu.Utils.Dao
                     await r.Where(e => e.PassWord.Equals(vpd))
                            .ToArrayAsync();
             return result.Length > 0
-                    ? new {Succeed = true, Role = result.Select(s => s.Role).FirstOrDefault()}
+                    ? new
+                    {
+                        Succeed = true,
+                        Role = result.Select(s => s.Role).FirstOrDefault(),
+                        uid = result.Select(e => e.Id).FirstOrDefault()
+                    }
                     : _admin.User.Equals(name) && Md5.IsThisMd5(password, _admin.Password)
-                            ? new {Succeed = true, Role = UserRole.SuperAdmin}
-                            : new {Succeed = false, Role = UserRole.GeneralUser};
+                            ? new {Succeed = true, Role = UserRole.SuperAdmin, uid = 0}
+                            : new {Succeed = false, Role = UserRole.GeneralUser, uid = 0};
 
             //TODO 这里需要修改，增加一种重置密码的方式，不再使用配置文件保存密码
         }
@@ -106,7 +111,7 @@ namespace Danmu.Utils.Dao
         /// <returns></returns>
         public async Task<int> CheckNameAsync(string name)
         {
-            return await _con.User.Where(e => e.Name.Equals(name)).CountAsync();
+            return await _con.User.AsNoTracking().Where(e => e.Name.Equals(name)).CountAsync();
         }
 
         /// <summary>
@@ -120,7 +125,8 @@ namespace Danmu.Utils.Dao
         public async Task<bool> ChangeUserInfoAsync(int id, string name = null, string email = null,
                                                     string phoneNumber = null)
         {
-            if (await _con.User.Where(e => e.Name.Equals(name)).CountAsync() > 0) return false;
+            if (await _con.User.Where(e => e.Name.Equals(name)).CountAsync() > 0 ||
+                await _con.User.Where(e => e.Id.Equals(id)).CountAsync() == 0) return false;
             var r = await _con.User.Where(e => e.Id.Equals(id)).FirstOrDefaultAsync();
             r.Name = name ?? r.Name;
             r.Email = email ?? r.Email;
@@ -128,6 +134,42 @@ namespace Danmu.Utils.Dao
             r.UpDateTime = DateTime.UtcNow;
             _con.User.Update(r);
             return await _con.SaveChangesAsync() > 0;
+        }
+
+        /// <summary>
+        ///     修改用户角色
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="role"></param>
+        /// <returns></returns>
+        public async Task<bool> ChangeUserRoleAsync(int id, UserRole role)
+        {
+            var r = _con.User.Where(e => e.Id.Equals(id));
+            if (await r.CountAsync() == 0) return false;
+
+            var r1 = await r.FirstOrDefaultAsync();
+            r1.Role = role;
+            _con.User.Update(r1);
+            return await _con.SaveChangesAsync() > 0;
+        }
+
+        /// <summary>
+        ///     查看某用户信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<UserTable> UserInfoAsync(int id)
+        {
+            return await _con.User.AsNoTracking().Where(e => e.Id.Equals(id)).Select(s => new UserTable
+            {
+                Id = s.Id,
+                Name = s.Name,
+                Email = s.Email,
+                PhoneNumber = s.PhoneNumber,
+                CreateTime = s.CreateTime,
+                UpDateTime = s.UpDateTime,
+                Role = s.Role
+            }).FirstOrDefaultAsync();
         }
     }
 }

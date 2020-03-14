@@ -67,7 +67,7 @@ namespace Danmu.Utils.Dao
         /// <returns></returns>
         public async Task<string[]> GetVidsAsync()
         {
-            return await _con.Video.Select(e => e.Vid).Distinct().ToArrayAsync();
+            return await _con.Video.AsNoTracking().Select(e => e.Vid).Distinct().ToArrayAsync();
         }
     }
 }
