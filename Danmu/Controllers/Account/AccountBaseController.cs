@@ -48,7 +48,7 @@ namespace Danmu.Controllers.Account
         {
             var userName = data.TryGetProperty("name", out JsonElement a) ? a.GetString() : null;
             var password = data.TryGetProperty("password", out JsonElement b) ? b.GetString() : null;
-            var returnUrl = data.TryGetProperty("url", out JsonElement c) ? c.GetString() : null;
+            var url = data.TryGetProperty("url", out JsonElement c) ? c.GetString() : null;
 
             var r = await _userDao.VerPasswordAsync(userName, password);
             if (r.Succeed)
@@ -71,11 +71,11 @@ namespace Danmu.Controllers.Account
                 });
 
 
-                if (Url.IsLocalUrl(returnUrl)) return new WebResult(0) {Data = new {url = returnUrl}};
+                if (Url.IsLocalUrl(url)) return new WebResult(0) {Data = new {url = url}};
                 return new WebResult(0) {Data = new {url = "/"}};
             }
 
-            return new WebResult(1) {Data = new {url = returnUrl}};
+            return new WebResult(1) {Data = new {url = url}};
         }
 
         [HttpGet("logout")]

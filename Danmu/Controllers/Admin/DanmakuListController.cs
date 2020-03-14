@@ -13,39 +13,22 @@ namespace Danmu.Controllers.Admin
         public DanmuListController(DanmuDao danmuDao, VideoDao videoDao) : base(danmuDao, videoDao) { }
 
         /// <summary>
-        ///     获取全部弹幕数量
+        ///     获取弹幕数量
         /// </summary>
         /// <returns></returns>
         [HttpGet("count")]
-        public async Task<WebResult<int>> GetCount()
+        public async Task<WebResult<int>> GetCount(string vid = null)
         {
-            var count = await DanmuDao.GetAllDanmuAsync();
-            return new WebResult<int>
+            if (string.IsNullOrEmpty(vid))
             {
-                Code = 0,
-                Data = count
-            };
-        }
+                var allCount = await DanmuDao.GetAllDanmuAsync();
+                return new WebResult<int>
+                {
+                    Code = 0,
+                    Data = allCount
+                };
+            }
 
-        /// <summary>
-        ///     获取全部弹幕
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        public async Task<WebResult<DanmuTable[]>> GetDanmuList(int page = 1, int size = 30, bool descending = true)
-        {
-            var allDanmu = await DanmuDao.GetAllDanmuAsync(page, size, descending);
-            return new WebResult<DanmuTable[]>(allDanmu);
-        }
-
-        /// <summary>
-        ///     通过vid查询到的弹幕总数
-        /// </summary>
-        /// <param name="vid"></param>
-        /// <returns></returns>
-        [HttpGet("count" + "by" + "vid")]
-        public async Task<WebResult<int>> GetCountByVid(string vid)
-        {
             var count = await DanmuDao.GetDanmuByVidAsync(vid);
             return new WebResult<int>
             {
@@ -55,13 +38,19 @@ namespace Danmu.Controllers.Admin
         }
 
         /// <summary>
-        ///     通过vid查询弹幕
+        ///     获取弹幕
         /// </summary>
         /// <returns></returns>
-        [HttpGet("query" + "by" + "vid")]
-        public async Task<WebResult<DanmuTable[]>> GetDanmuListByVid(string vid, int page = 1, int size = 30,
-                                                                     bool descending = true)
+        [HttpGet]
+        public async Task<WebResult<DanmuTable[]>> GetDanmuList(string vid = null, int page = 1, int size = 30,
+                                                                bool descending = true)
         {
+            if (string.IsNullOrEmpty(vid))
+            {
+                var allDanmu = await DanmuDao.GetAllDanmuAsync(page, size, descending);
+                return new WebResult<DanmuTable[]>(allDanmu);
+            }
+
             var danmu = await DanmuDao.GetDanmuByVidAsync(vid, page, size, descending);
             return new WebResult<DanmuTable[]>(danmu);
         }

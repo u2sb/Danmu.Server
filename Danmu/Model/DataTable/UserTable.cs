@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Danmu.Utils.Common;
 
 namespace Danmu.Model.DataTable
 {
@@ -20,26 +21,29 @@ namespace Danmu.Model.DataTable
         ///     用户名
         /// </summary>
         [Required]
+        [MaxLength(16)]
+        [MinLength(4)]
         public string Name { get; set; }
 
         /// <summary>
         ///     密码
         /// </summary>
         [Required]
+        [MinLength(6)]
         public string PassWord { get; set; }
 
         /// <summary>
         ///     盐
         /// </summary>
         [Required]
-        public string Salt { get; set; }
+        public string Salt { get; set; } = new RandomStringBuilder().Create(6);
 
         /// <summary>
         ///     用户角色
         /// </summary>
         [Required]
         [DefaultValue(UserRole.GeneralUser)]
-        public UserRole Role { get; set; } = UserRole.GeneralUser;
+        public UserRole Role { get; set; } = UserRole.Guests;
 
         /// <summary>
         ///     手机号
@@ -66,9 +70,9 @@ namespace Danmu.Model.DataTable
 
     public enum UserRole
     {
-        SuperAdmin = 0,
-        Admin = 1,
-        Guests = 2,
+        Guests = 0,
+        SuperAdmin = 1,
+        Admin = 2,
         GeneralUser = 3
     }
 }
