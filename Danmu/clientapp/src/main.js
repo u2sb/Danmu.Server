@@ -1,16 +1,20 @@
 import Vue from 'vue'
-import App from './App.vue'
-import router from './plugins/vue-router'
-import store from './plugins/store'
-import './plugins/element'
-import './plugins/vue-axios'
+import 'normalize.css/normalize.css' // a modern alternative to CSS resets
+import Element from 'element-ui'
+import '@/assets/styles/index.scss' // global css
+import App from '@/App'
+import store from '@/store'
+import router from '@/router'
+import '@/assets/icons'
+import '@/directive'
+
+Vue.use(Element)
+
 Vue.config.productionTip = false
 
 new Vue({
-  el: '#app',
-  store,
-  render: h => h(App),
-  router
-}).$mount('#app')
-
-
+    el: '#app',
+    router,
+    store,
+    render: h => h(App)
+})

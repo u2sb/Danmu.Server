@@ -1,0 +1,138 @@
+@import "variables";
+@import "~element-ui/packages/theme-chalk/src/index";
+@import '~element-ui/lib/theme-chalk/display.css';
+@import "transition";
+@import "element-ui";
+@import "sidebar";
+@import "nprogress";
+
+body {
+    height: 100%;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
+}
+
+html {
+    height: 100%;
+    box-sizing: border-box;
+}
+
+#app {
+    height: 100%;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: inherit;
+}
+
+a:focus,
+a:active,
+div:focus {
+    outline: none;
+}
+
+a,
+a:focus,
+a:hover {
+    cursor: pointer;
+    color: inherit;
+    text-decoration: none;
+}
+
+.clearfix {
+    &:after {
+        visibility: hidden;
+        display: block;
+        font-size: 0;
+        content: " ";
+        clear: both;
+        height: 0;
+    }
+}
+
+.overflow-hidden {
+    overflow: hidden !important;
+}
+
+.text-center {
+    text-align: center
+}
+
+.table-container {
+    margin-top: 10px;
+}
+
+.table-image {
+    cursor: pointer;
+    display: inline-block;
+    height: 32px;
+    width: 32px;
+    border-radius: 50%;
+    vertical-align: middle;
+    overflow: hidden;
+}
+
+.card-container {
+    position: relative;
+
+    .el-scrollbar__wrap {
+        overflow-x: hidden;
+    }
+}
+
+.tip-row {
+    position: relative;
+    z-index: 1;
+    background: #fafafa;
+    padding: 8px 24px;
+    margin-bottom: 20px;
+    border-radius: 2px;
+    display: block;
+    line-height: 32px;
+    font-size: 16px;
+    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    color: #337ab7;
+    user-select: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    * + & {
+        margin-top: 40px;
+    }
+
+    a {
+        color: #337ab7;
+        cursor: pointer;
+        text-decoration: none;
+    }
+}
+
+//小圆点
+.dot {
+    width: 6px;
+    height: 6px;
+    display: inline-block;
+    border-radius: 50%;
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+    margin-right: 11px;
+    background: $--color-info;
+
+    &.success {
+        background: $--color-success;
+    }
+
+    &.primary {
+        background: $--color-primary;
+    }
+
+    &.error {
+        background: $--color-danger;
+    }
+}
+
+
