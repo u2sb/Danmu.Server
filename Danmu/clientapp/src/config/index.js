@@ -4,6 +4,9 @@ module.exports = {
     //全局axios的baseUrl
     apiPrefix: '/api',
 
+    //路由模式
+    routerMode: 'history',
+
     logo: '/favicon.png',
 
     //路由切换时的过渡动画名称,关联transition.css

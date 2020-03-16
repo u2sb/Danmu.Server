@@ -41,6 +41,7 @@
 </template>
 
 <script>
+    import { routerMode } from '@/config'
     import { isEmpty } from '@/utils'
     import md5 from 'js-md5'
     import { elSuccess } from '@/utils/message'
@@ -77,7 +78,7 @@
             success() {
                 elSuccess('登陆成功')
                 let redirect = this.$route.query.redirect || '/'
-                window.location.href = '/#' + redirect
+                window.location.href = routerMode === 'history' ? redirect : '/#' + redirect
             }
         },
         mounted() {
