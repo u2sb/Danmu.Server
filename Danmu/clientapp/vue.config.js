@@ -17,34 +17,34 @@ module.exports = {
     lintOnSave: false,
     productionSourceMap: false,
     parallel: true,
-    devServer: {
-        port,
-        open: true,
-        overlay: {
-            warnings: true,
-            errors: true
-        },
-        proxy: {
-            [settings.apiPrefix]: {
-                target: 'http://localhost:8081',  // 后台接口域名
-                ws: true,        //如果要代理 websockets，配置这个参数
-                secure: false,  // 如果是https接口，需要配置这个参数
-                changeOrigin: true  //是否跨域
-                /*pathRewrite: {
-                    [`^${settings.apiPrefix}`]: ''
-                }*/
-            }
-        },
-        historyApiFallback: {
-            rewrites: [{
-                from: /.*/g,
-                to: '/index.html'
-            }]
-        },
-        before(app) {
-            require('./mock')(app)
-        }
-    },
+    // devServer: {
+    //     port,
+    //     open: true,
+    //     overlay: {
+    //         warnings: true,
+    //         errors: true
+    //     },
+    //     proxy: {
+    //         [settings.apiPrefix]: {
+    //             target: 'http://localhost:8081',  // 后台接口域名
+    //             ws: true,        //如果要代理 websockets，配置这个参数
+    //             secure: false,  // 如果是https接口，需要配置这个参数
+    //             changeOrigin: true  //是否跨域
+    //             /*pathRewrite: {
+    //                 [`^${settings.apiPrefix}`]: ''
+    //             }*/
+    //         }
+    //     },
+    //     historyApiFallback: {
+    //         rewrites: [{
+    //             from: /.*/g,
+    //             to: '/index.html'
+    //         }]
+    //     },
+    //     before(app) {
+    //         require('./mock')(app)
+    //     }
+    // },
     configureWebpack: {
         name: settings.title,
         resolve: {
@@ -61,7 +61,7 @@ module.exports = {
                 minRatio: 0.8,
                 deleteOriginalAssets: false//是否删除源文件
             }),
-            process.env.NODE_ENV === 'production' ? new BundleAnalyzerPlugin() : { apply: () => ({}) }
+            //process.env.NODE_ENV === 'production' ? new BundleAnalyzerPlugin() : { apply: () => ({}) }
         ]
     },
     chainWebpack(config) {

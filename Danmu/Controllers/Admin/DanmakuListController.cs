@@ -70,13 +70,14 @@ namespace Danmu.Controllers.Admin
         [HttpGet("base" + "select")]
         public async Task<DanmuListWebResult<DanmuTable>> DanmuBasesSelect(
                 int page = 1, int size = 30, string vid = null,
-                string author = null, int authorId = -1,
+                string author = null, string authorId = null,
                 string startDate = null,
                 string endDate = null, int mode = 100,
                 string ip = null, string key = null,
                 bool descending = true)
         {
-            var result = DanmuDao.DanmuBasesSelectAsync(page, size, vid, author, authorId, startDate, endDate,
+            var iAuthorId = int.TryParse(authorId, out var uid) ? uid : -1;
+            var result = DanmuDao.DanmuBasesSelectAsync(page, size, vid, author, iAuthorId, startDate, endDate,
                     mode,
                     ip,
                     key, descending);
