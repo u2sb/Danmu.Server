@@ -147,7 +147,7 @@ namespace Danmu
             {
 #if DEBUG
                 spa.Options.SourcePath = "ClientApp";
-                spa.UseVueCli();
+                spa.UseVueCli("serve",18081);
 #endif
             });
         }

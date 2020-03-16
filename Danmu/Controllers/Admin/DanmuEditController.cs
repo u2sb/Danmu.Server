@@ -12,7 +12,7 @@ namespace Danmu.Controllers.Admin
     {
         public DanmuEditController(DanmuDao danmuDao, VideoDao videoDao) : base(danmuDao, videoDao) { }
 
-        [HttpGet("get")]
+        [HttpGet()]
         public async Task<WebResult<DanmuTable>> Get(string id)
         {
             var danmu = await DanmuDao.QueryDanmuByIdAsync(id);
@@ -23,7 +23,7 @@ namespace Danmu.Controllers.Admin
         public async Task<WebResult<DanmuTable>> EditDanmu(DanmuTable data)
         {
             var result = await DanmuDao.EditDanmuAsync(data.Id, data.Data.Time, data.Data.Mode, data.Data.Color,
-                    data.Data.Text);
+                    data.Data.Text, data.IsDelete);
             return new WebResult<DanmuTable>(result);
         }
 
