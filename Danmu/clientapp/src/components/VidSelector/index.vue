@@ -1,5 +1,5 @@
 <template>
-    <el-select :value="value" filterable allow-create @change="$emit('input',$event)">
+    <el-select :value="value" filterable clearable allow-create @change="$emit('input',$event)">
         <el-option v-for="vid in vids" :key="vid" :label="vid" :value="vid"/>
     </el-select>
 </template>
