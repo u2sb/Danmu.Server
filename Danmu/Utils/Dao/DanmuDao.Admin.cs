@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Danmu.Model.DataTable;
+using Danmu.Model.WebResult;
 using Microsoft.EntityFrameworkCore;
 
 namespace Danmu.Utils.Dao
@@ -125,8 +126,8 @@ namespace Danmu.Utils.Dao
         /// <param name="endDate"></param>
         /// <param name="descending"></param>
         /// <returns></returns>
-        public async Task<DanmuTable[]> DateSelectAsync(int page = 1, int size = 30, string startDate = null,
-                                                   string endDate = null, bool descending = true)
+        public async Task<DanmuList<DanmuTable>> DateSelectAsync(int page = 1, int size = 30, string startDate = null,
+                                                                 string endDate = null, bool descending = true)
         {
             DateTime sDate = DateTime.TryParse(startDate, out sDate) ? sDate : DateTime.MinValue;
             DateTime eDate = DateTime.TryParse(endDate, out eDate) ? eDate : DateTime.MaxValue;
@@ -134,7 +135,13 @@ namespace Danmu.Utils.Dao
                     (string.IsNullOrEmpty(startDate) || DateTime.Compare(sDate, d.CreateTime) < 0) &&
                     (string.IsNullOrEmpty(endDate) || DateTime.Compare(eDate, d.CreateTime) > 0));
             a = descending ? a.OrderByDescending(b => b.UpdateTime) : a.OrderBy(b => b.UpdateTime);
-            return await a.Skip(size * (page - 1)).Take(size).ToArrayAsync();
+            var c = a.Skip(size * (page - 1)).Take(size);
+
+            return new DanmuList<DanmuTable>
+            {
+                Total = await a.CountAsync(),
+                List = await c.ToArrayAsync()
+            };
         }
 
         /// <summary>
@@ -152,16 +159,17 @@ namespace Danmu.Utils.Dao
         /// <param name="key"></param>
         /// <param name="descending"></param>
         /// <returns></returns>
-        public async Task<DanmuTable[]> DanmuBasesSelect(int page, int size, string vid, string author, int authorId,
-                                                         string startDate,
-                                                         string endDate, int mode, string ip,
-                                                         string key, bool descending = true)
+        public async Task<DanmuList<DanmuTable>> DanmuBasesSelectAsync(int page, int size, string vid, string author,
+                                                                       int authorId,
+                                                                       string startDate,
+                                                                       string endDate, int mode, string ip,
+                                                                       string key, bool descending = true)
         {
             IPAddress dip;
             DateTime sDate = DateTime.TryParse(startDate, out sDate) ? sDate : DateTime.MinValue;
             DateTime eDate = DateTime.TryParse(endDate, out eDate) ? eDate : DateTime.MaxValue;
             var a = _con.Danmu.AsNoTracking().Where(d =>
-                    (mode >= 10 || d.Data.Mode.Equals(mode)) &&
+                    (mode >= 100 || d.Data.Mode.Equals(mode)) &&
                     (string.IsNullOrEmpty(ip) || !IPAddress.TryParse(ip, out dip) || d.Ip.Equals(dip)) &&
                     (string.IsNullOrEmpty(startDate) || DateTime.Compare(sDate, d.CreateTime) < 0) &&
                     (string.IsNullOrEmpty(endDate) || DateTime.Compare(eDate, d.CreateTime) > 0) &&
@@ -170,7 +178,13 @@ namespace Danmu.Utils.Dao
                     (authorId < 0 || d.Data.AuthorId.Equals(authorId)) &&
                     (string.IsNullOrEmpty(key) || d.Data.Text.Contains(key)));
             a = descending ? a.OrderByDescending(b => b.UpdateTime) : a.OrderBy(b => b.UpdateTime);
-            return await a.Skip(size * (page - 1)).Take(size).ToArrayAsync();
+            var c = a.Skip(size * (page - 1)).Take(size);
+
+            return new DanmuList<DanmuTable>
+            {
+                Total = await a.CountAsync(),
+                List = await c.ToArrayAsync()
+            };
         }
     }
 }

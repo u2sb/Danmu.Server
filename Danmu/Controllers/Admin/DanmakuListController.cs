@@ -13,35 +13,22 @@ namespace Danmu.Controllers.Admin
         public DanmuListController(DanmuDao danmuDao, VideoDao videoDao) : base(danmuDao, videoDao) { }
 
         /// <summary>
-        ///     获取弹幕数量
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("count")]
-        public async Task<WebResult<int>> GetCount(string vid = null)
-        {
-            var count = 0;
-            count = string.IsNullOrEmpty(vid)
-                    ? await DanmuDao.GetAllDanmuAsync()
-                    : await DanmuDao.GetDanmuByVidAsync(vid);
-            return new WebResult<int>
-            {
-                Code = 0,
-                Data = count
-            };
-        }
-
-        /// <summary>
         ///     获取弹幕
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<WebResult<DanmuTable[]>> GetDanmuList(string vid = null, int page = 1, int size = 30,
-                                                                bool descending = true)
+        public async Task<DanmuListWebResult<DanmuTable>> GetDanmuList(string vid = null, int page = 1, int size = 30,
+                                                                       bool descending = true)
         {
+            var total = string.IsNullOrEmpty(vid)
+                    ? DanmuDao.GetAllDanmuAsync()
+                    : DanmuDao.GetDanmuByVidAsync(vid);
+
             var danmu = string.IsNullOrEmpty(vid)
-                    ? await DanmuDao.GetAllDanmuAsync(page, size, descending)
-                    : await DanmuDao.GetDanmuByVidAsync(vid, page, size, descending);
-            return new WebResult<DanmuTable[]>(danmu);
+                    ? DanmuDao.GetAllDanmuAsync(page, size, descending)
+                    : DanmuDao.GetDanmuByVidAsync(vid, page, size, descending);
+
+            return new DanmuListWebResult<DanmuTable>(await total, await danmu);
         }
 
         /// <summary>
@@ -65,11 +52,15 @@ namespace Danmu.Controllers.Admin
         /// <param name="descending"></param>
         /// <returns></returns>
         [HttpGet("date" + "select")]
-        public async Task<WebResult<DanmuTable[]>> DateSelect(int page = 1, int size = 30, string startDate = null,
-                                                              string endDate = null, bool descending = true)
+        public async Task<DanmuListWebResult<DanmuTable>> DateSelect(int page = 1, int size = 30,
+                                                                     string startDate = null,
+                                                                     string endDate = null, bool descending = true)
         {
-            var result = await DanmuDao.DateSelectAsync(page, size, startDate, endDate);
-            return new WebResult<DanmuTable[]>(result);
+            var result = DanmuDao.DateSelectAsync(page, size, startDate, endDate);
+            return new DanmuListWebResult<DanmuTable>(0)
+            {
+                Data = await result
+            };
         }
 
         /// <summary>
@@ -77,17 +68,22 @@ namespace Danmu.Controllers.Admin
         /// </summary>
         /// <returns></returns>
         [HttpGet("base" + "select")]
-        public async Task<WebResult<DanmuTable[]>> DanmuBasesSelect(int page = 1, int size = 30, string vid = null,
-                                                                    string author = null, int authorId = 0,
-                                                                    string startDate = null,
-                                                                    string endDate = null, int mode = 10,
-                                                                    string ip = null, string key = null,
-                                                                    bool descending = true)
+        public async Task<DanmuListWebResult<DanmuTable>> DanmuBasesSelect(
+                int page = 1, int size = 30, string vid = null,
+                string author = null, int authorId = -1,
+                string startDate = null,
+                string endDate = null, int mode = 100,
+                string ip = null, string key = null,
+                bool descending = true)
         {
-            var result = await DanmuDao.DanmuBasesSelect(page, size, vid, author, authorId, startDate, endDate, mode,
+            var result = DanmuDao.DanmuBasesSelectAsync(page, size, vid, author, authorId, startDate, endDate,
+                    mode,
                     ip,
                     key, descending);
-            return new WebResult<DanmuTable[]>(result);
+            return new DanmuListWebResult<DanmuTable>(0)
+            {
+                Data = await result
+            };
         }
     }
 }
