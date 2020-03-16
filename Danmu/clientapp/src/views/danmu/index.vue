@@ -2,7 +2,7 @@
     <el-card v-loading="config.operating">
         <search-form>
             <search-form-item label="vid：">
-                <el-input v-model="searchForm.vid" clearable maxlength="50"/>
+                <vid-selector v-model="searchForm.vid"/>
             </search-form-item>
             <search-form-item label="开始时间：">
                 <el-date-picker
@@ -104,6 +104,7 @@
 <script>
     import SearchForm from '@/components/SearchForm'
     import SearchFormItem from '@/components/SearchForm/SearchFormItem'
+    import VidSelector from '@/components/VidSelector'
     import EditDialog from './EditDialog'
     import { isEmpty } from '@/utils'
     import { getLocalTime } from '@/utils/date'
@@ -115,7 +116,7 @@
     export default {
         name: 'danmuList',
         mixins: [tableMixin],
-        components: { SearchForm, SearchFormItem, EditDialog },
+        components: { SearchForm, SearchFormItem, VidSelector, EditDialog },
         data() {
             return {
                 searchForm: {

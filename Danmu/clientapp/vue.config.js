@@ -11,7 +11,7 @@ function resolve(dir) {
 const port = process.env.port || 5000
 
 module.exports = {
-    publicPath: './',
+    publicPath: settings.routerMode === 'history' ? '/' : './',
     outputDir: 'dist',
     assetsDir: 'static',
     lintOnSave: false,
@@ -29,11 +29,17 @@ module.exports = {
                 target: 'http://localhost:8081',  // 后台接口域名
                 ws: true,        //如果要代理 websockets，配置这个参数
                 secure: false,  // 如果是https接口，需要配置这个参数
-                changeOrigin: true,  //是否跨域
+                changeOrigin: true  //是否跨域
                 /*pathRewrite: {
                     [`^${settings.apiPrefix}`]: ''
                 }*/
             }
+        },
+        historyApiFallback: {
+            rewrites: [{
+                from: /.*/g,
+                to: '/index.html'
+            }]
         },
         before(app) {
             require('./mock')(app)
