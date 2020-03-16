@@ -1,0 +1,3 @@
+<linker>
+  <assembly fullname="CommandLine" preserve="all"/>
+</linker>

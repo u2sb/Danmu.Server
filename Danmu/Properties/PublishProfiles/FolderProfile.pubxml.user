@@ -6,6 +6,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
-    <_PublishTargetUrl>D:\MonoLogueChi\Documents\GitHub\Danmu.Server\Danmu\bin\Release-Linux64\netcoreapp3.1\publish\</_PublishTargetUrl>
+    <_PublishTargetUrl>D:\MonoLogueChi\Documents\GitHub\Danmu.Server\Danmu\bin\Release-Win\netcoreapp3.1\publish\</_PublishTargetUrl>
   </PropertyGroup>
 </Project>

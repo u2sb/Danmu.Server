@@ -1,0 +1,17 @@
+<linker>
+  <assembly fullname="Microsoft.AspNetCore" preserve="all"/>
+  <assembly fullname="Microsoft.AspNetCore.Cors" preserve="all"/>
+  <assembly fullname="Microsoft.AspNetCore.Authorization" preserve="all"/>
+  <assembly fullname="Microsoft.AspNetCore.Authentication.Cookies" preserve="all"/>
+  <assembly fullname="Microsoft.AspNetCore.Mvc.Core" preserve="all"/>
+  <assembly fullname="Microsoft.AspNetCore.Hosting" preserve="all"/>
+  <assembly fullname="Microsoft.AspNetCore.HttpOverrides" preserve="all"/>
+
+  <assembly fullname="Microsoft.EntityFrameworkCore" preserve="all"/>
+  <assembly fullname="Npgsql.EntityFrameworkCore.PostgreSQL" preserve="all"/>
+
+  <assembly fullname="Microsoft.Extensions.Identity.Core" preserve="all"/>
+  <assembly fullname="Microsoft.Extensions.Configuration.Binder" preserve="all"/>
+  
+  <assembly fullname="System.ComponentModel.Annotations" preserve="all"/>
+</linker>
