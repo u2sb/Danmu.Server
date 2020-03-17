@@ -18,19 +18,7 @@ steps:
     inputs:
       version: "12.x"
 
-  ##编译Linux版
-  ##开启R2R选项
-  - task: Bash@3
-    inputs:
-      targetType: "inline"
-      script: |
-        #!/bin/bash
-        CLI_VERSION=`git describe --tags`
-        sed -i "s/<PublishReadyToRun>false/<PublishReadyToRun>true/g" $(Build.SourcesDirectory)/Danmu/Danmu.csproj
-        sed -i "s/<Version>1.0.0/<Version>`echo ${CLI_VERSION}`/g" $(Build.SourcesDirectory)/CommandLine/Danmu.CommandLine.csproj
-        echo `git describe --tags`
-        echo ${CLI_VERSION}
-        cat $(Build.SourcesDirectory)/CommandLine/Danmu.CommandLine.csproj
+  
 
   - task: CmdLine@2
     inputs:
@@ -49,7 +37,18 @@ steps:
         npm install
         npm run build
 
-  
+  ##编译Linux版
+  ##开启R2R选项
+  - task: Bash@3
+    inputs:
+      targetType: "inline"
+      script: |
+        #!/bin/bash
+        CLI_VERSION=`git describe --tags`
+        sed -i "s/<PublishReadyToRun>false/<PublishReadyToRun>true/g" $(Build.SourcesDirectory)/Danmu/Danmu.csproj
+        sed -i "s/<Version>1.0.0/<Version>`echo ${CLI_VERSION}`/g" $(Build.SourcesDirectory)/CommandLine/Danmu.CommandLine.csproj
+        cat $(Build.SourcesDirectory)/CommandLine/Danmu.CommandLine.csproj
+        
   - task: DotNetCoreCLI@2
     inputs:
       command: publish

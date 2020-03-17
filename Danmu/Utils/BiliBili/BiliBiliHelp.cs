@@ -1,8 +1,11 @@
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Danmu.Model.Config;
 using Danmu.Model.Danmu.BiliBili;
 using Danmu.Utils.Configuration;
+using Danmu.Utils.Dao;
+using Microsoft.Extensions.Caching.Memory;
 using static Danmu.Utils.Global.VariableDictionary;
 
 namespace Danmu.Utils.BiliBili
@@ -12,17 +15,21 @@ namespace Danmu.Utils.BiliBili
         private readonly bool _canGetHistory;
         private readonly HttpClient _deflateClient;
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly HttpClientCacheDao _cache;
+        private readonly BiliBiliSetting _setting;
 
-        public BiliBiliHelp(AppConfiguration appConfiguration, IHttpClientFactory httpClientFactory)
+        public BiliBiliHelp(AppConfiguration appConfiguration, IHttpClientFactory httpClientFactory, HttpClientCacheDao biliBiliCache)
         {
             _httpClientFactory = httpClientFactory;
             _deflateClient = httpClientFactory.CreateClient(Deflate);
-            var settings = appConfiguration.GetAppSetting();
-            if (!string.IsNullOrEmpty(settings.BCookie))
+            _setting = appConfiguration.GetAppSetting().BiliBiliSetting;
+            if (!string.IsNullOrEmpty(_setting.Cookie))
             {
                 _canGetHistory = true;
-                _deflateClient.DefaultRequestHeaders.Add("Cookie", settings.BCookie);
+                _deflateClient.DefaultRequestHeaders.Add("Cookie", _setting.Cookie);
             }
+
+            _cache = biliBiliCache;
         }
 
         /// <summary>

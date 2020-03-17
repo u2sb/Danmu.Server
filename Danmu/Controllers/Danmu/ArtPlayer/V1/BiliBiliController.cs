@@ -22,12 +22,13 @@ namespace Danmu.Controllers.Danmu.ArtPlayer.V1
             string[] date = Request.Query["date"];
             if (date.Length == 0 && !(!string.IsNullOrEmpty(format) && format.Equals("json")))
             {
+                HttpContext.Response.ContentType = "application/xml; charset=utf-8";
                 if (cid == 0 && aid != 0)
                 {
                     p = p == 0 ? 1 : p;
                     cid = await Bilibili.GetCidAsync(aid, p);
                 }
-                HttpContext.Response.ContentType = "application/xml; charset=utf-8";
+
                 return await Bilibili.GetDanmuRawByCidTask(cid);
             }
 
@@ -37,7 +38,6 @@ namespace Danmu.Controllers.Danmu.ArtPlayer.V1
                 return new WebResult<IEnumerable<ArtPlayerDanmuData>>(danmu
                                                                      .ToDanmuDataBases()
                                                                      .Select(s => (ArtPlayerDanmuData) s));
-
             if (string.IsNullOrEmpty(format)) HttpContext.Request.Headers["Accept"] = "application/xml";
             return danmu;
         }

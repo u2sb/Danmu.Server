@@ -15,6 +15,8 @@
   &lt;Assembly Path="C:\Users\MonoLogueChi\.nuget\packages\microsoft.extensions.configuration.binder\3.1.2\lib\netcoreapp3.1\Microsoft.Extensions.Configuration.Binder.dll" /&gt;&#xD;
   &lt;Assembly Path="C:\Program Files\dotnet\packs\Microsoft.AspNetCore.App.Ref\3.1.0\ref\netcoreapp3.1\Microsoft.AspNetCore.dll" /&gt;&#xD;
   &lt;Assembly Path="C:\Program Files\dotnet\packs\Microsoft.AspNetCore.App.Ref\3.1.0\ref\netcoreapp3.1\Microsoft.AspNetCore.HttpOverrides.dll" /&gt;&#xD;
+  &lt;Assembly Path="C:\Users\MonoLogueChi\.nuget\packages\microsoft.extensions.caching.abstractions\3.1.2\lib\netcoreapp3.1\Microsoft.Extensions.Caching.Abstractions.dll" /&gt;&#xD;
+  &lt;Assembly Path="C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.1.15\System.Private.CoreLib.dll" /&gt;&#xD;
 &lt;/AssemblyExplorer&gt;</s:String>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=artplayer/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Bili/@EntryIndexedValue">True</s:Boolean>

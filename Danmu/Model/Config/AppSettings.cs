@@ -11,18 +11,17 @@ namespace Danmu.Model.Config
             configuration.Bind(this);
         }
 
-        public KestrelSettings KestrelSettings { get; set; }
+        public KestrelSettings KestrelSettings { get; set; } = new KestrelSettings();
         public string[] WithOrigins { get; set; }
         public string[] LiveWithOrigins { get; set; }
         public string[] AdminWithOrigins { get; set; }
-        public DanmuSql DanmuSql { get; set; }
-        public Admin Admin { get; set; }
-        public string BCookie { get; set; }
+        public DanmuSql DanmuSql { get; set; } = new DanmuSql();
+        public Admin Admin { get; set; } = new Admin();
+        public BiliBiliSetting BiliBiliSetting { get; set; } = new BiliBiliSetting();
     }
 
     public class DanmuSql
     {
-        public SqlType Sql { get; set; } = SqlType.SqLite;
         public string Host { get; set; } = "127.0.0.1";
         public int Port { get; set; } = 0;
         public string UserName { get; set; }
@@ -31,16 +30,17 @@ namespace Danmu.Model.Config
         public int PoolSize { get; set; } = 8;
     }
 
-    public enum SqlType
-    {
-        PostgreSql = 0,
-        SqLite = 1
-    }
-
     public class Admin
     {
         public string User { get; set; }
         public string Password { get; set; }
         public int MaxAge { get; set; }
+    }
+
+    public class BiliBiliSetting
+    {
+        public string Cookie { get; set; }
+        public int CidCacheTime { get; set; } = 72;
+        public int DanmuCacheTime { get; set; } = 5;
     }
 }

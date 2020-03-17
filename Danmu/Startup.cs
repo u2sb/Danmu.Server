@@ -39,7 +39,8 @@ namespace Danmu
         {
             //AppSetting配置文件
             var config = new AppConfiguration(Configuration);
-            services.AddSingleton(s => config);
+            var appSetting = config.GetAppSetting();
+
 
             //自定义序列化程序
             services.AddControllers().AddXmlSerializerFormatters().AddJsonOptions(opt =>
@@ -51,7 +52,7 @@ namespace Danmu
             //数据库连接
             // ReSharper disable once ObjectCreationAsStatement
             services.AddDbContextPool<DanmuContext>(option => new DbContextBuild(config, option),
-                    config.GetAppSetting().DanmuSql.PoolSize);
+                    appSetting.DanmuSql.PoolSize);
 
 
             //Http请求
@@ -73,17 +74,17 @@ namespace Danmu
                 options.AddDefaultPolicy(builder => builder.WithMethods("GET", "POST", "OPTIONS"));
 
                 options.AddPolicy(DanmuAllowSpecificOrigins, builder =>
-                        builder.WithOrigins(config.GetAppSetting().WithOrigins)
+                        builder.WithOrigins(appSetting.WithOrigins)
                                .SetIsOriginAllowedToAllowWildcardSubdomains().WithMethods("GET", "POST", "OPTIONS")
                                .AllowAnyHeader());
 
                 options.AddPolicy(LiveAllowSpecificOrigins, builder =>
-                        builder.WithOrigins(config.GetAppSetting().LiveWithOrigins)
+                        builder.WithOrigins(appSetting.LiveWithOrigins)
                                .SetIsOriginAllowedToAllowWildcardSubdomains().WithMethods("GET", "POST", "OPTIONS")
                                .AllowAnyHeader().AllowCredentials());
 
                 options.AddPolicy(AdminAllowSpecificOrigins, builder =>
-                        builder.WithOrigins(config.GetAppSetting().AdminWithOrigins)
+                        builder.WithOrigins(appSetting.AdminWithOrigins)
                                .WithMethods("GET", "POST", "OPTIONS"));
             });
 
@@ -105,7 +106,7 @@ namespace Danmu
                          options.LoginPath = "/api/admin/login";
                          options.LogoutPath = "/api/admin/logout";
                          options.Cookie.Name = "DCookie";
-                         options.Cookie.MaxAge = TimeSpan.FromMinutes(config.GetAppSetting().Admin.MaxAge);
+                         options.Cookie.MaxAge = TimeSpan.FromMinutes(appSetting.Admin.MaxAge);
                      });
 
             // SPA根目录
@@ -113,9 +114,12 @@ namespace Danmu
 
 
             //注入
+            services.AddSingleton(s => config);
+
             services.AddScoped<UserDao>();
             services.AddScoped<DanmuDao>();
             services.AddScoped<VideoDao>();
+            services.AddScoped<HttpClientCacheDao>();
             services.AddScoped<BiliBiliHelp>();
         }
 

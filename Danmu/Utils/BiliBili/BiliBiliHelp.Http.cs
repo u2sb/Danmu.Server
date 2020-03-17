@@ -1,5 +1,7 @@
+using System;
 using System.IO;
 using System.Threading.Tasks;
+using Danmu.Utils.Common;
 using static Danmu.Utils.Global.VariableDictionary;
 
 namespace Danmu.Utils.BiliBili
@@ -11,12 +13,17 @@ namespace Danmu.Utils.BiliBili
         /// </summary>
         /// <param name="aid">视频的aid</param>
         /// <returns></returns>
-        private async Task<Stream> GetBiliBiliPageRawAsync(int aid)
+        private async Task<byte[]> GetBiliBiliPageRawAsync(int aid)
         {
-            var gzipClient = _httpClientFactory.CreateClient(Gzip);
-            var response = await gzipClient.GetAsync($"https://www.bilibili.com/widget/getPageList?aid={aid}");
-            if (response.IsSuccessStatusCode) return await response.Content.ReadAsStreamAsync();
-            return null;
+            return await _cache.GetOrCreateCache($"aid{aid}", TimeSpan.FromMinutes(_setting.CidCacheTime),
+                    async s =>
+                    {
+                        var gzipClient = _httpClientFactory.CreateClient(Gzip);
+                        var response =
+                                await gzipClient.GetAsync($"https://www.bilibili.com/widget/getPageList?aid={aid}");
+                        if (response.IsSuccessStatusCode) return await response.Content.ReadAsByteArrayAsync();
+                        return new byte[0];
+                    });
         }
 
         /// <summary>
@@ -26,9 +33,15 @@ namespace Danmu.Utils.BiliBili
         /// <returns></returns>
         private async Task<Stream> GetDanmuRawAsync(string url)
         {
-            var response = await _deflateClient.GetAsync(url);
-            if (response.IsSuccessStatusCode) return await response.Content.ReadAsStreamAsync();
-            return null;
+            var key = Md5.GetMd5(url);
+            var result = await _cache.GetOrCreateCache(key, TimeSpan.FromMinutes(_setting.CidCacheTime), async s =>
+            {
+                var response = await _deflateClient.GetAsync(url);
+                if (response.IsSuccessStatusCode) return await response.Content.ReadAsByteArrayAsync();
+                return new byte[0];
+            });
+
+            return result.Length == 0 ? Stream.Null : new MemoryStream(result);
         }
 
         public Task<Stream> GetDanmuRawByCidTask(int cid)
