@@ -20,6 +20,10 @@ namespace Danmu.CommandLine
             if (opts.Version)
                 Console.WriteLine((Assembly.GetEntryAssembly() ?? throw new InvalidOperationException())
                                  .GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion);
+            if (opts.Menu)
+            {
+                Menu.MainMenu();
+            }
         }
 
         private static void HandleParseError(IEnumerable<Error> errs)
