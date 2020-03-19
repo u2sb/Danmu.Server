@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading.Tasks;
 using CommandLine;
 using Danmu.CommandLine.Utils;
 
@@ -10,6 +11,9 @@ namespace Danmu.CommandLine
     {
         private static void Main(string[] args)
         {
+            //系统信息查询
+            Start.StartCommandLine();
+            
             Parser.Default.ParseArguments<Options>(args)
                   .WithParsed(RunOptions)
                   .WithNotParsed(HandleParseError);
@@ -22,7 +26,7 @@ namespace Danmu.CommandLine
                                  .GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion);
             if (opts.Menu)
             {
-                Menu.MainMenu();
+                _ = Menu.MainMenu().Result;
             }
         }
 

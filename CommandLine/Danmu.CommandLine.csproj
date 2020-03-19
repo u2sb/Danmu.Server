@@ -9,25 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Menu\**" />
-    <EmbeddedResource Remove="Menu\**" />
-    <None Remove="Menu\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="Resources\MainMenu.txt" />
-    <None Remove="Utils\MainMenu.txt" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\MainMenu.txt">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.7.82" />
-    <PackageReference Include="Shell.NET" Version="0.2.2" />
+    <PackageReference Include="MedallionShell" Version="1.6.1" />
+    <PackageReference Include="Octokit" Version="0.45.0" />
+    <PackageReference Include="ShellProgressBar" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,18 +20,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+    <None Update="Scripts\**">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

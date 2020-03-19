@@ -16,6 +16,8 @@ namespace Danmu.Model.DbContext
         {
             modelBuilder.Entity<DanmuTable>().Property(p => p.IsDelete).HasDefaultValue(false);
             modelBuilder.Entity<DanmuTable>().HasIndex(d => new {d.Vid, d.IsDelete});
+
+            modelBuilder.Entity<HttpClientCacheTable>().HasIndex(h => h.Key).HasMethod("hash");
         }
     }
 }

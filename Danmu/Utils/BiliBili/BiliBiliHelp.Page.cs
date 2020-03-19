@@ -1,9 +1,7 @@
-using System;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Danmu.Model.Danmu.BiliBili;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace Danmu.Utils.BiliBili
 {
@@ -17,10 +15,9 @@ namespace Danmu.Utils.BiliBili
         /// <returns>cid</returns>
         public async Task<int> GetCidAsync(int aid, int p)
         {
-
-                var pages = await GetBiliBiliPageAsync(aid);
-                return GetCid(pages, p);
-            }
+            var pages = await GetBiliBiliPageAsync(aid);
+            return GetCid(pages, p);
+        }
 
         /// <summary>
         ///     获取视频Cid和分P信息
@@ -29,7 +26,7 @@ namespace Danmu.Utils.BiliBili
         /// <returns>Page数据</returns>
         private async Task<BiliBiliPage[]> GetBiliBiliPageAsync(int aid)
         {
-            var raw = await GetBiliBiliPageRawAsync(aid);
+            var raw = await GetBiliBiliPageRawAsync($"https://www.bilibili.com/widget/getPageList?aid={aid}");
             if (raw.Length != 0)
             {
                 var pages = JsonSerializer.DeserializeAsync<BiliBiliPage[]>(new MemoryStream(raw));

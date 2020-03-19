@@ -23,36 +23,32 @@ namespace Danmu.Utils.Dao
         /// <param name="expireTime"></param>
         /// <param name="factory"></param>
         /// <returns></returns>
-        public async Task<byte[]> GetOrCreateCache(string key, TimeSpan expireTime, Func<string, Task<byte[]>> factory)
+        public async Task<byte[]> GetOrCreateCache(string key, TimeSpan expireTime, Func<Task<byte[]>> factory)
         {
-            var a = _con.HttpClientCache.Where(e => e.Data.Key.Equals(key));
+            var a = _con.HttpClientCache.Where(e => e.Key.Equals(key));
             if (await a.CountAsync() > 0)
             {
                 var b = await a.FirstOrDefaultAsync();
-                if (DateTimeOffset.UtcNow.ToUnixTimeSeconds() - b.Data.TimeStamp > expireTime.TotalSeconds)
+                if (DateTimeOffset.UtcNow.ToUnixTimeSeconds() - b.TimeStamp > expireTime.TotalSeconds)
                 {
-                    var c = await factory(key);
-                    b.Data.Value = c;
-                    b.Data.TimeStamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                    var c = await factory();
+                    b.Value = c;
+                    b.TimeStamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
                     _con.HttpClientCache.Update(b);
                     await _con.SaveChangesAsync();
                 }
 
-                return b.Data.Value;
+                return b.Value;
             }
 
             var d = new HttpClientCacheTable
             {
-                Data = new CacheData
-                {
-                    Key = key,
-                    Value = await factory(key),
-                    TimeStamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
-                }
+                Key =  key,
+                Value = await factory()
             };
             await _con.HttpClientCache.AddAsync(d);
             await _con.SaveChangesAsync();
-            return d.Data.Value;
+            return d.Value;
         }
     }
 }

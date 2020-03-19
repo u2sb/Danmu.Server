@@ -28,7 +28,7 @@ namespace Danmu.Controllers.Danmu.Common.V1
                 }
 
                 HttpContext.Response.ContentType = "application/xml; charset=utf-8";
-                return await Bilibili.GetDanmuRawByCidTask(cid);
+                return await Bilibili.GetDanmuRawByCidTaskAsync(cid);
             }
 
             var danmu = await Bilibili.GetDanmuAsync(cid, aid, p, date);

@@ -57,11 +57,11 @@ steps:
       arguments: "-c Release-Linux64 -r linux-x64 --self-contained false --output $(Build.ArtifactStagingDirectory)/Danmu64-R2R"
       zipAfterPublish: False
 
-  #开启程序集链接
-  - task: CmdLine@2
-    inputs:
-      script: |
-        sed -i "s/<PublishTrimmed>false/<PublishTrimmed>true/g" $(Build.SourcesDirectory)/Danmu/Danmu.csproj
+  # #开启程序集链接
+  # - task: CmdLine@2
+  #   inputs:
+  #     script: |
+  #       sed -i "s/<PublishTrimmed>false/<PublishTrimmed>true/g" $(Build.SourcesDirectory)/Danmu/Danmu.csproj
   - task: DotNetCoreCLI@2
     inputs:
       command: publish
@@ -122,10 +122,10 @@ steps:
 
   #编译非SCD版
   #关闭程序集链接
-  - task: CmdLine@2
-    inputs:
-      script: |
-        sed -i "s/<PublishTrimmed>true/<PublishTrimmed>false/g" $(Build.SourcesDirectory)/Danmu/Danmu.csproj
+  # - task: CmdLine@2
+  #   inputs:
+  #     script: |
+  #       sed -i "s/<PublishTrimmed>true/<PublishTrimmed>false/g" $(Build.SourcesDirectory)/Danmu/Danmu.csproj
   - task: DotNetCoreCLI@2
     inputs:
       command: publish

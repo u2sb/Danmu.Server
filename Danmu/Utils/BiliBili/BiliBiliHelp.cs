@@ -1,3 +1,4 @@
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -5,7 +6,6 @@ using Danmu.Model.Config;
 using Danmu.Model.Danmu.BiliBili;
 using Danmu.Utils.Configuration;
 using Danmu.Utils.Dao;
-using Microsoft.Extensions.Caching.Memory;
 using static Danmu.Utils.Global.VariableDictionary;
 
 namespace Danmu.Utils.BiliBili
@@ -13,7 +13,6 @@ namespace Danmu.Utils.BiliBili
     public partial class BiliBiliHelp
     {
         private readonly bool _canGetHistory;
-        private readonly HttpClient _deflateClient;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly HttpClientCacheDao _cache;
         private readonly BiliBiliSetting _setting;
@@ -21,14 +20,8 @@ namespace Danmu.Utils.BiliBili
         public BiliBiliHelp(AppConfiguration appConfiguration, IHttpClientFactory httpClientFactory, HttpClientCacheDao biliBiliCache)
         {
             _httpClientFactory = httpClientFactory;
-            _deflateClient = httpClientFactory.CreateClient(Deflate);
             _setting = appConfiguration.GetAppSetting().BiliBiliSetting;
-            if (!string.IsNullOrEmpty(_setting.Cookie))
-            {
-                _canGetHistory = true;
-                _deflateClient.DefaultRequestHeaders.Add("Cookie", _setting.Cookie);
-            }
-
+            _canGetHistory = !string.IsNullOrEmpty(_setting.Cookie);
             _cache = biliBiliCache;
         }
 
@@ -36,11 +29,11 @@ namespace Danmu.Utils.BiliBili
         ///     获取B站弹幕
         /// </summary>
         /// <param name="cid">视频的cid</param>
-        /// <returns>B站弹幕</returns>
-        public async Task<DanmuDataBiliBili> GetDanmuAsync(int cid)
+        /// <returns>B站弹幕数据流</returns>
+        public async Task<Stream> GetDanmuRawByCidTaskAsync(int cid)
         {
-            var raw = GetDanmuRawByCidTask(cid);
-            return new DanmuDataBiliBili(await raw);
+            var r = await GetDanmuRawAsync($"https://api.bilibili.com/x/v1/dm/list.so?oid={cid}");
+            return r.Length == 0 ? Stream.Null : new MemoryStream(r);
         }
 
         /// <summary>
@@ -51,12 +44,13 @@ namespace Danmu.Utils.BiliBili
         /// <returns></returns>
         public async Task<DanmuDataBiliBili> GetDanmuAsync(int cid, string[] date)
         {
-            if (!_canGetHistory) return new DanmuDataBiliBili();
+            if (!_canGetHistory) return await GetDanmuAsync(cid, 0, 1, new string[0]);
             var a = Task.Run(() => date.Select(async s =>
             {
                 var b = await GetDanmuRawAsync(
                         $"https://api.bilibili.com/x/v2/dm/history?type=1&oid={cid}&date={s}");
-                return new DanmuDataBiliBili(b);
+                var c = b.Length == 0 ? Stream.Null : new MemoryStream(b);
+                return new DanmuDataBiliBili(c);
             }).SelectMany(s => s.Result.D));
             return new DanmuDataBiliBili
             {
@@ -83,7 +77,7 @@ namespace Danmu.Utils.BiliBili
             return cid == 0
                     ? new DanmuDataBiliBili()
                     : date.Length == 0
-                            ? await GetDanmuAsync(cid)
+                            ? new DanmuDataBiliBili(await GetDanmuRawByCidTaskAsync(cid))
                             : await GetDanmuAsync(cid, date);
         }
     }

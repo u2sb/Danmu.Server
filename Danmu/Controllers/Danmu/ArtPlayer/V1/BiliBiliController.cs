@@ -29,7 +29,7 @@ namespace Danmu.Controllers.Danmu.ArtPlayer.V1
                     cid = await Bilibili.GetCidAsync(aid, p);
                 }
 
-                return await Bilibili.GetDanmuRawByCidTask(cid);
+                return await Bilibili.GetDanmuRawByCidTaskAsync(cid);
             }
 
             var danmu = await Bilibili.GetDanmuAsync(cid, aid, p, date);

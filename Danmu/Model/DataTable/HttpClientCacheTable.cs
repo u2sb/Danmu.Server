@@ -11,15 +11,12 @@ namespace Danmu.Model.DataTable
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [Column("Data", TypeName = "jsonb")]
         [Required]
-        public CacheData Data { get; set; }
-    }
-
-    public class CacheData
-    {
         public string Key { get; set; }
+
         public byte[] Value { get; set; }
+
+        [Required]
         public long TimeStamp { get; set; } = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
     }
 }

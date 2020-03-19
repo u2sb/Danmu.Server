@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Threading.Tasks;
 using Danmu.Utils.Common;
 using static Danmu.Utils.Global.VariableDictionary;
@@ -11,19 +10,18 @@ namespace Danmu.Utils.BiliBili
         /// <summary>
         ///     获取视频的Page原始数据
         /// </summary>
-        /// <param name="aid">视频的aid</param>
+        /// <param name="url"></param>
         /// <returns></returns>
-        private async Task<byte[]> GetBiliBiliPageRawAsync(int aid)
+        private async Task<byte[]> GetBiliBiliPageRawAsync(string url)
         {
-            return await _cache.GetOrCreateCache($"aid{aid}", TimeSpan.FromMinutes(_setting.CidCacheTime),
-                    async s =>
-                    {
-                        var gzipClient = _httpClientFactory.CreateClient(Gzip);
-                        var response =
-                                await gzipClient.GetAsync($"https://www.bilibili.com/widget/getPageList?aid={aid}");
-                        if (response.IsSuccessStatusCode) return await response.Content.ReadAsByteArrayAsync();
-                        return new byte[0];
-                    });
+            var key = Md5.GetMd5(url);
+            return await _cache.GetOrCreateCache(key, TimeSpan.FromMinutes(_setting.CidCacheTime), async () =>
+            {
+                var gzipClient = _httpClientFactory.CreateClient(Gzip);
+                var response = await gzipClient.GetAsync(url);
+                if (response.IsSuccessStatusCode) return await response.Content.ReadAsByteArrayAsync();
+                return new byte[0];
+            });
         }
 
         /// <summary>
@@ -31,22 +29,20 @@ namespace Danmu.Utils.BiliBili
         /// </summary>
         /// <param name="url">url</param>
         /// <returns></returns>
-        private async Task<Stream> GetDanmuRawAsync(string url)
+        private async Task<byte[]> GetDanmuRawAsync(string url)
         {
             var key = Md5.GetMd5(url);
-            var result = await _cache.GetOrCreateCache(key, TimeSpan.FromMinutes(_setting.CidCacheTime), async s =>
+            return await _cache.GetOrCreateCache(key, TimeSpan.FromMinutes(_setting.CidCacheTime), async () =>
             {
-                var response = await _deflateClient.GetAsync(url);
+                var deflateClient = _httpClientFactory.CreateClient(Deflate);
+                if (!string.IsNullOrEmpty(_setting.Cookie))
+                {
+                    deflateClient.DefaultRequestHeaders.Add("Cookie", _setting.Cookie);
+                }
+                var response = await deflateClient.GetAsync(url);
                 if (response.IsSuccessStatusCode) return await response.Content.ReadAsByteArrayAsync();
                 return new byte[0];
             });
-
-            return result.Length == 0 ? Stream.Null : new MemoryStream(result);
-        }
-
-        public Task<Stream> GetDanmuRawByCidTask(int cid)
-        {
-            return GetDanmuRawAsync($"https://api.bilibili.com/x/v1/dm/list.so?oid={cid}");
         }
     }
 }
