@@ -6,12 +6,14 @@ title: 安装
 
 ## 快速部署
 
-1. 安装PostgreSQL，详情见[PostgreSQL安装](/other/pgsql.html)
+> CLI 工具正在开发中，使用 CLI 工具可快速部署
+
+1. 安装 PostgreSQL，详情见[PostgreSQL 安装](/other/pgsql.html)
 1. 下载带有 `scd` 标记的[最新预编译文件](https://github.com/MonoLogueChi/Danmu.Server/releases/latest)
 1. 解压到合适位置
 1. 修改配置文件
 1. 测试能否正常启动
-1. 配置http代理工具和进程守护
+1. 配置 http 代理工具和进程守护
 
 ```bash
 //1 省略，见后面的文档
@@ -134,7 +136,11 @@ vim appsetting.json
     "Password": "000000",
     "MaxAge": 60
   },
-  "BCookie": ""
+  "BiliBiliSetting": {
+    "Cookie": "",
+    "CidCacheTime": 72,
+    "DanmuCacheTime": 5
+  }
 }
 ```
 
@@ -159,7 +165,10 @@ vim appsetting.json
   - User: `string` 管理后台用户名
   - Password: `string` 管理后台密码
   - MaxAge: `int` 登录有效时间，分钟
-- BCookie: `string` BiliBili Cookie，仅用于历史弹幕获取，不需要历史弹幕不需要填写
+- BiliBiliSetting: 
+  - Cookie: `string` BiliBili Cookie，仅用于历史弹幕获取，不需要历史弹幕不需要填写
+  - CidCacheTime: `int` Cid缓存时间，小时，Cid长期不变，缓存时间越长越好
+  - DanmuCacheTime: `int` 弹幕缓存时间，小时
 
 ### 获取 BCookie 的方法
 
@@ -252,9 +261,9 @@ stdout_logfile = /www/caddy/log/out.log
 
 根据自己的情况创建配置文件，具体关于 Supervisor 的使用请自行百度。
 
-### 使用Nginx
+### 使用 Nginx
 
-Nginx配置较caddy稍麻烦，下面只是一个示例
+Nginx 配置较 caddy 稍麻烦，下面只是一个示例
 
 ```nginx
 location /
@@ -264,7 +273,7 @@ location /
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_set_header REMOTE-HOST $remote_addr;
-    
+
     proxy_connect_timeout 30s;
     proxy_read_timeout 1800s;
     proxy_send_timeout 35s;

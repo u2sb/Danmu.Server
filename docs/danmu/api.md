@@ -46,7 +46,7 @@ title: API
 - `/api/danmu/v1/bilibili/?aid=[aid]&p=[p]`  
   `/api/danmu/v1/bilibili/danmu.xml?aid=[aid]&p=[p]`  
   `/api/danmu/v1/bilibili/danmu.json?aid=[aid]&p=[p]`，当 p=1 时可以省略参数 p，例如
-  `https://danmu.u2sb.top//api/danmu/v1/bilibili/danmu.xml?aid=810872&p=1`
+  `https://danmu.u2sb.top/api/danmu/v1/bilibili/danmu.xml?aid=810872&p=1`
 
 ## Dplayer 弹幕接口
 
