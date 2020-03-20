@@ -12,23 +12,19 @@ namespace Danmu.Model.DataTable
         /// <summary>
         ///     Id
         /// </summary>
-        [Key]
-        [Column("Id")]
+        [Key, Column("Id")]
         public Guid Id { get; set; } = new Guid();
 
         /// <summary>
         ///     弹幕所在视频
         /// </summary>
-        [Column("Vid")]
-        [Required]
-        [MaxLength(36)]
+        [Column("Vid"), Required, MaxLength(36)]
         public string Vid { get; set; }
 
         /// <summary>
         ///     弹幕数据
         /// </summary>
-        [Column("Data", TypeName = "jsonb")]
-        [Required]
+        [Column("Data", TypeName = "jsonb"), Required]
         public BaseDanmuData Data { get; set; }
 
         /// <summary>

@@ -6,9 +6,7 @@ namespace Danmu.Model.DataTable
 {
     public class HttpClientCacheTable
     {
-        [Key]
-        [Column("Id")]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key, Column("Id"), DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [Required]

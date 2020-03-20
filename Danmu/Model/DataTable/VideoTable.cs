@@ -11,16 +11,13 @@ namespace Danmu.Model.DataTable
         /// <summary>
         ///     主键 自增ID
         /// </summary>
-        [Key]
-        [Column("Id")]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key, Column("Id"), DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         /// <summary>
         ///     视频VID
         /// </summary>
-        [Required]
-        [MaxLength(36)]
+        [Required, MaxLength(36)]
         public string Vid { get; set; }
 
         [Column(TypeName = "jsonb")] public Referer Referer { get; set; }

@@ -11,8 +11,8 @@ export function logout() {
     window.location.href = apiPrefix + baseUrl + '/logout'
 }
 
-export function getUserInfo(id) {
-    return request.get(baseUrl + '/user/user', { params: { id } }).then(({ data }) => data.data)
+export function getUserInfo(uid) {
+    return request.get(baseUrl + '/user/user', { params: { uid } }).then(({ data }) => data.data)
 }
 
 export function changePwd({ uid, oldP, newP }) {

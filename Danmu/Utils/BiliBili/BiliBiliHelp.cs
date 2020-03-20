@@ -6,7 +6,6 @@ using Danmu.Model.Config;
 using Danmu.Model.Danmu.BiliBili;
 using Danmu.Utils.Configuration;
 using Danmu.Utils.Dao;
-using static Danmu.Utils.Global.VariableDictionary;
 
 namespace Danmu.Utils.BiliBili
 {

@@ -12,24 +12,19 @@ namespace Danmu.Model.DataTable
         /// <summary>
         ///     用户ID
         /// </summary>
-        [Key]
-        [Column("Id")]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key, Column("Id"), DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         /// <summary>
         ///     用户名
         /// </summary>
-        [Required]
-        [MaxLength(16)]
-        [MinLength(4)]
+        [Required, MaxLength(16), MinLength(4)]
         public string Name { get; set; }
 
         /// <summary>
         ///     密码
         /// </summary>
-        [Required]
-        [MinLength(6)]
+        [Required, MinLength(6)]
         public string PassWord { get; set; }
 
         /// <summary>
@@ -41,8 +36,7 @@ namespace Danmu.Model.DataTable
         /// <summary>
         ///     用户角色
         /// </summary>
-        [Required]
-        [DefaultValue(UserRole.GeneralUser)]
+        [Required, DefaultValue(UserRole.GeneralUser)]
         public UserRole Role { get; set; } = UserRole.Guests;
 
         /// <summary>
@@ -65,7 +59,7 @@ namespace Danmu.Model.DataTable
         ///     修改时间 UTC
         /// </summary>
         [Column(TypeName = "timestamp(3)")]
-        public DateTime UpDateTime { get; set; } = DateTime.UtcNow;
+        public DateTime UpdateTime { get; set; } = DateTime.UtcNow;
     }
 
     public enum UserRole

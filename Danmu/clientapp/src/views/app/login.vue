@@ -76,7 +76,7 @@
                 })
             },
             success() {
-                elSuccess('登陆成功')
+                elSuccess('登录成功')
                 let redirect = this.$route.query.redirect || '/'
                 window.location.href = routerMode === 'history' ? redirect : '/#' + redirect
             }

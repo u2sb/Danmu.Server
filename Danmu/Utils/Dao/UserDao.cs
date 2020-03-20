@@ -99,7 +99,7 @@ namespace Danmu.Utils.Dao
             var r2 = await r1.FirstOrDefaultAsync();
             r2.PassWord = Md5.GetMd5(newP, salt1);
             r2.Salt = salt1;
-            r2.UpDateTime = DateTime.UtcNow;
+            r2.UpdateTime = DateTime.UtcNow;
             _con.User.Update(r2);
             return await _con.SaveChangesAsync() > 0;
         }
@@ -131,7 +131,7 @@ namespace Danmu.Utils.Dao
             r.Name = name ?? r.Name;
             r.Email = email ?? r.Email;
             r.PhoneNumber = phoneNumber ?? r.PhoneNumber;
-            r.UpDateTime = DateTime.UtcNow;
+            r.UpdateTime = DateTime.UtcNow;
             _con.User.Update(r);
             return await _con.SaveChangesAsync() > 0;
         }
@@ -167,7 +167,7 @@ namespace Danmu.Utils.Dao
                 Email = s.Email,
                 PhoneNumber = s.PhoneNumber,
                 CreateTime = s.CreateTime,
-                UpDateTime = s.UpDateTime,
+                UpdateTime = s.UpdateTime,
                 Role = s.Role
             }).FirstOrDefaultAsync();
         }

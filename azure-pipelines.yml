@@ -47,7 +47,6 @@ steps:
         CLI_VERSION=`git describe --tags`
         sed -i "s/<PublishReadyToRun>false/<PublishReadyToRun>true/g" $(Build.SourcesDirectory)/Danmu/Danmu.csproj
         sed -i "s/<Version>1.0.0/<Version>`echo ${CLI_VERSION}`/g" $(Build.SourcesDirectory)/CommandLine/Danmu.CommandLine.csproj
-        cat $(Build.SourcesDirectory)/CommandLine/Danmu.CommandLine.csproj
         
   - task: DotNetCoreCLI@2
     inputs:

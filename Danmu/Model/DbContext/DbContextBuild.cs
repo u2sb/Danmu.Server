@@ -1,7 +1,7 @@
-using System.IO;
-using Danmu.Model.Config;
 using Danmu.Utils.Configuration;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Debug;
 
 namespace Danmu.Model.DbContext
 {
@@ -13,6 +13,9 @@ namespace Danmu.Model.DbContext
             sql.Port = sql.Port == 0 ? 5432 : sql.Port;
             option.UseNpgsql(
                     $"Host={sql.Host};Port={sql.Port};Database={sql.DataBase};Username={sql.UserName};Password={sql.PassWord};");
+#if DEBUG
+            option.UseLoggerFactory(new LoggerFactory(new[] { new DebugLoggerProvider() }));
+#endif
         }
     }
 }

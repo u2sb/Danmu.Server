@@ -43,12 +43,22 @@ namespace Danmu.Utils.Dao
 
             var d = new HttpClientCacheTable
             {
-                Key =  key,
+                Key = key,
                 Value = await factory()
             };
             await _con.HttpClientCache.AddAsync(d);
             await _con.SaveChangesAsync();
             return d.Value;
+        }
+
+        /// <summary>
+        ///     清空缓存表
+        /// </summary>
+        /// <returns></returns>
+        public async Task<bool> ClearCacheAsync()
+        {
+            var r = _con.ClearTable(nameof(_con.HttpClientCache));
+            return await r > 0;
         }
     }
 }

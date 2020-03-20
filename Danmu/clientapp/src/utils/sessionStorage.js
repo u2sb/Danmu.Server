@@ -24,6 +24,6 @@ export function setUser(user) {
     sessionStorage.setItem(sessionUserKey, JSON.stringify(user))
 }
 
-function removeUser() {
+export function removeUser() {
     sessionStorage.removeItem(sessionUserKey)
 }

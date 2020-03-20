@@ -3,6 +3,8 @@ using System.Text;
 using System.Text.Json;
 using Danmu.Model.Config;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Debug;
 
 namespace Danmu.Model.DbContext
 {

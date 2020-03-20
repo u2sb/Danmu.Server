@@ -2,7 +2,7 @@ import cookie from 'js-cookie'
 import { cookieRoleKey } from '@/config'
 import { login, logout } from '@/api/admin/account'
 import { createMutations, isEmpty } from '@/utils'
-import { getUser, setUser } from '@/utils/sessionStorage'
+import { getUser, setUser, removeUser } from '@/utils/sessionStorage'
 
 //刷新时从本地存储中获取用户信息
 const user = getUser()
@@ -41,6 +41,7 @@ const actions = {
         return new Promise((resolve, reject) => {
             if (state.prepareLogout) return Promise.reject()
             commit('setPrepareLogout', true)
+            removeUser()
             logout()
             /*logout(state.token)
                 .then(() => {

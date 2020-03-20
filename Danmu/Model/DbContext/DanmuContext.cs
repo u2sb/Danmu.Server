@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Danmu.Model.DataTable;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +19,11 @@ namespace Danmu.Model.DbContext
             modelBuilder.Entity<DanmuTable>().HasIndex(d => new {d.Vid, d.IsDelete});
 
             modelBuilder.Entity<HttpClientCacheTable>().HasIndex(h => h.Key).HasMethod("hash");
+        }
+
+        public async Task<int> ClearTable(string tableName)
+        {
+            return await Database.ExecuteSqlRawAsync($"TRUNCATE \"{tableName}\" RESTART IDENTITY;");
         }
     }
 }
