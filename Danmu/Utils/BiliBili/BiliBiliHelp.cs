@@ -11,12 +11,13 @@ namespace Danmu.Utils.BiliBili
 {
     public partial class BiliBiliHelp
     {
+        private readonly HttpClientCacheDao _cache;
         private readonly bool _canGetHistory;
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly HttpClientCacheDao _cache;
         private readonly BiliBiliSetting _setting;
 
-        public BiliBiliHelp(AppConfiguration appConfiguration, IHttpClientFactory httpClientFactory, HttpClientCacheDao biliBiliCache)
+        public BiliBiliHelp(AppConfiguration appConfiguration, IHttpClientFactory httpClientFactory,
+                            HttpClientCacheDao biliBiliCache)
         {
             _httpClientFactory = httpClientFactory;
             _setting = appConfiguration.GetAppSetting().BiliBiliSetting;
@@ -43,7 +44,7 @@ namespace Danmu.Utils.BiliBili
         /// <returns></returns>
         public async Task<DanmuDataBiliBili> GetDanmuAsync(int cid, string[] date)
         {
-            if (!_canGetHistory) return await GetDanmuAsync(cid, 0, 1, new string[0]);
+            if (!_canGetHistory) return await GetDanmuAsync(cid, 0, null, 1, new string[0]);
             var a = Task.Run(() => date.Select(async s =>
             {
                 var b = await GetDanmuRawAsync(
@@ -62,15 +63,24 @@ namespace Danmu.Utils.BiliBili
         /// </summary>
         /// <param name="cid"></param>
         /// <param name="aid"></param>
+        /// <param name="bvid"></param>
         /// <param name="p"></param>
         /// <param name="date"></param>
         /// <returns></returns>
-        public async Task<DanmuDataBiliBili> GetDanmuAsync(int cid, int aid, int p, string[] date)
+        public async Task<DanmuDataBiliBili> GetDanmuAsync(int cid, int aid, string bvid, int p, string[] date)
         {
-            if (cid == 0 && aid != 0)
+            if (cid == 0)
             {
-                p = p == 0 ? 1 : p;
-                cid = await GetCidAsync(aid, p);
+                if (aid != 0)
+                {
+                    p = p == 0 ? 1 : p;
+                    cid = await GetCidAsync(aid, p);
+                }
+                else if (!string.IsNullOrEmpty(bvid))
+                {
+                    p = p == 0 ? 1 : p;
+                    cid = await GetCidAsync(bvid, p);
+                }
             }
 
             return cid == 0

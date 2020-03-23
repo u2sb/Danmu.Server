@@ -13,11 +13,11 @@ namespace Danmu.Controllers.Danmu.Dplayer.V3
         public BiliBiliController(BiliBiliHelp bilibili) : base(bilibili) { }
 
         [HttpGet("bilibili")]
-        public async Task<DplayerWebResult> Get(int cid, int aid, int p)
+        public async Task<DplayerWebResult> Get(int cid, int aid, string bvid, int p)
         {
             string[] date = Request.Query["date"];
             HttpContext.Request.Headers["Accept"] = "application/json";
-            var result = await Bilibili.GetDanmuAsync(cid, aid, p, date);
+            var result = await Bilibili.GetDanmuAsync(cid, aid, bvid, p, date);
             return new DplayerWebResult(result.ToDanmuDataBases().ToArray());
         }
     }

@@ -17,8 +17,8 @@ namespace Danmu.Utils.BiliBili
             var key = Md5.GetMd5(url);
             return await _cache.GetOrCreateCache(key, TimeSpan.FromMinutes(_setting.CidCacheTime), async () =>
             {
-                var gzipClient = _httpClientFactory.CreateClient(Gzip);
-                var response = await gzipClient.GetAsync(url);
+                var httpClient = _httpClientFactory.CreateClient(Deflate);
+                var response = await httpClient.GetAsync(url);
                 if (response.IsSuccessStatusCode) return await response.Content.ReadAsByteArrayAsync();
                 return new byte[0];
             });

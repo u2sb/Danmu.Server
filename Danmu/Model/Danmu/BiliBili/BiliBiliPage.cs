@@ -4,22 +4,31 @@ namespace Danmu.Model.Danmu.BiliBili
 {
     public class BiliBiliPage
     {
-        /// <summary>
-        ///     分P
-        /// </summary>
-        [JsonPropertyName("page")]
-        public int Page { get; set; }
+        [JsonPropertyName("code")]
+        public int Code { get; set; }
 
-        /// <summary>
-        ///     标题
-        /// </summary>
-        [JsonPropertyName("name")]
-        public string Name { get; set; }
+        [JsonPropertyName("data")]
+        public DataObj[] Data { get; set; }
 
-        /// <summary>
-        ///     cid
-        /// </summary>
-        [JsonPropertyName("cid")]
-        public int Cid { get; set; }
+        public class DataObj
+        {
+            /// <summary>
+            ///     分P
+            /// </summary>
+            [JsonPropertyName("page")]
+            public int Page { get; set; }
+
+            /// <summary>
+            ///     标题
+            /// </summary>
+            [JsonPropertyName("part")]
+            public string Part { get; set; }
+
+            /// <summary>
+            ///     cid
+            /// </summary>
+            [JsonPropertyName("cid")]
+            public int Cid { get; set; }
+        }
     }
 }

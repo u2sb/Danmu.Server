@@ -16,22 +16,30 @@ namespace Danmu.Controllers.Danmu.Common.V1
         [HttpGet]
         [HttpGet("danmu")]
         [HttpGet("danmu.{format}")]
-        public async Task<dynamic> Get(int cid, int aid, int p, string format)
+        public async Task<dynamic> Get(int cid, int aid, string bvid, int p, string format)
         {
             string[] date = Request.Query["date"];
             if (date.Length == 0 && !(!string.IsNullOrEmpty(format) && format.Equals("json")))
             {
-                if (cid == 0 && aid != 0)
+                if (cid == 0)
                 {
-                    p = p == 0 ? 1 : p;
-                    cid = await Bilibili.GetCidAsync(aid, p);
+                    if (aid != 0)
+                    {
+                        p = p == 0 ? 1 : p;
+                        cid = await Bilibili.GetCidAsync(aid, p);
+                    }
+                    else if (!string.IsNullOrEmpty(bvid))
+                    {
+                        p = p == 0 ? 1 : p;
+                        cid = await Bilibili.GetCidAsync(bvid, p);
+                    }
                 }
 
                 HttpContext.Response.ContentType = "application/xml; charset=utf-8";
                 return await Bilibili.GetDanmuRawByCidTaskAsync(cid);
             }
 
-            var danmu = await Bilibili.GetDanmuAsync(cid, aid, p, date);
+            var danmu = await Bilibili.GetDanmuAsync(cid, aid, bvid, p, date);
 
             if (!string.IsNullOrEmpty(format) && format.Equals("json"))
                 return new WebResult<IEnumerable<BaseDanmuData>>(danmu.ToDanmuDataBases());
