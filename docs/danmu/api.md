@@ -37,7 +37,7 @@ title: API
 },
 ```
 
-### BiliBili弹幕
+### BiliBili 弹幕
 
 - `/api/danmu/v1/bilibili/?cid=[cid]`  
   `/api/danmu/v1/bilibili/danmu.xml?cid=[cid]`  
@@ -46,7 +46,7 @@ title: API
 - `/api/danmu/v1/bilibili/?aid=[aid]&p=[p]`  
   `/api/danmu/v1/bilibili/danmu.xml?aid=[aid]&p=[p]`  
   `/api/danmu/v1/bilibili/danmu.json?aid=[aid]&p=[p]`，当 p=1 时可以省略参数 p，例如
-  `https://danmu.u2sb.top//api/danmu/v1/bilibili/danmu.xml?aid=810872&p=1`
+  `https://danmu.u2sb.top/api/danmu/v1/bilibili/danmu.xml?aid=810872&p=1`
 - `/api/danmu/v1/bilibili/?bvid=[bvid]&p=[p]`  
   `/api/danmu/v1/bilibili/danmu.xml?bvid=[bvid]&p=[p]`  
   `/api/danmu/v1/bilibili/danmu.json?bvid=[bvid]&p=[p]`，当 p=1 时可以省略参数 p，例如
@@ -103,8 +103,8 @@ title: API
   "id": "C6CC6218F1FB8770", //视频ID
   "text": "弹幕啊", //弹幕文本
   "time": 23.359518, //时间
-  "color": "#fff", //颜色 
-  "mode": 0, //弹幕类型 0-滚动 1-固定
+  "color": "#fff", //颜色
+  "mode": 0 //弹幕类型 0-滚动 1-固定
 }
 ```
 
@@ -117,7 +117,7 @@ title: API
 - `/api/danmu/artplayer/v1/bilibili/?aid=[aid]&p=[p]`  
   `/api/danmu/artplayer/v1/bilibili/danmu.xml?aid=[aid]&p=[p]`  
   `/api/danmu/artplayer/v1/bilibili/danmu.json?aid=[aid]&p=[p]`，当 p=1 时可以省略参数 p，例如
-  `https://danmu.u2sb.top//api/danmu/artplayer/v1/bilibili/danmu.xml?aid=810872&p=1`
+  `https://danmu.u2sb.top/api/danmu/artplayer/v1/bilibili/danmu.xml?aid=810872&p=1`
 - `/api/danmu/artplayer/v1/bilibili/?bvid=[bvid]&p=[p]`  
   `/api/danmu/artplayer/v1/bilibili/danmu.xml?bvid=[bvid]&p=[p]`  
   `/api/danmu/artplayer/v1/bilibili/danmu.json?bvid=[bvid]&p=[p]`，当 p=1 时可以省略参数 p，例如
@@ -133,7 +133,6 @@ title: API
 - `/api/danmu/artplayer/v1/bilibili/?aid=[aid]&p=[p]&date=[date0]&date=[date1]`  
   `/api/danmu/artplayer/v1/bilibili/danmu.xml?aid=[aid]&p=[p]&date=[date0]&date=[date1]`  
   `/api/danmu/artplayer/v1/bilibili/danmu.json?aid=[aid]&p=[p]&date=[date0]&date=[date1]`
-
 
 ### ArtPlayer 示例
 
