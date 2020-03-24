@@ -24,6 +24,7 @@ themeConfig:
     其他相关文档:
       其他文档: /other/
       PostgreSQL安装: /other/pgsql.html
+      其他API: /other/otherapi.html
       FQA: /other/fqa.html
       感谢: /other/sponsors.html
   sidebar:
@@ -37,6 +38,7 @@ themeConfig:
       - api
     /other/:
       - pgsql
+      - otherapi
       - fqa
       - sponsors
   repo: MonoLogueChi/Danmu.Server
