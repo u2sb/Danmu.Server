@@ -1,7 +1,7 @@
-using System;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Danmu.Model.Config;
 using Danmu.Model.Danmu.BiliBili;
@@ -104,24 +104,37 @@ namespace Danmu.Utils.BiliBili
             return query;
         }
 
-        public async Task<int> GetAidByBvidAsync(string bvid)
+        /// <summary>
+        ///     获取视频aid和bvid信息
+        /// </summary>
+        /// <param name="bvid"></param>
+        /// <param name="aid"></param>
+        /// <returns></returns>
+        public async Task<BvidInfo> GetBvidInfoAsync(string bvid, int aid)
         {
-            return await _cache.GetOrCreateAidCacheAsync(bvid, async () =>
-            {
-                var key = "window.__INITIAL_STATE__={\"aid\":";
-                var html = await GetBiliBiliHtmlAsync($"https://www.bilibili.com/video/BV{bvid}?p=1");
-                var a = html.IndexOf(key, StringComparison.Ordinal);
-
-                if (a > 0)
+            string url;
+            if (string.IsNullOrEmpty(bvid))
+                url = $"https://api.bilibili.com/x/web-interface/archive/stat?aid={aid}";
+            else if (aid == 0)
+                url = $"https://api.bilibili.com/x/web-interface/archive/stat?bvid={bvid}";
+            else
+                return new BvidInfo
                 {
-                    var b = html.Substring(a + key.Length, 11);
-                    var c = b.IndexOf(",", StringComparison.Ordinal);
-                    var d = b.Substring(0, c);
-                    return int.TryParse(d, out var e) ? e : 0;
-                }
+                    Code = 0,
+                    Data = new BvidInfo.DataObj
+                    {
+                        Aid = aid,
+                        Bvid = bvid
+                    }
+                };
+            var a = await GetBiliBiliPageRawAsync(url);
+            if (a.Length > 0)
+            {
+                var b = await JsonSerializer.DeserializeAsync<BvidInfo>(new MemoryStream(a));
+                if (b.Code == 0) return b;
+            }
 
-                return 0;
-            });
+            return new BvidInfo();
         }
     }
 }

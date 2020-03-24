@@ -1,33 +1,33 @@
 using System.Threading.Tasks;
+using Danmu.Controllers.Base;
 using Danmu.Model.WebResult;
 using Danmu.Utils.BiliBili;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Danmu.Controllers.Other
 {
-    [Route("api/other/query" + "aid")]
+    [Route("/api/other/bilibili")]
     [ApiController]
-    public class QueryAidController : ControllerBase
+    public class QueryAidController : BiliBiliBaseController
     {
-        private readonly BiliBiliHelp _bilibili;
+        public QueryAidController(BiliBiliHelp bilibili) : base(bilibili) { }
 
-        public QueryAidController(BiliBiliHelp bilibil)
+        [HttpGet("query" + "aid")]
+        public async Task<WebResult> QueryAid(string bvid, int aid)
         {
-            _bilibili = bilibil;
-        }
+            var a = await Bilibili.GetBvidInfoAsync(bvid, aid);
 
-        [HttpGet]
-        public async Task<WebResult> QueryAid(string bvid)
-        {
-            var aid = await _bilibili.GetAidByBvidAsync(bvid);
-            return string.IsNullOrEmpty(bvid) || aid == 0 ? new WebResult(1) : new WebResult(0)
-            {
-                Data = new
-                {
-                    Aid = aid,
-                    PageList = (await _bilibili.GetBiliBiliPageAsync(bvid)).Data
-                }
-            };
+            return a.Code == 0
+                    ? new WebResult(0)
+                    {
+                        Data = new
+                        {
+                            a.Data.Aid,
+                            a.Data.Bvid,
+                            PageList = (await Bilibili.GetBiliBiliPageAsync(a.Data.Bvid)).Data
+                        }
+                    }
+                    : new WebResult(1);
         }
     }
 }

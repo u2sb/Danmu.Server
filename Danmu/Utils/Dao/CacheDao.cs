@@ -29,7 +29,7 @@ namespace Danmu.Utils.Dao
             if (await a.CountAsync() > 0)
             {
                 var b = await a.FirstOrDefaultAsync();
-                if (DateTimeOffset.UtcNow.ToUnixTimeSeconds() - b.TimeStamp > expireTime.TotalSeconds)
+                if (DateTimeOffset.UtcNow.ToUnixTimeSeconds() - b.TimeStamp > expireTime.TotalSeconds || b.Value.Length == 0)
                 {
                     var c = await factory();
                     b.Value = c;
@@ -59,36 +59,6 @@ namespace Danmu.Utils.Dao
         {
             var r = _con.ClearTable(nameof(_con.HttpClientCache));
             return await r > 0;
-        }
-
-        /// <summary>
-        ///     AidCache表中获取或创建
-        /// </summary>
-        /// <param name="bvid"></param>
-        /// <param name="factory"></param>
-        /// <returns></returns>
-        public async Task<int> GetOrCreateAidCacheAsync(string bvid, Func<Task<int>> factory)
-        {
-            var a = _con.AidCache.Where(e => e.Bvid.Equals(bvid));
-            if (await a.CountAsync() > 0)
-            {
-                var b = await a.Select(s => s.Aid).FirstOrDefaultAsync();
-                return b;
-            }
-
-            var c = await factory();
-            if (c != 0)
-            {
-                var d = new AidCacheTable
-                {
-                    Bvid = bvid,
-                    Aid = c
-                };
-                await _con.AidCache.AddAsync(d);
-                await _con.SaveChangesAsync();
-            }
-
-            return c;
         }
     }
 }

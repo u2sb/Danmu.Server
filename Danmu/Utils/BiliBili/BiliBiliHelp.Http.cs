@@ -42,18 +42,5 @@ namespace Danmu.Utils.BiliBili
                 return new byte[0];
             });
         }
-
-        /// <summary>
-        ///     获取BiliBili页面
-        /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
-        public async Task<string> GetBiliBiliHtmlAsync(string url)
-        {
-            var httpClient = _httpClientFactory.CreateClient(Gzip);
-            var response = await httpClient.GetAsync(url);
-            if (response.IsSuccessStatusCode) return await response.Content.ReadAsStringAsync();
-            return string.Empty;
-        }
     }
 }
