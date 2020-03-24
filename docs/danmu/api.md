@@ -52,6 +52,7 @@ title: API
   `/api/danmu/v1/bilibili/danmu.json?bvid=[bvid]&p=[p]`，当 p=1 时可以省略参数 p，例如
   `https://danmu.u2sb.top/api/danmu/v1/bilibili/danmu.xml?bvid=18b411j72u&p=1`
 
+
 ## Dplayer 弹幕接口
 
 - `/api/danmu/dplayer/` ，例如  
