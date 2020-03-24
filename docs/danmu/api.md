@@ -47,6 +47,10 @@ title: API
   `/api/danmu/v1/bilibili/danmu.xml?aid=[aid]&p=[p]`  
   `/api/danmu/v1/bilibili/danmu.json?aid=[aid]&p=[p]`，当 p=1 时可以省略参数 p，例如
   `https://danmu.u2sb.top//api/danmu/v1/bilibili/danmu.xml?aid=810872&p=1`
+- `/api/danmu/v1/bilibili/?bvid=[bvid]&p=[p]`  
+  `/api/danmu/v1/bilibili/danmu.xml?bvid=[bvid]&p=[p]`  
+  `/api/danmu/v1/bilibili/danmu.json?bvid=[bvid]&p=[p]`，当 p=1 时可以省略参数 p，例如
+  `https://danmu.u2sb.top/api/danmu/v1/bilibili/danmu.xml?bvid=18b411j72u&p=1`
 
 ## Dplayer 弹幕接口
 
@@ -61,6 +65,8 @@ title: API
   `https://danmu.u2sb.top/api/danmu/dplayer/v3/bilibili/?aid=41940944`
 - `/api/danmu/dplayer/v3/bilibili/?aid=[aid]&p=[p]` ，例如  
   `https://danmu.u2sb.top/api/danmu/dplayer/v3/bilibili/?aid=41940944&p=1`
+- `/api/danmu/dplayer/v3/bilibili/?bvid=[bvid]&p=[p]` ，例如  
+  `https://danmu.u2sb.top/api/danmu/dplayer/v3/bilibili/?bvid=18b411j72u&p=1`
 
 ### BiliBili 历史弹幕接口
 
@@ -71,6 +77,7 @@ title: API
 - `/api/danmu/dplayer/v3/bilibili/?cid=[cid]&date=[date0]&date=[date1]` ，例如  
   `https://danmu.u2sb.top/api/danmu/dplayer/v3/bilibili/?cid=73636868&date=2019-07-26&date=2019-04-01`
 - 使用 aid 方法同理。
+- 使用 bvid 方法同理。
 
 ## ArtPlayer 弹幕接口
 
@@ -111,6 +118,10 @@ title: API
   `/api/danmu/artplayer/v1/bilibili/danmu.xml?aid=[aid]&p=[p]`  
   `/api/danmu/artplayer/v1/bilibili/danmu.json?aid=[aid]&p=[p]`，当 p=1 时可以省略参数 p，例如
   `https://danmu.u2sb.top//api/danmu/artplayer/v1/bilibili/danmu.xml?aid=810872&p=1`
+- `/api/danmu/artplayer/v1/bilibili/?bvid=[bvid]&p=[p]`  
+  `/api/danmu/artplayer/v1/bilibili/danmu.xml?bvid=[bvid]&p=[p]`  
+  `/api/danmu/artplayer/v1/bilibili/danmu.json?bvid=[bvid]&p=[p]`，当 p=1 时可以省略参数 p，例如
+  `https://danmu.u2sb.top/api/danmu/artplayer/v1/bilibili/danmu.xml?bvid=18b411j72u&p=1`
 
 ### BiliBili 历史弹幕接口
 
