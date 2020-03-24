@@ -119,7 +119,7 @@ namespace Danmu
             services.AddScoped<UserDao>();
             services.AddScoped<DanmuDao>();
             services.AddScoped<VideoDao>();
-            services.AddScoped<HttpClientCacheDao>();
+            services.AddScoped<CacheDao>();
             services.AddScoped<BiliBiliHelp>();
         }
 

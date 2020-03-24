@@ -4,11 +4,9 @@ namespace Danmu.Model.Danmu.BiliBili
 {
     public class BiliBiliPage
     {
-        [JsonPropertyName("code")]
-        public int Code { get; set; }
+        [JsonPropertyName("code")] public int Code { get; set; }
 
-        [JsonPropertyName("data")]
-        public DataObj[] Data { get; set; }
+        [JsonPropertyName("data")] public DataObj[] Data { get; set; }
 
         public class DataObj
         {
@@ -29,6 +27,27 @@ namespace Danmu.Model.Danmu.BiliBili
             /// </summary>
             [JsonPropertyName("cid")]
             public int Cid { get; set; }
+
+            /// <summary>
+            ///     时长
+            /// </summary>
+            [JsonPropertyName("duration")]
+            public int Duration { get; set; }
+
+            [JsonPropertyName("dimension")]
+            public DimensionObj Dimension { get; set; }
+
+            public class DimensionObj
+            {
+                [JsonPropertyName("width")]
+                public int Width { get; set; }
+
+                [JsonPropertyName("height")]
+                public int Height { get; set; }
+
+                [JsonPropertyName("rotate")]
+                public int Rotate { get; set; }
+            }
         }
     }
 }

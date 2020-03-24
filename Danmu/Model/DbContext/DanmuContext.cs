@@ -13,12 +13,15 @@ namespace Danmu.Model.DbContext
         public DbSet<VideoTable> Video { get; set; }
         public DbSet<HttpClientCacheTable> HttpClientCache { get; set; }
 
+        public DbSet<AidCacheTable> AidCache { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<DanmuTable>().Property(p => p.IsDelete).HasDefaultValue(false);
             modelBuilder.Entity<DanmuTable>().HasIndex(d => new {d.Vid, d.IsDelete});
 
             modelBuilder.Entity<HttpClientCacheTable>().HasIndex(h => h.Key).HasMethod("hash");
+            modelBuilder.Entity<AidCacheTable>().HasIndex(h => h.Bvid).HasMethod("hash");
         }
 
         public async Task<int> ClearTable(string tableName)

@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -11,13 +12,13 @@ namespace Danmu.Utils.BiliBili
 {
     public partial class BiliBiliHelp
     {
-        private readonly HttpClientCacheDao _cache;
+        private readonly CacheDao _cache;
         private readonly bool _canGetHistory;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly BiliBiliSetting _setting;
 
         public BiliBiliHelp(AppConfiguration appConfiguration, IHttpClientFactory httpClientFactory,
-                            HttpClientCacheDao biliBiliCache)
+                            CacheDao biliBiliCache)
         {
             _httpClientFactory = httpClientFactory;
             _setting = appConfiguration.GetAppSetting().BiliBiliSetting;
@@ -30,10 +31,21 @@ namespace Danmu.Utils.BiliBili
         /// </summary>
         /// <param name="cid">视频的cid</param>
         /// <returns>B站弹幕数据流</returns>
-        public async Task<Stream> GetDanmuRawByCidTaskAsync(int cid)
+        public async Task<Stream> GetDanmuRawByCidAsync(int cid)
         {
             var r = await GetDanmuRawAsync($"https://api.bilibili.com/x/v1/dm/list.so?oid={cid}");
             return r.Length == 0 ? Stream.Null : new MemoryStream(r);
+        }
+
+        /// <summary>
+        ///     通过Query获取弹幕
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public async Task<Stream> GetDanmuRawByQueryAsync(BiliBiliQuery query)
+        {
+            query = await CheckCid(query);
+            return await GetDanmuRawByCidAsync(query.Cid);
         }
 
         /// <summary>
@@ -44,7 +56,7 @@ namespace Danmu.Utils.BiliBili
         /// <returns></returns>
         public async Task<DanmuDataBiliBili> GetDanmuAsync(int cid, string[] date)
         {
-            if (!_canGetHistory) return await GetDanmuAsync(cid, 0, null, 1, new string[0]);
+            if (!_canGetHistory) return await GetDanmuAsync(new BiliBiliQuery {Cid = cid});
             var a = Task.Run(() => date.Select(async s =>
             {
                 var b = await GetDanmuRawAsync(
@@ -61,33 +73,55 @@ namespace Danmu.Utils.BiliBili
         /// <summary>
         ///     获取B站弹幕
         /// </summary>
-        /// <param name="cid"></param>
-        /// <param name="aid"></param>
-        /// <param name="bvid"></param>
-        /// <param name="p"></param>
-        /// <param name="date"></param>
+        /// <param name="query"></param>
         /// <returns></returns>
-        public async Task<DanmuDataBiliBili> GetDanmuAsync(int cid, int aid, string bvid, int p, string[] date)
+        public async Task<DanmuDataBiliBili> GetDanmuAsync(BiliBiliQuery query)
         {
-            if (cid == 0)
+            query = await CheckCid(query);
+
+            return query.Cid == 0
+                    ? new DanmuDataBiliBili()
+                    : query.Date.Length == 0 && !_canGetHistory
+                            ? new DanmuDataBiliBili(await GetDanmuRawByCidAsync(query.Cid))
+                            : await GetDanmuAsync(query.Cid, query.Date);
+        }
+
+        /// <summary>
+        ///     检查Cid
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public async Task<BiliBiliQuery> CheckCid(BiliBiliQuery query)
+        {
+            if (query.Cid == 0)
             {
-                if (aid != 0)
-                {
-                    p = p == 0 ? 1 : p;
-                    cid = await GetCidAsync(aid, p);
-                }
-                else if (!string.IsNullOrEmpty(bvid))
-                {
-                    p = p == 0 ? 1 : p;
-                    cid = await GetCidAsync(bvid, p);
-                }
+                query.P = query.P == 0 ? 1 : query.P;
+                if (query.Aid != 0)
+                    query.Cid = await GetCidAsync(query.Aid, query.P);
+                else if (!string.IsNullOrEmpty(query.Bvid)) query.Cid = await GetCidAsync(query.Bvid, query.P);
             }
 
-            return cid == 0
-                    ? new DanmuDataBiliBili()
-                    : date.Length == 0
-                            ? new DanmuDataBiliBili(await GetDanmuRawByCidTaskAsync(cid))
-                            : await GetDanmuAsync(cid, date);
+            return query;
+        }
+
+        public async Task<int> GetAidByBvidAsync(string bvid)
+        {
+            return await _cache.GetOrCreateAidCacheAsync(bvid, async () =>
+            {
+                var key = "window.__INITIAL_STATE__={\"aid\":";
+                var html = await GetBiliBiliHtmlAsync($"https://www.bilibili.com/video/BV{bvid}?p=1");
+                var a = html.IndexOf(key, StringComparison.Ordinal);
+
+                if (a > 0)
+                {
+                    var b = html.Substring(a + key.Length, 11);
+                    var c = b.IndexOf(",", StringComparison.Ordinal);
+                    var d = b.Substring(0, c);
+                    return int.TryParse(d, out var e) ? e : 0;
+                }
+
+                return 0;
+            });
         }
     }
 }

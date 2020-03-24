@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Danmu.Controllers.Base;
+using Danmu.Model.Danmu.BiliBili;
 using Danmu.Model.WebResult;
 using Danmu.Utils.BiliBili;
 using Microsoft.AspNetCore.Mvc;
@@ -13,11 +14,10 @@ namespace Danmu.Controllers.Danmu.Dplayer.V3
         public BiliBiliController(BiliBiliHelp bilibili) : base(bilibili) { }
 
         [HttpGet("bilibili")]
-        public async Task<DplayerWebResult> Get(int cid, int aid, string bvid, int p)
+        public async Task<DplayerWebResult> Get([FromQuery] BiliBiliQuery query)
         {
-            string[] date = Request.Query["date"];
             HttpContext.Request.Headers["Accept"] = "application/json";
-            var result = await Bilibili.GetDanmuAsync(cid, aid, bvid, p, date);
+            var result = await Bilibili.GetDanmuAsync(query);
             return new DplayerWebResult(result.ToDanmuDataBases().ToArray());
         }
     }

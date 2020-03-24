@@ -37,7 +37,7 @@ namespace Danmu.Utils.BiliBili
         /// </summary>
         /// <param name="aid">视频的aid</param>
         /// <returns>Page数据</returns>
-        private async Task<BiliBiliPage> GetBiliBiliPageAsync(int aid)
+        public async Task<BiliBiliPage> GetBiliBiliPageAsync(int aid)
         {
             var raw = await GetBiliBiliPageRawAsync($"https://api.bilibili.com/x/player/pagelist?aid={aid}");
             if (raw.Length != 0)
@@ -54,7 +54,7 @@ namespace Danmu.Utils.BiliBili
         /// </summary>
         /// <param name="bvid"></param>
         /// <returns></returns>
-        private async Task<BiliBiliPage> GetBiliBiliPageAsync(string bvid)
+        public async Task<BiliBiliPage> GetBiliBiliPageAsync(string bvid)
         {
             var raw = await GetBiliBiliPageRawAsync($"https://api.bilibili.com/x/player/pagelist?bvid={bvid}");
             if (raw.Length != 0)
