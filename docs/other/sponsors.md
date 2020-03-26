@@ -1,6 +1,7 @@
 ---
 title: 捐赠
 ---
+
 ::: tip 联系
 如果您对弹幕服务感兴趣，想要赞助作者继续开发，欢迎联系作者 xxwhite@foxmail.com
 :::
@@ -24,6 +25,13 @@ title: 捐赠
 > 感谢 `*永虎` 捐赠的 50 元。
 > 感谢 `天空铃音` 捐赠的 13.32 元。
 
+---
+
+## 感谢
+
+[![](@img/other/ReSharper.png =200x200)](https://www.jetbrains.com/resharper/)
+
+**使用 ReSharper 开发**
 
 <script>
 const date = new Date();
