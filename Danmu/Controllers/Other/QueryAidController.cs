@@ -13,9 +13,9 @@ namespace Danmu.Controllers.Other
         public QueryAidController(BiliBiliHelp bilibili) : base(bilibili) { }
 
         [HttpGet("query" + "aid")]
-        public async Task<WebResult> QueryAid(string bvid, int aid)
+        public async Task<WebResult> QueryAid(string bvid, int? aid)
         {
-            var a = await Bilibili.GetBvidInfoAsync(bvid, aid);
+            var a = await Bilibili.GetBvidInfoAsync(bvid, aid ?? 0);
 
             return a.Code == 0
                     ? new WebResult(0)

@@ -34,7 +34,7 @@ namespace Danmu.Model.Config
     {
         public string User { get; set; }
         public string Password { get; set; }
-        public int MaxAge { get; set; }
+        public int MaxAge { get; set; } = 1;
     }
 
     public class BiliBiliSetting

@@ -60,7 +60,7 @@ namespace Danmu.Utils.BiliBili
             var a = Task.Run(() => date.Select(async s =>
             {
                 var b = await GetDanmuRawAsync(
-                        $"https://api.bilibili.com/x/v2/dm/history?type=1&oid={cid}&date={s}");
+                        $"https://api.bilibili.com/x/v2/dm/history?type=1&oid={cid}&date={s}", true);
                 var c = b.Length == 0 ? Stream.Null : new MemoryStream(b);
                 return new DanmuDataBiliBili(c);
             }).SelectMany(s => s.Result.D));
