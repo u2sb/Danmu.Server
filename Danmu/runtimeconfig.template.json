@@ -1,0 +1,5 @@
+{
+  "configProperties": {
+    "System.Net.Http.SocketsHttpHandler.Http2Support": true
+  }
+}

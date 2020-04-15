@@ -1,4 +1,5 @@
 using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Danmu.Utils.Common;
 using static Danmu.Utils.Global.VariableDictionary;
@@ -17,8 +18,8 @@ namespace Danmu.Utils.BiliBili
             var key = Md5.GetMd5(url);
             return await _cache.GetOrCreateHttpCacheAsync(key, TimeSpan.FromMinutes(_setting.CidCacheTime), async () =>
             {
-                var httpClient = _httpClientFactory.CreateClient(Deflate);
-                var response = await httpClient.GetAsync(url);
+                var client = _httpClientFactory.CreateClient(Deflate);
+                var response = await client.GetAsync(url);
                 if (response.IsSuccessStatusCode) return await response.Content.ReadAsByteArrayAsync();
                 return new byte[0];
             });
@@ -35,10 +36,11 @@ namespace Danmu.Utils.BiliBili
             var key = Md5.GetMd5(url);
             return await _cache.GetOrCreateHttpCacheAsync(key, TimeSpan.FromMinutes(_setting.DanmuCacheTime), async () =>
             {
-                var deflateClient = _httpClientFactory.CreateClient(Deflate);
+                var request = new HttpRequestMessage(HttpMethod.Get, url);
                 if (useCookie && !string.IsNullOrEmpty(_setting.Cookie))
-                    deflateClient.DefaultRequestHeaders.Add("Cookie", _setting.Cookie);
-                var response = await deflateClient.GetAsync(url);
+                    request.Headers.Add("Cookie", _setting.Cookie);
+                var client = _httpClientFactory.CreateClient(Deflate);
+                var response = await client.SendAsync(request);
                 if (response.IsSuccessStatusCode) return await response.Content.ReadAsByteArrayAsync();
                 return new byte[0];
             });

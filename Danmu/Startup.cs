@@ -56,6 +56,7 @@ namespace Danmu
 
 
             //Http请求
+            services.AddHttpClient();
             services.AddHttpClient(Gzip).ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
                     {AutomaticDecompression = DecompressionMethods.GZip});
             services.AddHttpClient(Deflate).ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
@@ -151,7 +152,7 @@ namespace Danmu
             {
 #if DEBUG
                 spa.Options.SourcePath = "ClientApp";
-                spa.UseVueCli("serve",18081);
+                spa.UseVueCli("serve", 18081);
 #endif
             });
         }

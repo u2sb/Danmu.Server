@@ -56,6 +56,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <TrimmerRootDescriptor Include="TrimmerRoots.xml" />
+    <Content Update="runtimeconfig.template.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 </Project>

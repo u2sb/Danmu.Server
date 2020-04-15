@@ -17,10 +17,10 @@ namespace Danmu.Utils.BiliBili
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly BiliBiliSetting _setting;
 
-        public BiliBiliHelp(AppConfiguration appConfiguration, IHttpClientFactory httpClientFactory,
+        public BiliBiliHelp(AppConfiguration appConfiguration, IHttpClientFactory clientFactory,
                             CacheDao biliBiliCache)
         {
-            _httpClientFactory = httpClientFactory;
+            _httpClientFactory = clientFactory;
             _setting = appConfiguration.GetAppSetting().BiliBiliSetting;
             _canGetHistory = !string.IsNullOrEmpty(_setting.Cookie);
             _cache = biliBiliCache;
