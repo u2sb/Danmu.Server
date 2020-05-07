@@ -81,7 +81,7 @@ namespace Danmu.Utils.BiliBili
 
             return query.Cid == 0
                     ? new DanmuDataBiliBili()
-                    : query.Date.Length == 0 && !_canGetHistory
+                    : query.Date.Length == 0 || !_canGetHistory
                             ? new DanmuDataBiliBili(await GetDanmuRawByCidAsync(query.Cid))
                             : await GetDanmuAsync(query.Cid, query.Date);
         }
