@@ -308,12 +308,14 @@ stdout_logfile = /www/caddy/log/out.log
 
 ### 使用 Nginx
 
-Nginx 配置较 caddy 稍麻烦，下面只是一个示例
+Nginx 配置较 caddy 稍麻烦，下面只是一个关键部分示例，具体配置还要自己想
+
+::: details Nginx 配置示例
 
 ```nginx
 location /
 {
-  proxy_pass unix:/tmp/danmu.sock;
+  proxy_pass http://unix:/tmp/danmu.sock;
   proxy_set_header Host $host;
   proxy_set_header X-Real-IP $remote_addr;
   proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -323,14 +325,22 @@ location /
 
 location /api/live
 {
+  proxy_pass http://unix:/tmp/danmu.sock;
+  proxy_set_header Host $host;
+  proxy_set_header X-Real-IP $remote_addr;
+  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  proxy_set_header REMOTE-HOST $remote_addr;
+  add_header X-Cache $upstream_cache_status;
   proxy_connect_timeout 30s;
-    proxy_read_timeout 1800s;
-    proxy_send_timeout 35s;
-    proxy_http_version 1.1;
-    proxy_set_header Upgrade $http_upgrade;
-    proxy_set_header Connection "upgrade";
+  proxy_read_timeout 1800s;
+  proxy_send_timeout 35s;
+  proxy_http_version 1.1;
+  proxy_set_header Upgrade $http_upgrade;
+  proxy_set_header Connection "upgrade";
 }
 ```
+
+:::
 
 ## Dplayer 的简单应用
 
