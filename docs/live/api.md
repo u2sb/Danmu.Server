@@ -2,6 +2,8 @@
 title: API
 ---
 
+# API
+
 ## Dplayer
 
 Api 非常简单，通信使用了`signalR`，封装成都比较高，具体可以参考 [livedanmu.js](/js/livedanmu.js)。

@@ -2,6 +2,8 @@
 title: PostgreSQL安装
 ---
 
+# PostgreSQL安装
+
 > 参考文档：[https://www.postgresql.org/download/](https://www.postgresql.org/download/)
 
 以 Debian10 为例，其他系统请看官方文档，与 Debian10 类似，其他 Linux 系统请看官方文档。

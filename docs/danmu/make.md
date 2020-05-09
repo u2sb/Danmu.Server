@@ -2,6 +2,8 @@
 title: 编译
 ---
 
+# 编译 
+
 ::: tip 提示
 正常情况下[下载](https://github.com/MonoLogueChi/Danmu.Server/releases)编译完成的版本即可，无需自己编译，可以直接看[安装](install.md)部分，如有特殊需要，请参考本文。
 :::

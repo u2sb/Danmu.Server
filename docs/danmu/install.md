@@ -2,9 +2,11 @@
 title: 安装
 ---
 
-# 最简部署
+# 安装
 
 ## 快速部署
+
+::: details 快速部署
 
 > CLI 工具正在开发中，使用 CLI 工具可快速部署
 
@@ -35,7 +37,7 @@ vim appsettings.yml
 省略，见后面的文档
 ```
 
-# 完整概述
+:::
 
 ## 环境要求
 
@@ -102,7 +104,9 @@ vim appsetting.yml
 
 ### 配置文件解释
 
-> 新版配置文件使用yaml，但json配置文件仍可使用，相同配置项，yaml将会覆盖json。
+> 新版配置文件使用 yaml，但 json 配置文件仍可使用，相同配置项，yaml 将会覆盖 json。
+
+::: details yaml 配置
 
 ```yaml appsetting.yml
 KestrelSettings:
@@ -136,6 +140,10 @@ BiliBiliSetting:
   CidCacheTime: 168
   DanmuCacheTime: 12
 ```
+
+:::
+
+::: details json 配置
 
 ```json appsetting.json
 {
@@ -179,6 +187,8 @@ BiliBiliSetting:
 }
 ```
 
+:::
+
 具体解释一下
 
 - Logging: 无需更改
@@ -200,9 +210,9 @@ BiliBiliSetting:
   - User: `string` 管理后台用户名
   - Password: `string` 管理后台密码
   - MaxAge: `int` 登录有效时间，分钟
-- BiliBiliSetting: 
+- BiliBiliSetting:
   - Cookie: `string` BiliBili Cookie，仅用于历史弹幕获取，不需要历史弹幕不需要填写
-  - CidCacheTime: `int` Cid缓存时间，小时，Cid长期不变，缓存时间越长越好
+  - CidCacheTime: `int` Cid 缓存时间，小时，Cid 长期不变，缓存时间越长越好
   - DanmuCacheTime: `int` 弹幕缓存时间，小时
 
 ### 获取 BCookie 的方法
@@ -303,20 +313,22 @@ Nginx 配置较 caddy 稍麻烦，下面只是一个示例
 ```nginx
 location /
 {
-    proxy_pass unix:/tmp/danmu.sock;
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $remote_addr;
-    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header REMOTE-HOST $remote_addr;
+  proxy_pass unix:/tmp/danmu.sock;
+  proxy_set_header Host $host;
+  proxy_set_header X-Real-IP $remote_addr;
+  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  proxy_set_header REMOTE-HOST $remote_addr;
+  add_header X-Cache $upstream_cache_status;
+}
 
-    proxy_connect_timeout 30s;
+location /api/live
+{
+  proxy_connect_timeout 30s;
     proxy_read_timeout 1800s;
     proxy_send_timeout 35s;
     proxy_http_version 1.1;
     proxy_set_header Upgrade $http_upgrade;
     proxy_set_header Connection "upgrade";
-
-    add_header X-Cache $upstream_cache_status;
 }
 ```
 
@@ -333,18 +345,18 @@ location /
   const dp = new DPlayer({
     container: document.getElementById("dplayer"),
     video: {
-      url: "demo.mp4"
+      url: "demo.mp4",
     },
     subtitle: {
-      url: "demo.vtt"
+      url: "demo.vtt",
     },
     danmaku: {
       id: "视频的ID，建议使用视频Hash值，例如CRC64",
       api: "https://danmu.u2sb.top/api/danmu/dplayer/", //你自己的api
       addition: [
-        "https://danmu.u2sb.top/api/danmu/dplayer/v3/bilibili/?cid=73636868"
-      ] //解析BiliBili弹幕
-    }
+        "https://danmu.u2sb.top/api/danmu/dplayer/v3/bilibili/?cid=73636868",
+      ], //解析BiliBili弹幕
+    },
   });
 
   //修复手机横屏问题

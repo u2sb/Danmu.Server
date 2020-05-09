@@ -2,6 +2,8 @@
 title: FQA
 ---
 
+# FQA
+
 ## 为什么是 PostgreSQL？
 
 最初是使用 MySQL 的，但是后面发现 pgsql 更适合这个项目。

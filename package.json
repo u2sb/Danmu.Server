@@ -1,14 +1,11 @@
 {
   "private": true,
-  "workspaces": [
-    "packages/yaml-loader"
-  ],
   "scripts": {
     "docs:dev": "vuepress dev docs",
     "docs:build": "vuepress build docs"
   },
   "dependencies": {
-    "vuepress-theme-thindark": "^1.0.1"
+    "vuepress-theme-antdocs": "^1.0.1"
   },
   "devDependencies": {
     "@vssue/api-github-v4": "^1.4.0",

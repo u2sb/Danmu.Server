@@ -87,8 +87,7 @@ export default {
     showPlayer() {
       this.shouldShowPlayer = true;
       Promise.all([
-        import(/* webpackChunkName: "dplayer" */ "dplayer/dist/DPlayer.min.js"),
-        import(/* webpackChunkName: "dplayer" */ "dplayer/dist/DPlayer.min.css")
+        import(/* webpackChunkName: "dplayer" */ "dplayer/dist/DPlayer.min.js")
       ]).then(([{ default: DPlayer }]) => {
         // eslint-disable-next-line
         let dp = new DPlayer({

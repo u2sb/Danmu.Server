@@ -2,6 +2,8 @@
 title: 其他API
 ---
 
+# 其他API
+
 ## 通过bv号查询av号
 
 - `/api/other/bilibili/queryaid/?bvid=[bvid]`，例如  
