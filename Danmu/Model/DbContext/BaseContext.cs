@@ -1,10 +1,6 @@
-using System.IO;
-using System.Text;
-using System.Text.Json;
 using Danmu.Model.Config;
+using Danmu.Utils.Configuration;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Debug;
 
 namespace Danmu.Model.DbContext
 {
@@ -14,10 +10,7 @@ namespace Danmu.Model.DbContext
 
         public BaseContext(DbContextOptions options) : base(options)
         {
-            using var sr = new StreamReader("appsettings.json", Encoding.UTF8);
-            var s = sr.ReadToEnd();
-            var settings = JsonSerializer.Deserialize<AppSettings>(s);
-            Sql = settings.DanmuSql;
+            Sql = AppConfiguration.AppSettings.DanmuSql;
         }
     }
 }

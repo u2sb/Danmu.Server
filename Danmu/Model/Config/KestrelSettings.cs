@@ -5,7 +5,7 @@ namespace Danmu.Model.Config
         /// <summary>
         ///     服务运行端口
         /// </summary>
-        public int[] Port { get; set; } = {5001};
+        public int[] Port { get; set; }
 
         /// <summary>
         ///     UnixSocketPath

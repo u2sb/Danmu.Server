@@ -1,41 +1,48 @@
 using System;
-using System.IO;
 using System.Net;
-using System.Text;
-using System.Text.Json;
 using Danmu.Model.Config;
 using Danmu.Model.DbContext;
 using Danmu.Utils.Dao;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+#if LINUX
+using System.IO;
+#endif
 
 namespace Danmu
 {
     public class Program
     {
-        public static void Main(string[] args)
-        {
-            AppSettings appSettings;
-            using (var sr = new StreamReader("appsettings.json", Encoding.UTF8))
-            {
-                var s = sr.ReadToEnd();
-                appSettings = JsonSerializer.Deserialize<AppSettings>(s);
-            }
+        private static AppSettings _appSettings = new AppSettings();
 
-            var host = CreateHostBuilder(args, appSettings.KestrelSettings).Build();
-            CreateDbIfNotExists(host, appSettings);
+        private static void Main(string[] args)
+        {
+            var host = CreateHostBuilder(args).Build();
+            CreateDbIfNotExists(host);
             host.Run();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args, KestrelSettings ks)
+        private static IHostBuilder CreateHostBuilder(string[] args)
         {
             return Host.CreateDefaultBuilder(args)
+                       .ConfigureAppConfiguration((context, builder) =>
+                        {
+                            var env = context.HostingEnvironment;
+                            builder
+                                   .AddJsonFile("appsettings.json", true, true)
+                                   .AddYamlFile("appsettings.yml", true, true)
+                                   .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true)
+                                   .AddJsonFile($"appsettings.{env.EnvironmentName}.yml", true);
+                            _appSettings = builder.Build().Get<AppSettings>();
+                        })
                        .ConfigureWebHostDefaults(webBuilder =>
                         {
                             webBuilder.ConfigureKestrel(options =>
                             {
+                                var ks = _appSettings.KestrelSettings;
 #if LINUX
                                 if (ks.UnixSocketPath.Length > 0)
                                     foreach (var path in ks.UnixSocketPath)
@@ -51,14 +58,14 @@ namespace Danmu
                         });
         }
 
-        private static void CreateDbIfNotExists(IHost host, AppSettings appSettings)
+        private static void CreateDbIfNotExists(IHost host)
         {
             using var scope = host.Services.CreateScope();
             var services = scope.ServiceProvider;
             try
             {
                 var context = services.GetRequiredService<DanmuContext>();
-                DbInitializer.Initialize(context, appSettings);
+                DbInitializer.Initialize(context, _appSettings);
             }
             catch (Exception ex)
             {
