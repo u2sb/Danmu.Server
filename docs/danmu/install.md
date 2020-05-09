@@ -26,7 +26,7 @@ tar -xvf linux64.tar.xz
 
 //4 配置文件每一项的解释见后面的文档
 cd Danmu
-vim appsettings.json
+vim appsettings.yml
 
 //5
 ./Danmu
@@ -97,10 +97,45 @@ sudo apt-get install aspnetcore-runtime-3.1
 ```bash
 tar -xvf linux64.tar.xz
 cd danmu
-vim appsetting.json
+vim appsetting.yml
 ```
 
 ### 配置文件解释
+
+> 新版配置文件使用yaml，但json配置文件仍可使用，相同配置项，yaml将会覆盖json。
+
+```yaml appsetting.yml
+KestrelSettings:
+  Port:
+    - 5000
+    - 5001
+  UnixSocketPath:
+    - "/tmp/danmu.sock"
+WithOrigins:
+  - "*"
+LiveWithOrigins:
+  - http://localhost
+  - http://localhost:4000
+  - https://doc.video.xwhite.studio
+AdminWithOrigins:
+  - http://localhost:5000
+DanmuSql:
+  Sql: 0
+  Host: 127.0.0.1
+  Port: 0
+  UserName: danmaku
+  PassWord: danmaku
+  DataBase: danmaku
+  PoolSize: 16
+Admin:
+  User: MonoLogueChi
+  Password: "000000"
+  MaxAge: 60
+BiliBiliSetting:
+  Cookie: ""
+  CidCacheTime: 168
+  DanmuCacheTime: 12
+```
 
 ```json appsetting.json
 {

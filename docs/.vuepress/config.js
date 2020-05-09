@@ -1,20 +1,20 @@
 const { resolve } = require("path");
 const { load } = require("yaml-loader");
 const merge = require("lodash.merge");
-const r = path => resolve(__dirname, path);
+const r = (path) => resolve(__dirname, path);
 const config = load(r("_config.yml"));
 
 const configureWebpack = {
   resolve: {
     alias: {
-      "@img": r("img")
-    }
-  }
+      "@img": r("img"),
+    },
+  },
 };
 
 const markdown = {
   lineNumbers: true,
-  extendMarkdown: md => {
+  extendMarkdown: (md) => {
     md.set({ breaks: true });
     md.use(require("markdown-it-sub"));
     md.use(require("markdown-it-sup"));
@@ -22,7 +22,7 @@ const markdown = {
     md.use(require("markdown-it-task-lists"));
     md.use(require("markdown-it-attrs"), {});
     md.use(require("markdown-it-imsize"));
-  }
+  },
 };
 
 const plugins = [
@@ -38,23 +38,26 @@ const plugins = [
       options: {
         margin: 16,
         background: "#2B312C",
-        scrollOffset: 60
-      }
-    }
+        scrollOffset: 60,
+      },
+    },
   ],
   ["@vuepress/search", { searchMaxSuggestions: 5 }],
   ["vuepress-plugin-pangu"],
-  ['@vssue/vuepress-plugin-vssue', {
-    platform: 'github-v4',
-    owner: 'MonoLogueChi',
-    repo: 'vssue',
-    clientId: 'b26880b4ce394f432a26',
-    clientSecret: '1460cd44beaa179927701ebc782cf7540eae811b',
-  }]
+  [
+    "@vssue/vuepress-plugin-vssue",
+    {
+      platform: "github-v4",
+      owner: "MonoLogueChi",
+      repo: "vssue",
+      clientId: "b26880b4ce394f432a26",
+      clientSecret: "1460cd44beaa179927701ebc782cf7540eae811b",
+    },
+  ],
 ];
 
 module.exports = merge(config, {
   configureWebpack,
   markdown,
-  plugins
+  plugins,
 });

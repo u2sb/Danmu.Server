@@ -37,15 +37,20 @@ title: 捐赠
 const date = new Date();
 const year = date.getFullYear();
 const month = date.getMonth() + 1;
+var start_time = "2020-1";
+var arr = start_time.split('-');
+var start_year = arr[0];
+var start_month = arr[1];
+var count = ( year-start_year ) * 12 + month - start_month +1;
 
-const pay = 344;
+const pay = 344 + count * 24;
 const otherReceivables = 5.36 + 5;
 const receivables = 50 + 13.32 + otherReceivables;
 
 export default {
   data() {
     return {
-      date: `${year}年${month}月1日`,
+      date: `${year}年${month}月`,
       pay: pay,
       receivables: receivables
     }
