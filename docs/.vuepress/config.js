@@ -68,7 +68,7 @@ module.exports = {
       msgOkText: "确定",
     },
     backToTop: true,
-    logo: "img/logo_white_s.png",
+    logo: "/img/logo_white_s.png",
     sidebarDepth: 2,
     smoothScroll: true,
     nav: [
