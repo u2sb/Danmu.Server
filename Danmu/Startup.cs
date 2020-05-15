@@ -75,13 +75,13 @@ namespace Danmu
                 options.AddDefaultPolicy(builder => builder.WithMethods("GET", "POST", "OPTIONS"));
 
                 options.AddPolicy(DanmuAllowSpecificOrigins, builder =>
-                        builder.WithOrigins(appSetting.WithOrigins)
-                               .SetIsOriginAllowedToAllowWildcardSubdomains().WithMethods("GET", "POST", "OPTIONS")
+                        builder.SetIsOriginAllowedToAllowWildcardSubdomains().WithOrigins(appSetting.WithOrigins)
+                               .WithMethods("GET", "POST", "OPTIONS")
                                .AllowAnyHeader());
 
                 options.AddPolicy(LiveAllowSpecificOrigins, builder =>
-                        builder.WithOrigins(appSetting.LiveWithOrigins)
-                               .SetIsOriginAllowedToAllowWildcardSubdomains().WithMethods("GET", "POST", "OPTIONS")
+                        builder.SetIsOriginAllowedToAllowWildcardSubdomains().WithOrigins(appSetting.LiveWithOrigins)
+                               .WithMethods("GET", "POST", "OPTIONS")
                                .AllowAnyHeader().AllowCredentials());
 
                 options.AddPolicy(AdminAllowSpecificOrigins, builder =>
