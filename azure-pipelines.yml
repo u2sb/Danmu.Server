@@ -20,8 +20,9 @@ steps:
   inputs:
     script: |
       sudo timedatectl set-timezone Asia/Shanghai
-      yarn install --pure-lockfile
-      yarn docs:build
+      npm install pnpm -g
+      pnpm install
+      pnpm run docs:build
       cd 'docs/.vuepress/dist'
       touch .nojekyll
       git config --global user.email "$(EMAIL)"

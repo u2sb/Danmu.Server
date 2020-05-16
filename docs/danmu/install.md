@@ -262,7 +262,7 @@ https://danmu.u2sb.top {
     tls youmail@xxx.com
     supervisor {
         command ./Danmu
-        dir /www/danmu/Dammu
+        dir /www/danmu/Danmu
         redirect_stdout stdout
         redirect_stderr stderr
     }
@@ -312,7 +312,7 @@ Nginx 配置较 caddy 稍麻烦，下面只是一个关键部分示例，具体�
 
 ::: details Nginx 配置示例
 
-```nginx
+```
 location /
 {
   proxy_pass http://unix:/tmp/danmu.sock;
