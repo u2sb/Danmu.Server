@@ -81,14 +81,19 @@ module.exports = {
         link: "/live/",
       },
       {
+        text: "视频教程",
+        link: "/video/",
+      },
+      {
         text: "其他相关文档",
         link: "/other/",
       },
     ],
     sidebar: {
-      "/danmu/": ["make", "install", "admin", "api"],
-      "/live/": ["install", "api"],
-      "/other/": ["pgsql", "otherapi", "fqa", "sponsors"],
+      "/danmu/": ["", "make", "install", "admin", "api"],
+      "/live/": ["", "install", "api"],
+      "/video/": [""],
+      "/other/": ["", "pgsql", "otherapi", "fqa", "sponsors"],
     },
     repo: "MonoLogueChi/Danmu.Server",
     repoLabel: "GitHub",
