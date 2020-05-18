@@ -12,11 +12,13 @@ using Danmu.Utils.LiveDanmu;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using StackExchange.Redis;
 using static Danmu.Utils.Global.VariableDictionary;
 #if DEBUG
 using VueCliMiddleware;
@@ -54,13 +56,21 @@ namespace Danmu
             services.AddDbContextPool<DanmuContext>(option => new DbContextBuild(config, option),
                     appSetting.DanmuSql.PoolSize);
 
-
             //Http请求
             services.AddHttpClient();
             services.AddHttpClient(Gzip).ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
                     {AutomaticDecompression = DecompressionMethods.GZip});
             services.AddHttpClient(Deflate).ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
                     {AutomaticDecompression = DecompressionMethods.Deflate});
+
+
+            //Redis
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.ConfigurationOptions = appSetting.Redis.ToConfigurationOptions();
+                options.InstanceName = appSetting.Redis.InstanceName;
+            });
+
 
             // 转接头，代理
             services.Configure<ForwardedHeadersOptions>(options =>
@@ -106,9 +116,19 @@ namespace Danmu
                          options.AccessDeniedPath = "/api/admin/noAuth";
                          options.LoginPath = "/api/admin/login";
                          options.LogoutPath = "/api/admin/logout";
-                         options.Cookie.Name = "DCookie";
+                         options.Cookie.Name = ".auth";
                          options.Cookie.MaxAge = TimeSpan.FromMinutes(appSetting.Admin.MaxAge);
                      });
+
+            //Session
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(appSetting.Admin.MaxAge);
+                options.Cookie.MaxAge = TimeSpan.FromMinutes(appSetting.Admin.MaxAge);
+                options.Cookie.Name = ".session";
+                options.Cookie.HttpOnly = true;
+            });
+
 
             // SPA根目录
             services.AddSpaStaticFiles(opt => opt.RootPath = "wwwroot");
@@ -135,12 +155,12 @@ namespace Danmu
             app.UseForwardedHeaders();
 
             app.UseCookiePolicy();
-
             app.UseRouting();
-            app.UseCors();
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseSession();
+            app.UseCors();
 
             app.UseEndpoints(endpoints =>
             {

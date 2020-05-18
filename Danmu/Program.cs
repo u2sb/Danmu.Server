@@ -16,7 +16,7 @@ namespace Danmu
 {
     public class Program
     {
-        private static AppSettings _appSettings = new AppSettings();
+        internal static AppSettings AppSettings;
 
         private static void Main(string[] args)
         {
@@ -36,13 +36,13 @@ namespace Danmu
                                    .AddYamlFile("appsettings.yml", true, true)
                                    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true)
                                    .AddJsonFile($"appsettings.{env.EnvironmentName}.yml", true);
-                            _appSettings = builder.Build().Get<AppSettings>();
+                            AppSettings = builder.Build().Get<AppSettings>();
                         })
                        .ConfigureWebHostDefaults(webBuilder =>
                         {
                             webBuilder.ConfigureKestrel(options =>
                             {
-                                var ks = _appSettings.KestrelSettings;
+                                var ks = AppSettings.KestrelSettings;
 #if LINUX
                                 if (ks.UnixSocketPath.Length > 0)
                                     foreach (var path in ks.UnixSocketPath)
@@ -65,7 +65,7 @@ namespace Danmu
             try
             {
                 var context = services.GetRequiredService<DanmuContext>();
-                DbInitializer.Initialize(context, _appSettings);
+                DbInitializer.Initialize(context, AppSettings);
             }
             catch (Exception ex)
             {

@@ -63,6 +63,8 @@ namespace Danmu.Controllers.Account
                 await HttpContext.SignInAsync(new ClaimsPrincipal(new ClaimsIdentity(claims,
                         CookieAuthenticationDefaults.AuthenticationScheme, "user", "role")));
 
+                HttpContext.Session.SetString("user", userName);
+
                 HttpContext.Response.Cookies.Append("ClientAuth", role.ToString(), new CookieOptions
                 {
                     HttpOnly = false,
@@ -71,11 +73,11 @@ namespace Danmu.Controllers.Account
                 });
 
 
-                if (Url.IsLocalUrl(url)) return new WebResult(0) {Data = new {url = url, uid = r.uid}};
-                return new WebResult(0) {Data = new {url = "/", uid = r.uid } };
+                if (Url.IsLocalUrl(url)) return new WebResult(0) {Data = new {url, r.uid}};
+                return new WebResult(0) {Data = new {url = "/", r.uid}};
             }
 
-            return new WebResult(1) {Data = new {url = url}};
+            return new WebResult(1) {Data = new {url}};
         }
 
         [HttpGet("logout")]

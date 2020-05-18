@@ -18,7 +18,7 @@ namespace Danmu.Model.DataTable
         /// <summary>
         ///     弹幕所在视频
         /// </summary>
-        [Column("Vid"), Required, MaxLength(36)]
+        [Column("Vid"), Required, MaxLength(72)]
         public string Vid { get; set; }
 
         /// <summary>

@@ -17,7 +17,7 @@ namespace Danmu.Model.DataTable
         /// <summary>
         ///     视频VID
         /// </summary>
-        [Required, MaxLength(36)]
+        [Required, MaxLength(72)]
         public string Vid { get; set; }
 
         [Column(TypeName = "jsonb")] public Referer Referer { get; set; }

@@ -1,5 +1,4 @@
 using Danmu.Model.Config;
-using Danmu.Utils.Configuration;
 using Microsoft.EntityFrameworkCore;
 
 namespace Danmu.Model.DbContext
@@ -10,7 +9,7 @@ namespace Danmu.Model.DbContext
 
         public BaseContext(DbContextOptions options) : base(options)
         {
-            Sql = AppConfiguration.AppSettings.DanmuSql;
+            Sql = Program.AppSettings.DanmuSql;
         }
     }
 }

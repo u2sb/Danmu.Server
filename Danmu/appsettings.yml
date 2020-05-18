@@ -18,7 +18,7 @@ DanmuSql:
   UserName: danmaku
   PassWord: danmaku
   DataBase: danmaku
-  PoolSize: 16
+  PoolSize: 8
 Admin:
   User: MonoLogueChi
   Password: "000000"
@@ -27,3 +27,10 @@ BiliBiliSetting:
   Cookie: ""
   CidCacheTime: 168
   DanmuCacheTime: 12
+Redis:
+  Host: 127.0.0.1
+  Port: 6379
+  User:
+  Password:
+  DatabaseNumber: 0
+  InstanceName: danmu

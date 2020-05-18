@@ -42,11 +42,13 @@ namespace Danmu.Model.DataTable
         /// <summary>
         ///     手机号
         /// </summary>
+        [Phone]
         public string PhoneNumber { get; set; }
 
         /// <summary>
         ///     邮箱
         /// </summary>
+        [EmailAddress]
         public string Email { get; set; }
 
         /// <summary>
