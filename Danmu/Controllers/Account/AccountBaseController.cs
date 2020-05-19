@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Danmu.Controllers.Base;
-using Danmu.Model.DataTable;
+using Danmu.Model.Danmu.Account;
 using Danmu.Model.WebResult;
 using Danmu.Utils.Configuration;
 using Danmu.Utils.Dao;
@@ -44,28 +43,26 @@ namespace Danmu.Controllers.Account
         }
 
         [HttpPost("login")]
-        public async Task<WebResult> Login([FromBody] dynamic data)
+        public async Task<WebResult> Login([FromBody] LoginData data)
         {
-            var userName = data.TryGetProperty("name", out JsonElement a) ? a.GetString() : null;
-            var password = data.TryGetProperty("password", out JsonElement b) ? b.GetString() : null;
-            var url = data.TryGetProperty("url", out JsonElement c) ? c.GetString() : null;
-
-            var r = await _userDao.VerPasswordAsync(userName, password);
-            if (r.Succeed)
+            if (_userDao.VerPassword(data.UserName, data.Password, out var user))
             {
-                UserRole role = r.Role;
                 var claims = new List<Claim>
                 {
-                    new Claim("user", userName),
-                    new Claim("role", role.ToString())
+                    new Claim("user", user.Name),
+                    new Claim("role", user.Role.ToString())
                 };
 
-                await HttpContext.SignInAsync(new ClaimsPrincipal(new ClaimsIdentity(claims,
-                        CookieAuthenticationDefaults.AuthenticationScheme, "user", "role")));
+                var sign = HttpContext.SignInAsync(
+                        new ClaimsPrincipal(
+                                new ClaimsIdentity(
+                                        claims,
+                                        CookieAuthenticationDefaults.AuthenticationScheme, "user", "role"
+                                )));
 
-                HttpContext.Session.SetString("user", userName);
+                HttpContext.Session.SetInt32("uid", user.Id);
 
-                HttpContext.Response.Cookies.Append("ClientAuth", role.ToString(), new CookieOptions
+                HttpContext.Response.Cookies.Append(".client", user.Role.ToString(), new CookieOptions
                 {
                     HttpOnly = false,
                     MaxAge = TimeSpan.FromMinutes(_admin.MaxAge),
@@ -73,11 +70,12 @@ namespace Danmu.Controllers.Account
                 });
 
 
-                if (Url.IsLocalUrl(url)) return new WebResult(0) {Data = new {url, r.uid}};
-                return new WebResult(0) {Data = new {url = "/", r.uid}};
+                if (Url.IsLocalUrl(data.Url)) return new WebResult(0) {Data = new {data.Url}};
+                await sign;
+                return new WebResult(0) {Data = new {Url = "/"}};
             }
 
-            return new WebResult(1) {Data = new {url}};
+            return new WebResult(1) {Data = new {ReturnUrl = ""}};
         }
 
         [HttpGet("logout")]

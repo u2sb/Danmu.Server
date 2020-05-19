@@ -17,7 +17,7 @@ namespace Danmu.Controllers.Other
         {
             var a = await Bilibili.GetBvidInfoAsync(bvid, aid ?? 0);
 
-            return a.Code == 0
+            return a?.Code == 0
                     ? new WebResult(0)
                     {
                         Data = new

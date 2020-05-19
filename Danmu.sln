@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Danmu", "Danmu\Danmu.csproj", "{B9C588D4-1F1B-47C6-8DFD-8434978890A7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Danmu.CommandLine", "CommandLine\Danmu.CommandLine.csproj", "{2765DE2D-69D1-4F25-9B7C-5DBB2711B6BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Danmu.CommandLine", "CommandLine\Danmu.CommandLine.csproj", "{2765DE2D-69D1-4F25-9B7C-5DBB2711B6BC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,8 +22,8 @@ Global
 		{B9C588D4-1F1B-47C6-8DFD-8434978890A7}.Release|Any CPU.Build.0 = Release-Linux64|Any CPU
 		{B9C588D4-1F1B-47C6-8DFD-8434978890A7}.Release-Linux32|Any CPU.ActiveCfg = Release-Linux32|Any CPU
 		{B9C588D4-1F1B-47C6-8DFD-8434978890A7}.Release-Linux32|Any CPU.Build.0 = Release-Linux32|Any CPU
-		{B9C588D4-1F1B-47C6-8DFD-8434978890A7}.Release-Linux64|Any CPU.ActiveCfg = Release-Linux64|x64
-		{B9C588D4-1F1B-47C6-8DFD-8434978890A7}.Release-Linux64|Any CPU.Build.0 = Release-Linux64|x64
+		{B9C588D4-1F1B-47C6-8DFD-8434978890A7}.Release-Linux64|Any CPU.ActiveCfg = Release-Linux64|Any CPU
+		{B9C588D4-1F1B-47C6-8DFD-8434978890A7}.Release-Linux64|Any CPU.Build.0 = Release-Linux64|Any CPU
 		{B9C588D4-1F1B-47C6-8DFD-8434978890A7}.Release-Win|Any CPU.ActiveCfg = Release-Win|Any CPU
 		{B9C588D4-1F1B-47C6-8DFD-8434978890A7}.Release-Win|Any CPU.Build.0 = Release-Win|Any CPU
 		{2765DE2D-69D1-4F25-9B7C-5DBB2711B6BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU

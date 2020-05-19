@@ -1,5 +1,8 @@
+using MessagePack;
+
 namespace Danmu.Model.WebResult
 {
+    [MessagePackObject]
     public class DanmuListWebResult<T> : WebResult<DanmuList<T>>
     {
         public DanmuListWebResult() { }
@@ -15,9 +18,12 @@ namespace Danmu.Model.WebResult
         }
     }
 
+    [MessagePackObject]
     public class DanmuList<T>
     {
+        [Key(0)]
         public int Total { get; set; }
+        [Key(1)]
         public T[] List { get; set; }
     }
 }

@@ -19,12 +19,6 @@ namespace Danmu.Controllers.Danmu.Common.V1
         [HttpGet("danmu.{format}")]
         public async Task<dynamic> Get([FromQuery] BiliBiliQuery query, string format)
         {
-            if (query.Date.Length == 0 && !(!string.IsNullOrEmpty(format) && format.Equals("json")))
-            {
-                HttpContext.Response.ContentType = "application/xml; charset=utf-8";
-                return await Bilibili.GetDanmuRawByQueryAsync(query);
-            }
-
             var danmu = await Bilibili.GetDanmuAsync(query);
 
             if (!string.IsNullOrEmpty(format) && format.Equals("json"))

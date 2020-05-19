@@ -25,8 +25,8 @@ Admin:
   MaxAge: 60
 BiliBiliSetting:
   Cookie: ""
-  CidCacheTime: 168
-  DanmuCacheTime: 12
+  CidCacheTime: 72
+  DanmuCacheTime: 5
 Redis:
   Host: 127.0.0.1
   Port: 6379

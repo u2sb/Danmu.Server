@@ -5,10 +5,12 @@ using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
 using Danmu.Model.Danmu.DanmuData;
+using MessagePack;
 
 namespace Danmu.Model.Danmu.BiliBili
 {
     [Serializable]
+    [MessagePackObject]
     [DesignerCategory("code")]
     [XmlType(AnonymousType = true)]
     [XmlRoot("i", Namespace = "", IsNullable = false)]
@@ -23,6 +25,7 @@ namespace Danmu.Model.Danmu.BiliBili
             D = bd.D;
         }
 
+        [Key(0)]
         [XmlElement("d")] public iD[] D { get; set; }
 
         public static explicit operator DanmuDataBiliBili(BaseDanmuData[] data)
@@ -59,11 +62,15 @@ namespace Danmu.Model.Danmu.BiliBili
     [Serializable]
     [DesignerCategory("code")]
     [XmlType(AnonymousType = true)]
-    // ReSharper disable once InconsistentNaming
+    [MessagePackObject]    // ReSharper disable once InconsistentNaming
     public class iD
     {
-        [XmlAttribute("p")] public string P { get; set; }
+        [XmlAttribute("p")]
+        [Key(0)]
+        public string P { get; set; }
 
-        [XmlText] public string Value { get; set; }
+        [XmlText]
+        [Key(1)]
+        public string Value { get; set; }
     }
 }

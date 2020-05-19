@@ -1,9 +1,11 @@
 using System.Linq;
 using System.Web;
 using Danmu.Model.Danmu.DanmuData;
+using MessagePack;
 
 namespace Danmu.Model.WebResult
 {
+    [MessagePackObject]
     public class DplayerWebResult : WebResult<object[][]>
     {
         public DplayerWebResult() { }

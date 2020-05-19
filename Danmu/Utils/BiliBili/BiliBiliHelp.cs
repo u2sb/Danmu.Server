@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -27,28 +28,6 @@ namespace Danmu.Utils.BiliBili
         }
 
         /// <summary>
-        ///     获取B站弹幕
-        /// </summary>
-        /// <param name="cid">视频的cid</param>
-        /// <returns>B站弹幕数据流</returns>
-        public async Task<Stream> GetDanmuRawByCidAsync(int cid)
-        {
-            var r = await GetDanmuRawAsync($"https://api.bilibili.com/x/v1/dm/list.so?oid={cid}");
-            return r.Length == 0 ? Stream.Null : new MemoryStream(r);
-        }
-
-        /// <summary>
-        ///     通过Query获取弹幕
-        /// </summary>
-        /// <param name="query"></param>
-        /// <returns></returns>
-        public async Task<Stream> GetDanmuRawByQueryAsync(BiliBiliQuery query)
-        {
-            query = await CheckCid(query);
-            return await GetDanmuRawByCidAsync(query.Cid);
-        }
-
-        /// <summary>
         ///     获取B站历史弹幕
         /// </summary>
         /// <param name="cid">视频的cid</param>
@@ -57,12 +36,13 @@ namespace Danmu.Utils.BiliBili
         public async Task<DanmuDataBiliBili> GetDanmuAsync(int cid, string[] date)
         {
             if (!_canGetHistory) return await GetDanmuAsync(new BiliBiliQuery {Cid = cid});
+
             var a = Task.Run(() => date.Select(async s =>
             {
-                var b = await GetDanmuRawAsync(
-                        $"https://api.bilibili.com/x/v2/dm/history?type=1&oid={cid}&date={s}", true);
-                var c = b.Length == 0 ? Stream.Null : new MemoryStream(b);
-                return new DanmuDataBiliBili(c);
+                return await _cache.GetOrCreateCacheAsync($"{nameof(GetDanmuAsync)}{cid}{s}",
+                        TimeSpan.FromHours(_setting.DanmuCacheTime), TimeSpan.FromHours(_setting.DanmuCacheTime * 4),
+                        async () => new DanmuDataBiliBili(await GetDanmuRawAsync(
+                                $"https://api.bilibili.com/x/v2/dm/history?type=1&oid={cid}&date={s}", true)));
             }).SelectMany(s => s.Result.D));
             return new DanmuDataBiliBili
             {
@@ -79,11 +59,14 @@ namespace Danmu.Utils.BiliBili
         {
             query = await CheckCid(query);
 
-            return query.Cid == 0
-                    ? new DanmuDataBiliBili()
-                    : query.Date.Length == 0 || !_canGetHistory
-                            ? new DanmuDataBiliBili(await GetDanmuRawByCidAsync(query.Cid))
-                            : await GetDanmuAsync(query.Cid, query.Date);
+            return await _cache.GetOrCreateCacheAsync($"{nameof(GetDanmuAsync)}{query.Cid}",
+                    TimeSpan.FromHours(_setting.DanmuCacheTime), TimeSpan.FromHours(_setting.DanmuCacheTime * 4),
+                    async () => query.Cid == 0
+                            ? new DanmuDataBiliBili()
+                            : _canGetHistory && query.Date.Length != 0
+                                    ? await GetDanmuAsync(query.Cid, query.Date)
+                                    : new DanmuDataBiliBili(await GetDanmuRawAsync(
+                                            $"https://api.bilibili.com/x/v1/dm/list.so?oid={query.Cid}")));
         }
 
         /// <summary>
@@ -112,12 +95,37 @@ namespace Danmu.Utils.BiliBili
         /// <returns></returns>
         public async Task<BvidInfo> GetBvidInfoAsync(string bvid, int aid)
         {
-            string url;
             if (string.IsNullOrEmpty(bvid))
-                url = $"https://api.bilibili.com/x/web-interface/archive/stat?aid={aid}";
-            else if (aid == 0)
-                url = $"https://api.bilibili.com/x/web-interface/archive/stat?bvid={bvid}";
-            else
+                return await _cache.GetOrCreateCacheAsync($"{nameof(GetBvidInfoAsync)}{aid}",
+                        TimeSpan.FromHours(_setting.CidCacheTime), TimeSpan.FromHours(_setting.CidCacheTime * 4),
+                        async () =>
+                        {
+                            var a = await GetBiliBiliPageRawAsync(
+                                    $"https://api.bilibili.com/x/web-interface/archive/stat?aid={aid}");
+                            if (a != Stream.Null)
+                            {
+                                var b = await JsonSerializer.DeserializeAsync<BvidInfo>(a);
+                                if (b.Code == 0) return b;
+                            }
+
+                            return null;
+                        });
+            if (aid == 0)
+                return await _cache.GetOrCreateCacheAsync($"{nameof(GetBvidInfoAsync)}{bvid}",
+                        TimeSpan.FromHours(_setting.CidCacheTime), TimeSpan.FromHours(_setting.CidCacheTime * 4),
+                        async () =>
+                        {
+                            var a = await GetBiliBiliPageRawAsync(
+                                    $"https://api.bilibili.com/x/web-interface/archive/stat?bvid={bvid}");
+                            if (a != Stream.Null)
+                            {
+                                var b = await JsonSerializer.DeserializeAsync<BvidInfo>(a);
+                                if (b.Code == 0) return b;
+                            }
+
+                            return null;
+                        });
+            if (!string.IsNullOrEmpty(bvid))
                 return new BvidInfo
                 {
                     Code = 0,
@@ -127,13 +135,6 @@ namespace Danmu.Utils.BiliBili
                         Bvid = bvid
                     }
                 };
-            var a = await GetBiliBiliPageRawAsync(url);
-            if (a.Length > 0)
-            {
-                var b = await JsonSerializer.DeserializeAsync<BvidInfo>(new MemoryStream(a));
-                if (b.Code == 0) return b;
-            }
-
             return new BvidInfo();
         }
     }

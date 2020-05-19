@@ -1,5 +1,8 @@
+using MessagePack;
+
 namespace Danmu.Model.WebResult
 {
+    [MessagePackObject]
     public class WebResult<T>
     {
         public WebResult() { }
@@ -14,8 +17,10 @@ namespace Danmu.Model.WebResult
             Data = data;
         }
 
+        [Key(0)]
         public int Code { get; set; }
 
+        [Key(1)]
         public T Data { get; set; }
     }
 

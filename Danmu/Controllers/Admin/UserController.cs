@@ -44,13 +44,13 @@ namespace Danmu.Controllers.Admin
         /// <param name="data"></param>
         /// <returns></returns>
         [HttpPost("change" + "password")]
-        public async Task<WebResult> ChangePassword([FromBody] dynamic data)
+        public WebResult ChangePassword([FromBody] dynamic data)
         {
             var uid = data.TryGetProperty("uid", out JsonElement a) ? a.GetInt32() : 0;
             var oldP = data.TryGetProperty("oldP", out JsonElement b) ? b.GetString() : null;
             var newP = data.TryGetProperty("newP", out JsonElement c) ? c.GetString() : null;
 
-            var result = await _userDao.ChangePasswordAsync(uid, oldP, newP);
+            var result = _userDao.ChangePassword(uid, oldP, newP);
             return new WebResult(result ? 0 : 1);
         }
 

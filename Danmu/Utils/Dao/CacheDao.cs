@@ -1,64 +1,56 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
-using Danmu.Model.DataTable;
-using Danmu.Model.DbContext;
-using Microsoft.EntityFrameworkCore;
+using MessagePack;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace Danmu.Utils.Dao
 {
     public class CacheDao
     {
-        private readonly DanmuContext _con;
+        private readonly IDistributedCache _cache;
 
-        public CacheDao(DanmuContext con)
+        public CacheDao(IDistributedCache cache)
         {
-            _con = con;
+            _cache = cache;
         }
 
         /// <summary>
         ///     HttpCache表中获取或创建
         /// </summary>
         /// <param name="key"></param>
-        /// <param name="expireTime"></param>
+        /// <param name="absoluteExpiration">绝对过期时间</param>
         /// <param name="factory"></param>
+        /// <param name="slidingExpiration">过期时间</param>
         /// <returns></returns>
-        public async Task<byte[]> GetOrCreateHttpCacheAsync(string key, TimeSpan expireTime, Func<Task<byte[]>> factory)
+        public async Task<T> GetOrCreateCacheAsync<T>(string key, TimeSpan slidingExpiration,
+                                                      TimeSpan absoluteExpiration, Func<Task<T>> factory)
         {
-            var a = _con.HttpClientCache.Where(e => e.Key.Equals(key));
-            if (await a.CountAsync() > 0)
+            T t = default;
+            var a = await _cache.GetAsync(key);
+            if (a == null)
             {
-                var b = await a.FirstOrDefaultAsync();
-                if (DateTimeOffset.UtcNow.ToUnixTimeSeconds() - b.TimeStamp > expireTime.TotalSeconds || b.Value.Length == 0)
-                {
-                    var c = await factory();
-                    b.Value = c;
-                    b.TimeStamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-                    _con.HttpClientCache.Update(b);
-                    await _con.SaveChangesAsync();
-                }
-
-                return b.Value;
+                t = await factory.Invoke();
+                if (t != null)
+                    await _cache.SetAsync(key, MessagePackSerializer.Serialize(t), new DistributedCacheEntryOptions
+                    {
+                        AbsoluteExpirationRelativeToNow = absoluteExpiration,
+                        SlidingExpiration = slidingExpiration
+                    });
+            }
+            else
+            {
+                t = MessagePackSerializer.Deserialize<T>(a);
             }
 
-            var d = new HttpClientCacheTable
-            {
-                Key = key,
-                Value = await factory()
-            };
-            await _con.HttpClientCache.AddAsync(d);
-            await _con.SaveChangesAsync();
-            return d.Value;
+            return t;
         }
 
         /// <summary>
         ///     清空Http缓存表
         /// </summary>
-        /// <returns></returns>
-        public async Task<bool> ClearCacheAsync()
+        public Task ClearCacheAsync(string key)
         {
-            var r = _con.ClearTable(nameof(_con.HttpClientCache));
-            return await r > 0;
+            return _cache.RefreshAsync(key);
         }
     }
 }

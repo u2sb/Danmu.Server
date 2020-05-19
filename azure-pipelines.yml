@@ -31,10 +31,7 @@ steps:
         sudo apt-get install apt-transport-https
         sudo apt-get update
         sudo apt-get install dotnet-sdk-3.1
-        cd $(Build.SourcesDirectory)/Danmu
-        dotnet remove package Microsoft.VisualStudio.Web.CodeGeneration.Design
-        dotnet remove package VueCliMiddleware
-        cd clientapp
+        cd $(Build.SourcesDirectory)/Danmu/clientapp
         npm install
         npm run build
 

@@ -47,6 +47,7 @@ namespace Danmu
             //自定义序列化程序
             services.AddControllers().AddXmlSerializerFormatters().AddJsonOptions(opt =>
             {
+                opt.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
                 opt.JsonSerializerOptions.Converters.Add(new IPAddressConverter());
             });
             services.AddSignalR();
@@ -65,9 +66,12 @@ namespace Danmu
 
 
             //Redis
+            var redisConn = appSetting.Redis.ToConfigurationOptions();
+            services.AddDataProtection()
+                    .PersistKeysToStackExchangeRedis(ConnectionMultiplexer.Connect(redisConn), "DataProtection-Keys");
             services.AddStackExchangeRedisCache(options =>
             {
-                options.ConfigurationOptions = appSetting.Redis.ToConfigurationOptions();
+                options.ConfigurationOptions = redisConn;
                 options.InstanceName = appSetting.Redis.InstanceName;
             });
 

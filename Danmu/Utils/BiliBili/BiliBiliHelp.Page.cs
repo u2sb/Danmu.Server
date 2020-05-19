@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -39,14 +40,14 @@ namespace Danmu.Utils.BiliBili
         /// <returns>Page数据</returns>
         public async Task<BiliBiliPage> GetBiliBiliPageAsync(int aid)
         {
-            var raw = await GetBiliBiliPageRawAsync($"https://api.bilibili.com/x/player/pagelist?aid={aid}");
-            if (raw.Length != 0)
-            {
-                var pages = JsonSerializer.DeserializeAsync<BiliBiliPage>(new MemoryStream(raw));
-                return await pages;
-            }
-
-            return new BiliBiliPage();
+            return await _cache.GetOrCreateCacheAsync($"{nameof(GetBiliBiliPageAsync)}{aid}",
+                    TimeSpan.FromHours(_setting.CidCacheTime), TimeSpan.FromHours(_setting.CidCacheTime * 4),
+                    async () =>
+                    {
+                        var a = await GetBiliBiliPageRawAsync($"https://api.bilibili.com/x/player/pagelist?aid={aid}");
+                        if (a != Stream.Null) return await JsonSerializer.DeserializeAsync<BiliBiliPage>(a);
+                        return null;
+                    });
         }
 
         /// <summary>
@@ -56,14 +57,15 @@ namespace Danmu.Utils.BiliBili
         /// <returns></returns>
         public async Task<BiliBiliPage> GetBiliBiliPageAsync(string bvid)
         {
-            var raw = await GetBiliBiliPageRawAsync($"https://api.bilibili.com/x/player/pagelist?bvid={bvid}");
-            if (raw.Length != 0)
-            {
-                var pages = JsonSerializer.DeserializeAsync<BiliBiliPage>(new MemoryStream(raw));
-                return await pages;
-            }
-
-            return new BiliBiliPage();
+            return await _cache.GetOrCreateCacheAsync($"{nameof(GetBiliBiliPageAsync)}{bvid}",
+                    TimeSpan.FromHours(_setting.CidCacheTime), TimeSpan.FromHours(_setting.CidCacheTime * 4),
+                    async () =>
+                    {
+                        var a = await GetBiliBiliPageRawAsync(
+                                $"https://api.bilibili.com/x/player/pagelist?bvid={bvid}");
+                        if (a != Stream.Null) return await JsonSerializer.DeserializeAsync<BiliBiliPage>(a);
+                        return null;
+                    });
         }
 
         /// <summary>
@@ -74,7 +76,7 @@ namespace Danmu.Utils.BiliBili
         /// <returns>cid</returns>
         private int GetCid(BiliBiliPage pages, int p)
         {
-            var cid = pages.Code == 0 ? pages.Data.Where(e => e.Page == p).Select(s => s.Cid).FirstOrDefault() : 0;
+            var cid = pages?.Code == 0 ? pages.Data.Where(e => e.Page == p).Select(s => s.Cid).FirstOrDefault() : 0;
             return cid;
         }
     }
