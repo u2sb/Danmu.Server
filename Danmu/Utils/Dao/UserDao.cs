@@ -12,12 +12,10 @@ namespace Danmu.Utils.Dao
 {
     public class UserDao
     {
-        private readonly Admin _admin;
         private readonly DanmuContext _con;
 
-        public UserDao(AppConfiguration appConfiguration, DanmuContext con)
+        public UserDao(DanmuContext con)
         {
-            _admin = appConfiguration.GetAppSetting().Admin;
             _con = con;
         }
 
@@ -26,6 +24,7 @@ namespace Danmu.Utils.Dao
         /// </summary>
         /// <param name="name">用户名</param>
         /// <param name="password">密码</param>
+        /// <param name="user"></param>
         /// <returns></returns>
         public bool VerPassword(string name, string password, out UserTable user)
         {
@@ -161,8 +160,9 @@ namespace Danmu.Utils.Dao
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<UserTable> UserInfoAsync(int id)
+        public async Task<UserTable> UserInfoAsync(int? id)
         {
+            if (id == null) return null;
             return await _con.User.AsNoTracking().Where(e => e.Id.Equals(id)).Select(s => s.ToSecurity())
                              .FirstOrDefaultAsync();
         }
