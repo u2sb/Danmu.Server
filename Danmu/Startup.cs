@@ -20,10 +20,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using StackExchange.Redis;
 using static Danmu.Utils.Global.VariableDictionary;
-#if DEBUG
-using VueCliMiddleware;
-
-#endif
 
 namespace Danmu
 {
@@ -50,7 +46,11 @@ namespace Danmu
                 opt.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
                 opt.JsonSerializerOptions.Converters.Add(new IPAddressConverter());
             });
+
+
             services.AddSignalR();
+            services.AddRazorPages();
+            services.AddServerSideBlazor();
 
             //数据库连接
             // ReSharper disable once ObjectCreationAsStatement
@@ -134,10 +134,6 @@ namespace Danmu
             });
 
 
-            // SPA根目录
-            services.AddSpaStaticFiles(opt => opt.RootPath = "wwwroot");
-
-
             //注入
             services.AddSingleton(s => config);
 
@@ -152,9 +148,9 @@ namespace Danmu
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
+            else app.UseExceptionHandler("/Error");
 
-            app.UseSpaStaticFiles();
-            app.UseDefaultFiles();
+            app.UseStaticFiles();
 
             app.UseForwardedHeaders();
 
@@ -170,14 +166,8 @@ namespace Danmu
             {
                 endpoints.MapControllers();
                 endpoints.MapHub<LiveDanmu>("api/live/danmu").RequireCors(LiveAllowSpecificOrigins);
-            });
-
-            app.UseSpa(spa =>
-            {
-#if DEBUG
-                spa.Options.SourcePath = "ClientApp";
-                spa.UseVueCli("serve", 18081);
-#endif
+                endpoints.MapBlazorHub();
+                endpoints.MapFallbackToPage("/_Host");
             });
         }
     }
