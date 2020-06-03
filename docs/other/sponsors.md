@@ -17,8 +17,9 @@ title: 捐赠
 :::
 
 <center style="display:flex; justify-content:space-around;">
-<img src="@img/other/alipay.png">
-<img src="@img/other/wechatpay.png">
+<a href="https://afdian.net/@monologuechi" target="_blank"><img class="sponsors-img" src="@img/other/afdian-MonoLogueChi.png"></a>
+<img src="@img/other/alipay.png" class="sponsors-img">
+<img src="@img/other/wechatpay.png" class="sponsors-img">
 </center>
 
 截至 {{date}}，本项目共收到捐款 {{receivables}} 元
@@ -63,3 +64,15 @@ export default {
 <ClientOnly>
   <Vssue title="捐赠-Other | 弹幕服务器文档" />
 </ClientOnly>
+
+<style lang="stylus" scoped>
+.sponsors-img {
+  height: 400px;
+  @media(max-width: 1600px) {
+    height: 350px;
+  }
+  @media(max-width: 1450px) {
+    height: 300px;
+  }
+}
+</style>
