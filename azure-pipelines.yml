@@ -31,9 +31,6 @@ steps:
         sudo apt-get install apt-transport-https
         sudo apt-get update
         sudo apt-get install dotnet-sdk-3.1
-        cd $(Build.SourcesDirectory)/Danmu/clientapp
-        npm install
-        npm run build
 
   ##编译Linux版
   ##开启R2R选项
@@ -202,23 +199,23 @@ steps:
       replaceExistingArchive: true
 
   ## CLI工具
-  - task: DotNetCoreCLI@2
-    inputs:
-      command: publish
-      projects: "$(Build.SourcesDirectory)/CommandLine/Danmu.CommandLine.csproj"
-      publishWebProjects: False
-      arguments: "-c Release-Linux64 -r linux-x64 --self-contained true -p:PublishSingleFile=true --output $(Build.ArtifactStagingDirectory)/Cli-Tool/Danmu"
-      zipAfterPublish: false
-      modifyOutputPath: false
+  # - task: DotNetCoreCLI@2
+  #   inputs:
+  #     command: publish
+  #     projects: "$(Build.SourcesDirectory)/CommandLine/Danmu.CommandLine.csproj"
+  #     publishWebProjects: False
+  #     arguments: "-c Release-Linux64 -r linux-x64 --self-contained true -p:PublishSingleFile=true --output $(Build.ArtifactStagingDirectory)/Cli-Tool/Danmu"
+  #     zipAfterPublish: false
+  #     modifyOutputPath: false
 
-  - task: ArchiveFiles@2
-    inputs:
-      rootFolderOrFile: "$(Build.ArtifactStagingDirectory)/Cli-Tool/Danmu"
-      includeRootFolder: true
-      archiveType: "tar"
-      tarCompression: "xz"
-      archiveFile: "$(Build.ArtifactStagingDirectory)/cli.tar.xz"
-      replaceExistingArchive: true
+  # - task: ArchiveFiles@2
+  #   inputs:
+  #     rootFolderOrFile: "$(Build.ArtifactStagingDirectory)/Cli-Tool/Danmu"
+  #     includeRootFolder: true
+  #     archiveType: "tar"
+  #     tarCompression: "xz"
+  #     archiveFile: "$(Build.ArtifactStagingDirectory)/cli.tar.xz"
+  #     replaceExistingArchive: true
 
   ## 提交
   - task: GithubRelease@0
