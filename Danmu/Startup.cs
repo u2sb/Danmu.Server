@@ -116,10 +116,8 @@ namespace Danmu
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                     .AddCookie(options =>
                      {
-                         options.ReturnUrlParameter = "url";
-                         options.AccessDeniedPath = "/api/admin/noAuth";
-                         options.LoginPath = "/api/admin/login";
-                         options.LogoutPath = "/api/admin/logout";
+                         options.LoginPath = "/account/login";
+                         options.LogoutPath = "/account/logout";
                          options.Cookie.Name = ".auth";
                          options.Cookie.MaxAge = TimeSpan.FromMinutes(appSetting.Admin.MaxAge);
                      });
@@ -150,6 +148,7 @@ namespace Danmu
             if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
             else app.UseExceptionHandler("/Error");
 
+            app.UseDefaultFiles();
             app.UseStaticFiles();
 
             app.UseForwardedHeaders();

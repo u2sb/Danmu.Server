@@ -1,10 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Danmu.Controllers.Base;
 using Danmu.Model.Danmu.Account;
 using Danmu.Model.WebResult;
+using Danmu.Utils.Common;
 using Danmu.Utils.Configuration;
 using Danmu.Utils.Dao;
 using Microsoft.AspNetCore.Authentication;
@@ -15,38 +14,32 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Danmu.Controllers.Account
 {
-    [Route("/api/admin")]
+    [Route("/account")]
     [AllowAnonymous]
-    public class AccountBaseController : AdminBaseController
+    public class AccountController : Controller
     {
         private readonly Model.Config.Admin _admin;
         private readonly UserDao _userDao;
 
-        public AccountBaseController(AppConfiguration configuration, UserDao userDao, DanmuDao danmuDao,
-                                     VideoDao videoDao) : base(danmuDao, videoDao)
+        public AccountController(AppConfiguration configuration, UserDao userDao)
         {
             _admin = configuration.GetAppSetting().Admin;
             _userDao = userDao;
         }
 
         [HttpGet("login")]
-        [HttpGet("noAuth")]
-        public WebResult NoAuth()
+        public ActionResult Login()
         {
-            return new WebResult(401)
-            {
-                Data = new
-                {
-                    desc = "没有权限"
-                }
-            };
+            return View();
         }
 
-        [HttpPost("login")]
+        [HttpPost("loginApi")]
         public async Task<WebResult> Login([FromBody] LoginData data)
         {
             if (_userDao.VerPassword(data.UserName, data.Password, out var user))
             {
+                Logout();
+
                 var claims = new List<Claim>
                 {
                     new Claim("user", user.Name),
@@ -62,29 +55,28 @@ namespace Danmu.Controllers.Account
 
                 HttpContext.Session.SetInt32("uid", user.Id);
 
-                HttpContext.Response.Cookies.Append(".client", user.Role.ToString(), new CookieOptions
-                {
-                    HttpOnly = false,
-                    MaxAge = TimeSpan.FromMinutes(_admin.MaxAge),
-                    SameSite = SameSiteMode.Lax
-                });
-
-
                 if (Url.IsLocalUrl(data.Url)) return new WebResult(0) {Data = new {data.Url}};
                 await sign;
                 return new WebResult(0) {Data = new {Url = "/"}};
             }
 
-            return new WebResult(1) {Data = new {ReturnUrl = ""}};
+            return new WebResult(1) {Data = new {Url = ""}};
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(string userName, string password, string returnUrl = null)
+        {
+            var result = await Login(new LoginData
+                    {UserName = userName, Password = Md5.GetMd5(password), Url = returnUrl});
+            if (result.Code == 0) return Redirect(result.Data.Url);
+            return View();
         }
 
         [HttpGet("logout")]
         public void Logout()
         {
             HttpContext.SignOutAsync();
-            HttpContext.Response.Cookies.Delete("ClientAuth");
-            Response.Headers.Add("Location", "/");
-            Response.StatusCode = 302;
+            Response.Redirect("/");
         }
     }
 }

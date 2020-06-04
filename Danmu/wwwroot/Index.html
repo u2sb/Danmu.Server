@@ -1,0 +1,215 @@
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>弹幕服务器</title>
+  <meta name="theme-color" content="#2092bf">
+  <meta name="msapplication-TileColor" content="#2092bf">
+  <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+  <link href="css/site.css" rel="stylesheet" />
+  <style>
+    body,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    html {
+      font-family: "Open Sans", sans-serif
+    }
+  </style>
+  <script type="text/javascript" async src="https://www.google-analytics.com/analytics.js"></script>
+  <link rel="stylesheet" href="/css/sweetalert2.min.css">
+  <script type="text/javascript" async src="/js/sweetalert2.min.js"></script>
+  <script type="text/javascript" async src="/js/fontawesome-all.min.js"></script>
+</head>
+
+<body>
+  <div id="main-container">
+    <!-- Navbar - Start -->
+    <div id="navbar-container">
+      <div>
+        <ul class="w3-navbar w3-theme-d2 w3-left-align w3-large">
+          <li class="w3-hide-medium w3-hide-large w3-opennav w3-right">
+            <a class="w3-padding-large w3-hover-white w3-large w3-theme-d2" href="javascript:void(0);"
+              onclick="openNav()">
+              <i class="fas fa-bars"></i>
+            </a>
+          </li>
+          <li>
+            <a href="/" target="_top" class="w3-padding-large w3-theme-d4"><i
+                class="fas fa-home w3-margin-right"></i>弹幕服务器</a>
+          </li>
+          <li class="w3-hide-small">
+            <a href="/admin/" class="w3-padding-large w3-hover-white" title="后台"><i
+                class="fas fa-user icon-with-text"></i>管理后台</a>
+          </li>
+          <li class="w3-hide-small">
+            <a href="https://dandoc.u2sb.top" target="_blank" class="w3-padding-large w3-hover-white" title="文档"><i
+                class="fas fa-info icon-with-text"></i>使用文档</a>
+          </li>
+        </ul>
+      </div>
+      <!-- Navbar on small screens -->
+      <div id="navDemo" class="w3-hide w3-hide-large w3-hide-medium w3-top" style="margin-top: 51px">
+        <ul class="w3-navbar w3-left-align w3-large w3-theme">
+          <li>
+            <a class="w3-padding-large" href="/admin/"><i class="fas fa-user icon-with-text"></i>管理后台</a>
+          </li>
+          <li>
+            <a class="w3-padding-large" href="https://dandoc.u2sb.top" target="_blank"><i
+                class="fas fa-info icon-with-text"></i>使用文档</a>
+          </li>
+        </ul>
+      </div>
+      <script>
+        // Used to toggle the menu on smaller screens when clicking on the menu button
+        function openNav() {
+          const x = document.getElementById("navDemo");
+          if (x.className.indexOf("w3-show") == -1) {
+            x.className += " w3-show";
+          } else {
+            x.className = x.className.replace(" w3-show", "");
+          }
+        }
+
+        // document.getElementById("navbar-dldmj").onclick = function(){_czc.push(﻿['_trackEvent','导航栏','下载弹幕姬',,,'navbar-dldmj']);};
+      </script>
+    </div>
+    <!-- Navbar - End -->
+    <!-- Content - Start -->
+    <div class="w3-content" id="page-container" style="max-width: 100%;">
+      <!--首页从www.danmuji.org的首页修改而来，偷个懒（-->
+      <div class="jumbotron w3-theme-d4">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-4 text-left">
+              <h1>弹幕服务器</h1>
+              <div class="lead">
+                <h4>开源、高效的弹幕服务器</h4>
+                <ul>
+                  <li>
+                    开源
+                    <a href="https://github.com/MonoLogueChi/Danmu.Server/blob/master/LICENSE" target="_blank"
+                      rel="noopener noreferrer">
+                      <img src="https://img.shields.io/github/license/MonoLogueChi/Danmu.Server" alt="GitHub"
+                        height="18">
+                    </a>
+                    <a href="https://github.com/MonoLogueChi/Danmu.Server" target="_blank" rel="noopener noreferrer">
+                      <img
+                        src="https://img.shields.io/github/stars/MonoLogueChi/Danmu.Server.svg?label=%E2%AD%90%20Stars"
+                        alt="Github Stars" height="18">
+                    </a>
+                  </li>
+                  <li>轻量 <img src="https://img.shields.io/github/languages/code-size/MonoLogueChi/Danmu.Server"
+                      alt="GitHub code size in bytes" height="18"></li>
+                  <li>
+                    积极维护
+                    <a href="https://github.com/MonoLogueChi/Danmu.Server/commits/master" target="_blank"
+                      rel="noopener noreferrer">
+                      <img src="https://img.shields.io/github/last-commit/MonoLogueChi/Danmu.Server"
+                        alt="GitHub last commit" height="18">
+                    </a>
+                  </li>
+                  <li>
+                    构建
+                    <a href="https://dev.azure.com/MonoLogueChi0038/MonoLogueChi-GitHub/_build/latest?definitionId=1&amp;branchName=master"
+                      target="_blank" rel="noopener noreferrer">
+                      <img
+                        src="https://dev.azure.com/MonoLogueChi0038/MonoLogueChi-GitHub/_apis/build/status/u2sb.Danmu.Server?branchName=master"
+                        alt="Build Status" height="18">
+                    </a>
+                  </li>
+                  <li>
+                    依赖
+                    <a href="https://dotnet.microsoft.com/" target="_blank" rel="noopener noreferrer">
+                      <img src="https://img.shields.io/badge/dotnet-%3E%3D3.1-green" alt="Dotnet Version" height="18">
+                    </a>
+                  </li>
+                  <li>
+                    发行
+                    <a href="https://github.com/MonoLogueChi/Danmu.Server/releases/latest" target="_blank"
+                      rel="noopener noreferrer">
+                      <img src="https://img.shields.io/github/v/tag/MonoLogueChi/Danmu.Server"
+                        alt="GitHub tag (latest by date)" height="18">
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-md-8 vcenter">
+              <img class="img-responsive" src="/img/logo_white.png">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="padding-bottom: 30px; padding-top: 25px;">
+        <div id="intro-container" class="container">
+          <h2 style="text-align: center;"></h2>
+          <div class="row">
+            <div class="col-sm-8">
+              <img class="img-responsive" src="/pics/2.png">
+            </div>
+            <div class="col-sm-4">
+              <h3>特点1</h3>
+              <ul>
+                <li>1</li>
+                <li>2</li>
+                <li>3</li>
+              </ul>
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-4">
+              <h3>特点2</h3>
+              <ul>
+                <li>1</li>
+                <li> 2 </li>
+                <li>3</li>
+
+              </ul>
+            </div>
+
+            <div class="col-sm-8">
+              <img class="img-responsive" src="/pics/3.png">
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-8">
+              <img class="img-responsive" src="/pics/4.png">
+            </div>
+            <div class="col-sm-4">
+              <h3>特点3</h3>
+              <ul>
+                <li>1</li>
+                <li>2</li>
+                <li>3</li>
+              </ul>
+              <br>
+            </div>
+          </div>
+        </div>
+        <hr>
+      </div>
+      <br>
+    </div>
+    <!-- Content - End -->
+    <!-- Footer - Start -->
+    <div id="footer-container">
+      <footer class="w3-container w3-theme-d5">
+        <p>
+          <a target="_blank" rel="noopener noreferrer nofollow" href="https://github.com/u2sb/Danmu.Server/">GitHub
+            仓库</a> |
+          <a target="_blank" rel="noopener noreferrer nofollow" href="https://github.com/u2sb/">帅比项目</a>
+        </p>
+      </footer>
+    </div>
+
+    <!-- Footer - End -->
+  </div>
+</body>
+
+</html>
