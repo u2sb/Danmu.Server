@@ -43,6 +43,7 @@ module.exports = {
         clientSecret: "1460cd44beaa179927701ebc782cf7540eae811b",
       },
     ],
+    ["@vuepress-reco/extract-code"],
   ],
   markdown: {
     lineNumbers: true,

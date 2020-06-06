@@ -75,7 +75,7 @@ title: 安装
 
 livedanmu.js:
 
-<<< @/docs/.vuepress/public/js/livedanmu.js{highlightLines}
+<<< @/docs/.vuepress/public/js/livedanmu.js
 
 <ClientOnly>
   <Vssue title="安装-Live | 弹幕服务器文档" />

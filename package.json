@@ -5,6 +5,7 @@
     "docs:build": "vuepress build docs"
   },
   "dependencies": {
+    "@vuepress-reco/vuepress-plugin-extract-code": "^1.0.4",
     "vuepress-theme-antdocs": "^1.0.1"
   },
   "devDependencies": {
