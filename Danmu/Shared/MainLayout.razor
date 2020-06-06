@@ -1,15 +1,24 @@
 @inherits LayoutComponentBase
 
-<div class="sidebar">
-    <NavMenu />
-</div>
 
-<div class="main">
-    <div class="top-row px-4">
-        <a href="/account/logout">退出登录</a>
-    </div>
+<BPopup></BPopup>
 
-    <div class="content px-4">
+<BLayout>
+  <West>
+    <BCard Shadow="@ShadowShowType.Never">
+      <Header>
+        弹幕服务器
+      </Header>
+      <Body>
+      <NavMenu/>
+      </Body>
+    </BCard>
+  </West>
+  <Center>
+    <BTab Type="@TabType.Card">
+      <div class="main">
         @Body
-    </div>
-</div>
+      </div>
+    </BTab>
+  </Center>
+</BLayout>

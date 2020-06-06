@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using System.Net.Http;
+using Blazui.Component;
 using Danmu.Model.Converter;
 using Danmu.Model.DataTable;
 using Danmu.Model.DbContext;
@@ -47,23 +48,23 @@ namespace Danmu
                 opt.JsonSerializerOptions.Converters.Add(new IPAddressConverter());
             });
 
+            //Http请求
+            services.AddHttpClient();
+            services.AddHttpClient(Gzip).ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
+                    { AutomaticDecompression = DecompressionMethods.GZip });
+            services.AddHttpClient(Deflate).ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
+                    { AutomaticDecompression = DecompressionMethods.Deflate });
+
 
             services.AddSignalR();
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services.AddBlazuiServicesAsync().Wait();
 
             //数据库连接
             // ReSharper disable once ObjectCreationAsStatement
             services.AddDbContextPool<DanmuContext>(option => new DbContextBuild(config, option),
                     appSetting.DanmuSql.PoolSize);
-
-            //Http请求
-            services.AddHttpClient();
-            services.AddHttpClient(Gzip).ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
-                    {AutomaticDecompression = DecompressionMethods.GZip});
-            services.AddHttpClient(Deflate).ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
-                    {AutomaticDecompression = DecompressionMethods.Deflate});
-
 
             //Redis
             var redisConn = appSetting.Redis.ToConfigurationOptions();

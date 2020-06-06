@@ -15,14 +15,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Danmu</title>
   <base href="~/"/>
-  <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css"/>
-  <link href="css/site.css" rel="stylesheet"/>
+  <link href="css/site.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/_content/Blazui.Component/css/index.css" />
+  <link rel="stylesheet" href="/_content/Blazui.Component/css/fix.css" />
   <link rel="icon" href="favicon.png"/>
 </head>
 <body>
-<app>
-  <component type="typeof(App)" render-mode="ServerPrerendered"/>
-</app>
+  <app>
+    @(await Html.RenderComponentAsync<App>(RenderMode.ServerPrerendered))
+  </app>
 
 <div id="blazor-error-ui">
   <environment include="Staging,Production">
@@ -35,6 +36,7 @@
   <a class="dismiss">🗙</a>
 </div>
 
+<script src="_content/Blazui.Component/js/dom.js"></script>
 <script src="_framework/blazor.server.js"></script>
 </body>
 </html>
