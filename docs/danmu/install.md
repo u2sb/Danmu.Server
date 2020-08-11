@@ -98,7 +98,7 @@ sudo apt-get install aspnetcore-runtime-3.1
 
 ```bash
 tar -xvf linux64.tar.xz
-cd danmu
+cd Danmu
 vim appsetting.yml
 ```
 
@@ -229,9 +229,9 @@ BiliBiliSetting:
 ## 运行测试
 
 ```bash
-./danmu
+./Danmu
 or
-dotnet danmu.dll
+dotnet Danmu.dll
 ```
 
 检查是否能够正常运行，数据库是否正常创建。
