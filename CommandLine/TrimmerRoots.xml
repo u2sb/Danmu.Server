@@ -1,5 +1,0 @@
-<linker>
-  <assembly fullname="CommandLine" preserve="all"/>
-  <assembly fullname="MedallionShell" preserve="all"/>
-  <assembly fullname="ShellProgressBar" preserve="all"/>
-</linker>
