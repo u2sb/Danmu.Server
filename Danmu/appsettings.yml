@@ -1,36 +1,39 @@
 KestrelSettings:
-  Port:
-    - 5000
+  Listens:
+    127.0.0.1:
+      - 5000
+      - 5001
   UnixSocketPath:
     - "/tmp/danmu.sock"
+
 WithOrigins:
   - "*"
+
 LiveWithOrigins:
-  - http://localhost
-  - http://localhost:4000
-  - https://doc.video.xwhite.studio
-AdminWithOrigins:
-  - http://localhost:5000
+  - "http://localhost"
+  - "http://localhost:4000"
+  - "https://doc.video.xwhite.studio"
+
+UseHttps:
+  UseHttpsRedirection: false
+  UseHsts: false
+
 DanmuSql:
-  Sql: 0
-  Host: 127.0.0.1
-  Port: 0
-  UserName: danmaku
-  PassWord: danmaku
-  DataBase: danmaku
-  PoolSize: 8
-Admin:
-  User: MonoLogueChi
-  Password: "000000"
-  MaxAge: 60
+  Directory: "./DataBase/"
+
 BiliBiliSetting:
   Cookie: ""
   CidCacheTime: 72
   DanmuCacheTime: 5
-Redis:
-  Host: 127.0.0.1
-  Port: 6379
-  User:
-  Password:
-  DatabaseNumber: 0
-  InstanceName: danmu
+
+EasyCaching:
+  InMemory:
+    MaxRdSecond: 60
+    EnableLogging: false
+    LockMs: 5000
+    SleepMs: 300
+    DBConfig:
+      SizeLimit: 10000
+      ExpirationScanFrequency: 60
+      EnableReadDeepClone: true
+      EnableWriteDeepClone: false

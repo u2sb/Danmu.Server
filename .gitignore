@@ -340,3 +340,4 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 /Danmu/appsettings.Development.json
+/Danmu/DataBase

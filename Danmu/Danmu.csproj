@@ -10,10 +10,18 @@
     <PackageReference Include="AntDesign" Version="0.5.0-*" />
     <PackageReference Include="AntDesign.Charts" Version="0.2.0-*" />
     <PackageReference Include="AntDesign.Pro.Layout" Version="0.1.0-*" />
+    <PackageReference Include="CommandLineParser" Version="2.9.0-preview1" />
     <PackageReference Include="EasyCaching.InMemory" Version="1.1.0" />
     <PackageReference Include="EasyCaching.LiteDB" Version="1.1.0" />
     <PackageReference Include="LiteDB" Version="5.0.9" />
+    <PackageReference Include="NETCore.Encrypt" Version="2.0.9" />
+    <PackageReference Include="NetEscapades.Configuration.Yaml" Version="2.1.0" />
+    <PackageReference Include="RandomDataGenerator.Net" Version="1.0.12" />
     <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Utils\Commons\" />
   </ItemGroup>
   
   <PropertyGroup Condition=" '$(SolutionDir)'==''">
