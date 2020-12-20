@@ -1,17 +1,19 @@
+using System.Text.Json.Serialization;
+
 namespace Danmu.Models.Danmus.BiliBili
 {
     public class BvidInfo
     {
-        public int Code { get; set; } = 1;
+        [JsonPropertyName("code")] public int Code { get; set; } = 1;
 
-        public DataObj Data { get; set; }
+        [JsonPropertyName("data")] public DataObj Data { get; set; }
 
 
         public class DataObj
         {
-            public int Aid { get; set; }
+            [JsonPropertyName("aid")] public int Aid { get; set; }
 
-            public string Bvid { get; set; }
+            [JsonPropertyName("bvid")] public string Bvid { get; set; }
         }
     }
 }

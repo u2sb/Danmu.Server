@@ -1,9 +1,13 @@
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using AntDesign.Pro.Layout;
 using Danmu.Models.Configs;
 using Danmu.Models.Converters;
+using Danmu.Utils.BiliBiliHelp;
+using Danmu.Utils.Dao;
+using Danmu.Utils.Dao.Danmu;
 using EasyCaching.LiteDB;
 using LiteDB;
 using Microsoft.AspNetCore.Builder;
@@ -39,6 +43,7 @@ namespace Danmu
             services.AddControllers().AddXmlSerializerFormatters().AddJsonOptions(opt =>
             {
                 opt.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+                opt.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
                 opt.JsonSerializerOptions.Converters.Add(new IpAddressConverter());
             });
 
@@ -62,7 +67,7 @@ namespace Danmu
                         FilePath = AppSetting.DanmuDb.Directory,
                         FileName = "EasyCaching.db"
                     };
-                });
+                }, LiteDb);
             });
 
             services.AddResponseCaching();
@@ -101,6 +106,14 @@ namespace Danmu
                         .WithMethods("GET", "POST", "OPTIONS")
                         .AllowAnyHeader().AllowCredentials());
             });
+
+            //×¢²á·þÎñ
+            services.AddSingleton<AppSettings>();
+            services.AddSingleton(l => new LiteDbContext(AppSetting.DanmuDb));
+
+            services.AddScoped<BiliBiliHelp>();
+            services.AddScoped<DanmuDao>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -127,10 +140,11 @@ namespace Danmu
             app.UseRouting();
 
             app.UseCors();
-            // app.UseResponseCaching();
+            app.UseResponseCaching();
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllers();
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
             });

@@ -39,7 +39,7 @@ namespace Danmu.Models.Danmus.Danmu
         /// <summary>
         ///     弹幕作者 名称
         /// </summary>
-        public string Author { get; set; } = "";
+        public string Author { get; set; } = "Anonymous";
 
         /// <summary>
         ///     弹幕作者ID

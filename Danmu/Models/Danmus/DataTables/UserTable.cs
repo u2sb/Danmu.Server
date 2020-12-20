@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using RandomDataGenerator.Randomizers;
+using RandomGen;
 
 namespace Danmu.Models.Danmus.DataTables
 {
@@ -36,7 +36,7 @@ namespace Danmu.Models.Danmus.DataTables
         ///     盐
         /// </summary>
         [Required]
-        public string Salt { get; set; } = ;
+        public string Salt { get; set; } = Gen.Random.Text.Length(6)();
 
         /// <summary>
         ///     用户角色
@@ -71,7 +71,7 @@ namespace Danmu.Models.Danmus.DataTables
 
         public UserTable ToSecurity()
         {
-            return new UserTable
+            return new()
             {
                 Id = Id,
                 Name = Name,
