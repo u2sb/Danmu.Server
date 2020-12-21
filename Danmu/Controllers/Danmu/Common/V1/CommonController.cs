@@ -13,7 +13,7 @@ namespace Danmu.Controllers.Danmu.Common.V1
     [Route("/api/danmu/v1")]
     public class CommonController : DanmuBaseController
     {
-        public CommonController(DanmuDao danmu) : base(danmu)
+        public CommonController(DanmuDao danmu, VideoDao video) : base(danmu, video)
         {
         }
 

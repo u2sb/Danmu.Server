@@ -6,23 +6,23 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Danmu.Models.Configs;
 using Danmu.Models.Danmus.BiliBili;
-using EasyCaching.Core;
-using static Danmu.Utils.Globals.VariableDictionary;
+using Danmu.Models.Danmus.Danmu;
+using Danmu.Utils.Caches;
 
 namespace Danmu.Utils.BiliBiliHelp
 {
     public partial class BiliBiliHelp
     {
-        private readonly IEasyCachingProvider _caching;
+        private readonly CacheLiteDb _caching;
         private readonly bool _canGetHistory;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly BiliBiliSetting _setting;
 
         public BiliBiliHelp(AppSettings appSettings, IHttpClientFactory clientFactory,
-            IEasyCachingProviderFactory factory)
+            CacheLiteDb cache)
         {
             _httpClientFactory = clientFactory;
-            _caching = factory.GetCachingProvider(LiteDb);
+            _caching = cache;
             _setting = appSettings.BiliBiliSetting;
             _canGetHistory = !string.IsNullOrEmpty(_setting.Cookie);
         }
@@ -33,7 +33,7 @@ namespace Danmu.Utils.BiliBiliHelp
         /// <param name="cid">视频的cid</param>
         /// <param name="date">历史日期</param>
         /// <returns></returns>
-        public async Task<BiliBiliDanmuData> GetDanmuAsync(int cid, string[] date)
+        public async Task<BaseDanmuData[]> GetDanmuAsync(int cid, string[] date)
         {
             if (!_canGetHistory) return await GetDanmuAsync(new BiliBiliQuery {Cid = cid});
 
@@ -44,11 +44,11 @@ namespace Danmu.Utils.BiliBiliHelp
                     async () => new BiliBiliDanmuData(await GetDanmuRawAsync(
                         $"https://api.bilibili.com/x/v2/dm/history?type=1&oid={cid}&date={s}", true)),
                     TimeSpan.FromHours(_setting.DanmuCacheTime));
-            }).SelectMany(s => s.Result.Value.D));
+            }).SelectMany(s => s.Result.D));
             return new BiliBiliDanmuData
             {
                 D = (await a).ToArray()
-            };
+            }.ToBaseDanmuDatas().ToArray();
         }
 
         /// <summary>
@@ -56,18 +56,18 @@ namespace Danmu.Utils.BiliBiliHelp
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        public async Task<BiliBiliDanmuData> GetDanmuAsync(BiliBiliQuery query)
+        public async Task<BaseDanmuData[]> GetDanmuAsync(BiliBiliQuery query)
         {
             query = await CheckCid(query);
 
-            return (await _caching.GetAsync($"{nameof(GetDanmuAsync)}{query.Cid}",
+            return await _caching.GetAsync($"{nameof(GetDanmuAsync)}{query.Cid}",
                 async () => query.Cid == 0
-                    ? new BiliBiliDanmuData()
+                    ? null
                     : _canGetHistory && query.Date.Length != 0
                         ? await GetDanmuAsync(query.Cid, query.Date)
                         : new BiliBiliDanmuData(await GetDanmuRawAsync(
-                            $"https://api.bilibili.com/x/v1/dm/list.so?oid={query.Cid}")),
-                TimeSpan.FromHours(_setting.DanmuCacheTime))).Value;
+                            $"https://api.bilibili.com/x/v1/dm/list.so?oid={query.Cid}")).ToBaseDanmuDatas().ToArray(),
+                TimeSpan.FromHours(_setting.DanmuCacheTime));
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace Danmu.Utils.BiliBiliHelp
         public async Task<BvidInfo> GetBvidInfoAsync(string bvid, int aid)
         {
             if (string.IsNullOrEmpty(bvid))
-                return (await _caching.GetAsync($"{nameof(GetBvidInfoAsync)}{aid}",
+                return await _caching.GetAsync($"{nameof(GetBvidInfoAsync)}{aid}",
                     async () =>
                     {
                         var a = await GetBiliBiliPageRawAsync(
@@ -110,10 +110,10 @@ namespace Danmu.Utils.BiliBiliHelp
 
                         return null;
                     },
-                    TimeSpan.FromHours(_setting.CidCacheTime))).Value;
+                    TimeSpan.FromHours(_setting.CidCacheTime));
 
             if (aid == 0)
-                return (await _caching.GetAsync($"{nameof(GetBvidInfoAsync)}{bvid}",
+                return await _caching.GetAsync($"{nameof(GetBvidInfoAsync)}{bvid}",
                     async () =>
                     {
                         var a = await GetBiliBiliPageRawAsync(
@@ -123,8 +123,9 @@ namespace Danmu.Utils.BiliBiliHelp
                             var b = await JsonSerializer.DeserializeAsync<BvidInfo>(a);
                             if (b != null && b.Code == 0) return b;
                         }
+
                         return null;
-                    }, TimeSpan.FromHours(_setting.CidCacheTime))).Value;
+                    }, TimeSpan.FromHours(_setting.CidCacheTime));
             if (!string.IsNullOrEmpty(bvid))
                 return new BvidInfo
                 {

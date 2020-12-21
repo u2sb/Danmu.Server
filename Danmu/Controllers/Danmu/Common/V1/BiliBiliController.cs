@@ -24,10 +24,10 @@ namespace Danmu.Controllers.Danmu.Common.V1
             var danmu = await Bilibili.GetDanmuAsync(query);
 
             if (!string.IsNullOrEmpty(format) && format.Equals("json"))
-                return new WebResult<IEnumerable<BaseDanmuData>>(danmu.ToBaseDanmuDatas());
+                return new WebResult<IEnumerable<BaseDanmuData>>(danmu);
 
             if (string.IsNullOrEmpty(format)) HttpContext.Request.Headers["Accept"] = "application/xml";
-            return danmu;
+            return (BiliBiliDanmuData) danmu;
         }
     }
 }

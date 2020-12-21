@@ -7,9 +7,9 @@ namespace Danmu.Utils.Dao
 
     public class LiteDbContext
     {
-        public LiteDbContext(DanmuDb db)
+        public LiteDbContext(AppSettings appSettings)
         {
-            Database = new LiteDatabase(Path.Combine(db.Directory, "Danmu.db"));
+            Database = new LiteDatabase(Path.Combine(appSettings.DanmuDb.Directory, "Danmu.db"));
         }
 
         public LiteDatabase Database { get; }

@@ -6,6 +6,7 @@ using AntDesign.Pro.Layout;
 using Danmu.Models.Configs;
 using Danmu.Models.Converters;
 using Danmu.Utils.BiliBiliHelp;
+using Danmu.Utils.Caches;
 using Danmu.Utils.Dao;
 using Danmu.Utils.Dao.Danmu;
 using EasyCaching.LiteDB;
@@ -109,10 +110,14 @@ namespace Danmu
 
             //×¢²á·þÎñ
             services.AddSingleton<AppSettings>();
-            services.AddSingleton(l => new LiteDbContext(AppSetting.DanmuDb));
+            services.AddSingleton<LiteDbContext>();
+            services.AddSingleton<CacheLiteDb>();
+            services.AddSingleton<VideoDao>();
+            services.AddSingleton<UserDao>();
 
             services.AddScoped<BiliBiliHelp>();
             services.AddScoped<DanmuDao>();
+
 
         }
 

@@ -46,7 +46,7 @@ namespace Danmu.Utils.BiliBiliHelp
                     var a = await GetBiliBiliPageRawAsync($"https://api.bilibili.com/x/player/pagelist?aid={aid}");
                     if (a != Stream.Null) return await JsonSerializer.DeserializeAsync<BiliBiliPage>(a);
                     return null;
-                }, TimeSpan.FromHours(_setting.CidCacheTime))).Value;
+                }, TimeSpan.FromHours(_setting.CidCacheTime)));
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace Danmu.Utils.BiliBiliHelp
                         $"https://api.bilibili.com/x/player/pagelist?bvid={bvid}");
                     if (a != Stream.Null) return await JsonSerializer.DeserializeAsync<BiliBiliPage>(a);
                     return null;
-                }, TimeSpan.FromHours(_setting.CidCacheTime))).Value;
+                }, TimeSpan.FromHours(_setting.CidCacheTime)));
         }
 
         /// <summary>

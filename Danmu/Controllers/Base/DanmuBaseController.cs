@@ -11,9 +11,12 @@ namespace Danmu.Controllers.Base
     public abstract class DanmuBaseController : ControllerBase
     {
         internal DanmuDao DanmuDao;
-        protected DanmuBaseController(DanmuDao danmu)
+        internal VideoDao VideoDao;
+
+        protected DanmuBaseController(DanmuDao danmu, VideoDao video)
         {
             DanmuDao = danmu;
+            VideoDao = video;
         }
     }
 }
