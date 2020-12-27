@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Net;
 using Danmu.Models.Danmus.Danmu;
+using LiteDB;
 
 namespace Danmu.Models.Danmus.DataTables
 {
@@ -12,19 +13,19 @@ namespace Danmu.Models.Danmus.DataTables
         /// <summary>
         ///     Id
         /// </summary>
-        [Key, Column("Id")]
+        [Key]
         public Guid Id { get; set; } = new Guid();
 
         /// <summary>
         ///     弹幕所在视频
         /// </summary>
-        [Column("Vid"), Required, MaxLength(72)]
+        [ Required, MaxLength(72)]
         public string Vid { get; set; }
 
         /// <summary>
         ///     弹幕数据
         /// </summary>
-        [Column("Data", TypeName = "jsonb"), Required]
+        [Required]
         public BaseDanmuData Data { get; set; }
 
         /// <summary>
@@ -35,14 +36,12 @@ namespace Danmu.Models.Danmus.DataTables
         /// <summary>
         ///     是否被删除
         /// </summary>
-        [Column("IsDelete")]
         [Required]
         public bool IsDelete { get; set; } = false;
 
         /// <summary>
         ///     关联到video表
         /// </summary>
-        [Column("VideoId")]
         public VideoTable Video { get; set; }
 
         /// <summary>

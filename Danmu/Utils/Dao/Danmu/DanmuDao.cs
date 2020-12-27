@@ -36,7 +36,7 @@ namespace Danmu.Utils.Dao.Danmu
         /// <returns>是否成功</returns>
         public async Task<bool> InsertDanmuAsync(DanmuTable danmu)
         {
-            return await Task.Run(() => _danmuTable.Insert(danmu));
+            return await Task.Run(() => !_danmuTable.Insert(danmu).IsNull);
         }
     }
 }

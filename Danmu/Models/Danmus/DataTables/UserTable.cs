@@ -12,9 +12,7 @@ namespace Danmu.Models.Danmus.DataTables
         /// <summary>
         ///     用户ID
         /// </summary>
-        [Key]
-        [Column("Id")]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         /// <summary>

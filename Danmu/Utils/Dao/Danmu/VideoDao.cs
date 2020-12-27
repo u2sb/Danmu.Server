@@ -53,7 +53,7 @@ namespace Danmu.Utils.Dao.Danmu
         /// <returns>结果</returns>
         public VideoTable Insert(VideoTable video)
         {
-            var a = _videoTable.Insert(video);
+            var a = !_videoTable.Insert(video).IsNull;
             if (a)
                 return video;
             return null;

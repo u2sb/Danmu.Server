@@ -71,7 +71,7 @@ namespace Danmu.Utils.Dao.Danmu
                 Role = role
             };
 
-            return await Task.Run(() => _userTable.Insert(user));
+            return await Task.Run(() => _userTable.Insert(user).AsBoolean);
         }
 
         /// <summary>

@@ -1,7 +1,8 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json;
+using LiteDB;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Danmu.Models.Danmus.DataTables
 {
@@ -11,7 +12,7 @@ namespace Danmu.Models.Danmus.DataTables
         /// <summary>
         ///     主键 自增ID
         /// </summary>
-        [Key, Column("Id"), DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         /// <summary>
