@@ -35,8 +35,6 @@ namespace Danmu.Controllers.Danmu.ArtPlayer.V1
                 return new WebResult<ArtPlayerDanmuData[]>(aData);
             }
 
-            if (string.IsNullOrEmpty(format)) HttpContext.Request.Headers["Accept"] = "application/xml";
-
             return (BiliBiliDanmuData) result;
         }
 

@@ -25,9 +25,10 @@ namespace Danmu.Controllers.Danmu.ArtPlayer.V1
             var danmu = await Bilibili.GetDanmuAsync(query);
 
             if (!string.IsNullOrEmpty(format) && format.Equals("json"))
-                return new WebResult<IEnumerable<ArtPlayerDanmuData>>(danmu.Select(s => (ArtPlayerDanmuData) s));
+                return new WebResult<IEnumerable<ArtPlayerDanmuData>>(danmu
+                    .Select(s => (ArtPlayerDanmuData) s));
             if (string.IsNullOrEmpty(format)) HttpContext.Request.Headers["Accept"] = "application/xml";
-            return (BiliBiliDanmuData) danmu;
+            return danmu;
         }
     }
 }

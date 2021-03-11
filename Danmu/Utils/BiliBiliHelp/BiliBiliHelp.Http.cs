@@ -1,7 +1,6 @@
 using System.IO;
-using System.Net.Http;
 using System.Threading.Tasks;
-using static Danmu.Utils.Globals.VariableDictionary;
+using Flurl.Http;
 
 namespace Danmu.Utils.BiliBiliHelp
 {
@@ -10,31 +9,25 @@ namespace Danmu.Utils.BiliBiliHelp
         /// <summary>
         ///     获取视频的Page原始数据
         /// </summary>
-        /// <param name="url"></param>
+        /// <param name="path"></param>
         /// <returns></returns>
-        private async Task<Stream> GetBiliBiliPageRawAsync(string url)
+        private async Task<Stream> GetBiliBiliPageRawAsync(string path)
         {
-            var client = _httpClientFactory.CreateClient(Deflate);
-            var response = await client.GetAsync(url);
-            if (response.IsSuccessStatusCode) return await response.Content.ReadAsStreamAsync();
-            return Stream.Null;
+            return await _flurlClient.Request(path).GetStreamAsync() ?? Stream.Null;
         }
 
         /// <summary>
         ///     获取BiliBili弹幕原始数据
         /// </summary>
-        /// <param name="url">url</param>
+        /// <param name="path">path</param>
         /// <param name="useCookie"></param>
         /// <returns></returns>
-        private async Task<Stream> GetDanmuRawAsync(string url, bool useCookie = false)
+        private async Task<Stream> GetDanmuRawAsync(string path, bool useCookie = false)
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, url);
-            if (useCookie && !string.IsNullOrEmpty(_setting.Cookie))
-                request.Headers.Add("Cookie", _setting.Cookie);
-            var client = _httpClientFactory.CreateClient(Deflate);
-            var response = await client.SendAsync(request);
-            if (response.IsSuccessStatusCode) return await response.Content.ReadAsStreamAsync();
-            return Stream.Null;
+            var client = useCookie && !string.IsNullOrEmpty(_setting.Cookie)
+                ? _flurlClient.WithHeader("Cookie", _setting.Cookie)
+                : _flurlClient;
+            return await client.Request(path).GetStreamAsync() ?? Stream.Null;
         }
     }
 }

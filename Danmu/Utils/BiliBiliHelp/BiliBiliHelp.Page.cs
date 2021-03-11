@@ -40,13 +40,13 @@ namespace Danmu.Utils.BiliBiliHelp
         /// <returns>Page数据</returns>
         public async Task<BiliBiliPage> GetBiliBiliPageAsync(int aid)
         {
-            return (await _caching.GetAsync($"{nameof(GetBiliBiliPageAsync)}{aid}",
+            return await _caching.GetAsync($"{nameof(GetBiliBiliPageAsync)}{aid}",
                 async () =>
                 {
-                    var a = await GetBiliBiliPageRawAsync($"https://api.bilibili.com/x/player/pagelist?aid={aid}");
+                    var a = await GetBiliBiliPageRawAsync($"/x/player/pagelist?aid={aid}");
                     if (a != Stream.Null) return await JsonSerializer.DeserializeAsync<BiliBiliPage>(a);
                     return null;
-                }, TimeSpan.FromHours(_setting.CidCacheTime)));
+                }, TimeSpan.FromHours(_setting.CidCacheTime));
         }
 
         /// <summary>
@@ -56,14 +56,14 @@ namespace Danmu.Utils.BiliBiliHelp
         /// <returns></returns>
         public async Task<BiliBiliPage> GetBiliBiliPageAsync(string bvid)
         {
-            return (await _caching.GetAsync($"{nameof(GetBiliBiliPageAsync)}{bvid}",
+            return await _caching.GetAsync($"{nameof(GetBiliBiliPageAsync)}{bvid}",
                 async () =>
                 {
                     var a = await GetBiliBiliPageRawAsync(
-                        $"https://api.bilibili.com/x/player/pagelist?bvid={bvid}");
+                        $"/x/player/pagelist?bvid={bvid}");
                     if (a != Stream.Null) return await JsonSerializer.DeserializeAsync<BiliBiliPage>(a);
                     return null;
-                }, TimeSpan.FromHours(_setting.CidCacheTime)));
+                }, TimeSpan.FromHours(_setting.CidCacheTime));
         }
 
         /// <summary>

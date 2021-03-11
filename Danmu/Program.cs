@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using CommandLine;
@@ -50,12 +51,14 @@ namespace Danmu
                     {
                         var ks = AppSettings.KestrelSettings;
 #if LINUX
-                                if (ks.UnixSocketPath.Length > 0)
-                                    foreach (var path in ks.UnixSocketPath)
-                                    {
-                                        if (File.Exists(path)) File.Delete(path);
-                                        options.ListenUnixSocket(path);
-                                    }
+                        if (ks.UnixSocketPath.Length > 0)
+                            foreach (var path in ks.UnixSocketPath)
+                            {
+                                if (File.Exists(path)) File.Delete(path);
+                                options.ListenUnixSocket(path);
+                                var psi = new ProcessStartInfo("/bin/chmod", $"777 {path}");
+                                Process.Start(psi);
+                            }
 #endif
                         if (ks.Listens.Count > 0)
                             foreach (var listen in ks.Listens)

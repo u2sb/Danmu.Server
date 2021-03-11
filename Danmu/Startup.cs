@@ -10,6 +10,7 @@ using Danmu.Utils.Caches;
 using Danmu.Utils.Dao;
 using Danmu.Utils.Dao.Danmu;
 using EasyCaching.LiteDB;
+using Flurl.Http.Configuration;
 using LiteDB;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
@@ -66,7 +67,7 @@ namespace Danmu
                     {
                         ConnectionType = ConnectionType.Direct,
                         FilePath = AppSetting.DanmuDb.Directory,
-                        FileName = "EasyCaching.db"
+                        FileName = "DanmuCaching.db"
                     };
                 }, LiteDb);
             });
@@ -114,6 +115,7 @@ namespace Danmu
             services.AddSingleton<CacheLiteDb>();
             services.AddSingleton<VideoDao>();
             services.AddSingleton<UserDao>();
+            services.AddSingleton<IFlurlClientFactory, PerBaseUrlFlurlClientFactory>();
 
             services.AddScoped<BiliBiliHelp>();
             services.AddScoped<DanmuDao>();

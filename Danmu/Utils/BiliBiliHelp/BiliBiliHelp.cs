@@ -1,27 +1,30 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Danmu.Models.Configs;
 using Danmu.Models.Danmus.BiliBili;
 using Danmu.Models.Danmus.Danmu;
 using Danmu.Utils.Caches;
+using Flurl.Http;
+using Flurl.Http.Configuration;
 
 namespace Danmu.Utils.BiliBiliHelp
 {
     public partial class BiliBiliHelp
     {
+        private const string BilibiliApiBaseUrl = "https://api.bilibili.com";
+
         private readonly CacheLiteDb _caching;
         private readonly bool _canGetHistory;
-        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IFlurlClient _flurlClient;
         private readonly BiliBiliSetting _setting;
 
-        public BiliBiliHelp(AppSettings appSettings, IHttpClientFactory clientFactory,
+        public BiliBiliHelp(AppSettings appSettings, IFlurlClientFactory flurlClientFac,
             CacheLiteDb cache)
         {
-            _httpClientFactory = clientFactory;
+            _flurlClient = flurlClientFac.Get(BilibiliApiBaseUrl);
             _caching = cache;
             _setting = appSettings.BiliBiliSetting;
             _canGetHistory = !string.IsNullOrEmpty(_setting.Cookie);
@@ -42,7 +45,7 @@ namespace Danmu.Utils.BiliBiliHelp
                 return await _caching.GetAsync(
                     $"{nameof(GetDanmuAsync)}{cid}{s}",
                     async () => new BiliBiliDanmuData(await GetDanmuRawAsync(
-                        $"https://api.bilibili.com/x/v2/dm/history?type=1&oid={cid}&date={s}", true)),
+                        $"/x/v2/dm/history?type=1&oid={cid}&date={s}", true)),
                     TimeSpan.FromHours(_setting.DanmuCacheTime));
             }).SelectMany(s => s.Result.D));
             return new BiliBiliDanmuData
@@ -66,7 +69,7 @@ namespace Danmu.Utils.BiliBiliHelp
                     : _canGetHistory && query.Date.Length != 0
                         ? await GetDanmuAsync(query.Cid, query.Date)
                         : new BiliBiliDanmuData(await GetDanmuRawAsync(
-                            $"https://api.bilibili.com/x/v1/dm/list.so?oid={query.Cid}")).ToBaseDanmuDatas().ToArray(),
+                            $"/x/v1/dm/list.so?oid={query.Cid}")).ToBaseDanmuDatas().ToArray(),
                 TimeSpan.FromHours(_setting.DanmuCacheTime));
         }
 
@@ -101,7 +104,7 @@ namespace Danmu.Utils.BiliBiliHelp
                     async () =>
                     {
                         var a = await GetBiliBiliPageRawAsync(
-                            $"https://api.bilibili.com/x/web-interface/archive/stat?aid={aid}");
+                            $"/x/web-interface/archive/stat?aid={aid}");
                         if (a != Stream.Null)
                         {
                             var b = await JsonSerializer.DeserializeAsync<BvidInfo>(a);
@@ -117,7 +120,7 @@ namespace Danmu.Utils.BiliBiliHelp
                     async () =>
                     {
                         var a = await GetBiliBiliPageRawAsync(
-                            $"https://api.bilibili.com/x/web-interface/archive/stat?bvid={bvid}");
+                            $"/x/web-interface/archive/stat?bvid={bvid}");
                         if (a != Stream.Null)
                         {
                             var b = await JsonSerializer.DeserializeAsync<BvidInfo>(a);
