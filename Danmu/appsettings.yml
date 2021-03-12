@@ -1,7 +1,6 @@
 KestrelSettings:
   Listens:
     127.0.0.1:
-      - 5000
       - 5001
   UnixSocketPath:
     - "/tmp/danmu.sock"

@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PublishTargetUrl>D:\MonoLogueChi\Documents\GitHub\Danmu.Server\Danmu\bin\Release-Linux64\net5.0\publish\</_PublishTargetUrl>
+    <History>True|2021-03-12T03:25:19.2315409Z;True|2021-03-12T11:24:44.3815556+08:00;True|2021-03-12T11:21:03.2469248+08:00;True|2021-03-12T11:07:35.9202716+08:00;True|2021-03-12T11:06:10.5741891+08:00;True|2021-03-12T11:03:37.1988007+08:00;True|2021-03-12T10:56:02.2617680+08:00;False|2021-03-12T10:55:14.9715006+08:00;False|2021-03-12T10:53:21.6872355+08:00;False|2021-03-12T10:52:42.0528373+08:00;False|2021-03-12T10:51:30.7330688+08:00;False|2021-03-12T10:49:23.2737738+08:00;False|2021-03-12T09:37:17.3908331+08:00;False|2021-03-12T09:30:05.0900127+08:00;</History>
+  </PropertyGroup>
+</Project>

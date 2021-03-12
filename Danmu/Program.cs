@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
@@ -6,6 +7,8 @@ using Danmu.Models.Configs;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using NLog;
+using NLog.Web;
 
 namespace Danmu
 {
@@ -13,23 +16,40 @@ namespace Danmu
     {
         internal static AppSettings AppSettings;
 
+        internal static Logger Logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
+
         public static void Main(string[] args)
         {
-            Parser.Default.ParseArguments<CommandOptions>(args).WithParsed(opts =>
+            try
             {
-                var host = CreateHostBuilder(args).Build();
+                Logger.Debug("init main");
+                Parser.Default.ParseArguments<CommandOptions>(args).WithParsed(opts =>
+                {
+                    var host = CreateHostBuilder(args).Build();
 
-                if (!string.IsNullOrEmpty(opts.UserName) && !string.IsNullOrEmpty(opts.Password))
-                {
-                    //这里初始化用户名和密码
-                }
-                else
-                {
-                    //正常启动
-                    DbInit(AppSettings.DanmuDb);
-                    host.Run();
-                }
-            });
+                    if (!string.IsNullOrEmpty(opts.UserName) && !string.IsNullOrEmpty(opts.Password))
+                    {
+                        //这里初始化用户名和密码
+                    }
+                    else
+                    {
+                        //正常启动
+                        DbInit(AppSettings.DanmuDb);
+                        host.Run();
+                    }
+                });
+            }
+            catch (Exception exception)
+            {
+                //NLog: catch setup errors
+                Logger.Error(exception, "Stopped program because of exception");
+                throw;
+            }
+            finally
+            {
+                // Ensure to flush and stop internal timers/threads before application-exit (Avoid segmentation fault on Linux)
+                LogManager.Shutdown();
+            }
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args)
@@ -56,8 +76,6 @@ namespace Danmu
                             {
                                 if (File.Exists(path)) File.Delete(path);
                                 options.ListenUnixSocket(path);
-                                var psi = new ProcessStartInfo("/bin/chmod", $"777 {path}");
-                                Process.Start(psi);
                             }
 #endif
                         if (ks.Listens.Count > 0)
