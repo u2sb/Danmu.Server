@@ -34,6 +34,7 @@ steps:
 
   ##编译Linux版
   ##开启R2R选项
+
   - task: Bash@3
     inputs:
       targetType: "inline"
@@ -41,6 +42,7 @@ steps:
         #!/bin/bash
         CLI_VERSION=`git describe --tags`
         sed -i "s/<PublishReadyToRun>false/<PublishReadyToRun>true/g" $(Build.SourcesDirectory)/Danmu/Danmu.csproj
+        sed -i "s/$(SolutionDir)Danmu/$(Build.SourcesDirectory)/Danmu" $(Build.SourcesDirectory)/Danmu/Danmu.csproj
 
   - task: DotNetCoreCLI@2
     inputs:
