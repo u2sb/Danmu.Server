@@ -42,12 +42,12 @@ steps:
         #!/bin/bash
         CLI_VERSION=`git describe --tags`
         sed -i "s/<PublishReadyToRun>false/<PublishReadyToRun>true/g" $(Build.SourcesDirectory)/Danmu/Danmu.csproj
-        sed -i "s/$(SolutionDir)Danmu/$(Build.SourcesDirectory)/Danmu" $(Build.SourcesDirectory)/Danmu/Danmu.csproj
 
   - task: DotNetCoreCLI@2
     inputs:
       command: publish
       projects: "$(Build.SourcesDirectory)/Danmu/Danmu.csproj"
+      workingDirectory: "$(Build.SourcesDirectory)"
       publishWebProjects: True
       arguments: "-c Release-Linux64 -r linux-x64 --self-contained false --output $(Build.ArtifactStagingDirectory)/Danmu64-R2R"
       zipAfterPublish: False
@@ -60,6 +60,7 @@ steps:
   - task: DotNetCoreCLI@2
     inputs:
       command: publish
+      workingDirectory: "$(Build.SourcesDirectory)"
       projects: "$(Build.SourcesDirectory)/Danmu/Danmu.csproj"
       publishWebProjects: True
       arguments: "-c Release-Linux64 -r linux-x64 --self-contained true -p:PublishSingleFile=true --output $(Build.ArtifactStagingDirectory)/Danmu64-R2R-SCD"
@@ -94,6 +95,7 @@ steps:
   - task: DotNetCoreCLI@2
     inputs:
       command: publish
+      workingDirectory: "$(Build.SourcesDirectory)"
       projects: "$(Build.SourcesDirectory)/Danmu/Danmu.csproj"
       publishWebProjects: True
       arguments: "-c Release-Linux64 -r linux-x64 --self-contained true -p:PublishSingleFile=true --output $(Build.ArtifactStagingDirectory)/Danmu64-SCD"
@@ -102,6 +104,7 @@ steps:
   - task: DotNetCoreCLI@2
     inputs:
       command: publish
+      workingDirectory: "$(Build.SourcesDirectory)"
       projects: "$(Build.SourcesDirectory)/Danmu/Danmu.csproj"
       publishWebProjects: True
       arguments: "-c Release-Linux32 -r linux-arm --self-contained true -p:PublishSingleFile=true --output $(Build.ArtifactStagingDirectory)/Danmu32-Arm-SCD"
@@ -110,6 +113,7 @@ steps:
   - task: DotNetCoreCLI@2
     inputs:
       command: publish
+      workingDirectory: "$(Build.SourcesDirectory)"
       projects: "$(Build.SourcesDirectory)/Danmu/Danmu.csproj"
       publishWebProjects: True
       arguments: "-c Release-Win -r win-x64 --self-contained true -p:PublishSingleFile=true --output $(Build.ArtifactStagingDirectory)/Danmu64-Win-SCD"
@@ -124,6 +128,7 @@ steps:
   - task: DotNetCoreCLI@2
     inputs:
       command: publish
+      workingDirectory: "$(Build.SourcesDirectory)"
       projects: "$(Build.SourcesDirectory)/Danmu/Danmu.csproj"
       publishWebProjects: True
       arguments: "-c Release-Linux64 -r linux-x64 --self-contained false --output $(Build.ArtifactStagingDirectory)/Danmu64"
@@ -132,6 +137,7 @@ steps:
   - task: DotNetCoreCLI@2
     inputs:
       command: publish
+      workingDirectory: "$(Build.SourcesDirectory)"
       projects: "$(Build.SourcesDirectory)/Danmu/Danmu.csproj"
       publishWebProjects: True
       arguments: "-c Release-Linux32 -r linux-arm --self-contained false --output $(Build.ArtifactStagingDirectory)/Danmu32-Arm"
@@ -140,6 +146,7 @@ steps:
   - task: DotNetCoreCLI@2
     inputs:
       command: publish
+      workingDirectory: "$(Build.SourcesDirectory)"
       projects: "$(Build.SourcesDirectory)/Danmu/Danmu.csproj"
       publishWebProjects: True
       arguments: "-c Release-Win -r win-x64 --self-contained false --output $(Build.ArtifactStagingDirectory)/Danmu64-Win"

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <Platforms>AnyCPU;x64</Platforms>
-    <Configurations>Debug;Release;Release-Linux64</Configurations>
+    <Configurations>Debug;Release;Release-Linux64;Release-Linux32</Configurations>
     <UserSecretsId>c555a9d9-a846-4a15-b485-05941a707b74</UserSecretsId>
   </PropertyGroup>
 
@@ -44,6 +44,19 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-Linux64|x64'">
     <DefineConstants>TRACE;LINUX</DefineConstants>
     <Optimize>true</Optimize>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-Linux32|x64'">
+    <DefineConstants>TRACE;LINUX</DefineConstants>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-Linux32|AnyCPU'">
+    <DefineConstants>TRACE;LINUX</DefineConstants>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-Linux64|AnyCPU'">
+    <DefineConstants>TRACE;LINUX</DefineConstants>
   </PropertyGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SolutionDir)node_modules') ">
