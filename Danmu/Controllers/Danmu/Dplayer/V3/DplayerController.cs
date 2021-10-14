@@ -3,10 +3,10 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Danmu.Controllers.Base;
-using Danmu.Model.Danmu.DanmuData;
-using Danmu.Model.DataTable;
-using Danmu.Model.WebResult;
-using Danmu.Utils.Dao;
+using Danmu.Models.Danmus.Danmu;
+using Danmu.Models.Danmus.DataTables;
+using Danmu.Models.WebResults;
+using Danmu.Utils.Dao.Danmu;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Danmu.Controllers.Danmu.Dplayer.V3
@@ -14,7 +14,9 @@ namespace Danmu.Controllers.Danmu.Dplayer.V3
     [Route("/api/danmu/dplayer/v3")]
     public class DplayerController : DanmuBaseController
     {
-        public DplayerController(DanmuDao danmuDao, VideoDao videoDao) : base(danmuDao, videoDao) { }
+        public DplayerController(DanmuDao danmuDao, VideoDao videoDao) : base(danmuDao, videoDao)
+        {
+        }
 
         // GET: api/dplayer/v3/
         [HttpGet]
@@ -22,8 +24,8 @@ namespace Danmu.Controllers.Danmu.Dplayer.V3
         {
             id ??= Request.Query["id"];
             return string.IsNullOrEmpty(id)
-                    ? new DplayerWebResult(1)
-                    : new DplayerWebResult(await DanmuDao.QueryDanmusByVidAsync(id));
+                ? new DplayerWebResult(1)
+                : new DplayerWebResult(await DanmuDao.QueryDanmusByVidAsync(id));
         }
 
         [HttpPost]
@@ -32,11 +34,11 @@ namespace Danmu.Controllers.Danmu.Dplayer.V3
             if (string.IsNullOrWhiteSpace(data.Id) || string.IsNullOrWhiteSpace(data.Text))
                 return new WebResult(1);
             data.Ip = IPAddress.TryParse(Request.Headers["X-Real-IP"], out var ip)
-                    ? ip
-                    : Request.HttpContext.Connection.RemoteIpAddress;
+                ? ip
+                : Request.HttpContext.Connection.RemoteIpAddress;
             data.Referer ??= Request.Headers["Referer"].FirstOrDefault();
 
-            var video = await VideoDao.InsertAsync(data.Id, new Uri(data.Referer));
+            var video = VideoDao.Insert(data.Id, new Uri(data.Referer ?? string.Empty));
             var danmu = new DanmuTable
             {
                 Vid = data.Id,

@@ -1,16 +1,14 @@
 using System;
+using System.Diagnostics;
+using System.IO;
 using System.Net;
-using Danmu.Model.Config;
-using Danmu.Model.DbContext;
-using Danmu.Utils.Dao;
+using CommandLine;
+using Danmu.Models.Configs;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-#if LINUX
-using System.IO;
-#endif
+using NLog;
+using NLog.Web;
 
 namespace Danmu
 {
@@ -18,60 +16,84 @@ namespace Danmu
     {
         internal static AppSettings AppSettings;
 
-        private static void Main(string[] args)
-        {
-            var host = CreateHostBuilder(args).Build();
-            CreateDbIfNotExists(host);
-            host.Run();
-        }
+        internal static Logger Logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
 
-        private static IHostBuilder CreateHostBuilder(string[] args)
+        public static void Main(string[] args)
         {
-            return Host.CreateDefaultBuilder(args)
-                       .ConfigureAppConfiguration((context, builder) =>
-                        {
-                            var env = context.HostingEnvironment;
-                            builder
-                                   .AddJsonFile("appsettings.json", true, true)
-                                   .AddYamlFile("appsettings.yml", true, true)
-                                   .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true)
-                                   .AddJsonFile($"appsettings.{env.EnvironmentName}.yml", true);
-                            AppSettings = builder.Build().Get<AppSettings>();
-                        })
-                       .ConfigureWebHostDefaults(webBuilder =>
-                        {
-                            webBuilder.ConfigureKestrel(options =>
-                            {
-                                var ks = AppSettings.KestrelSettings;
-#if LINUX
-                                if (ks.UnixSocketPath.Length > 0)
-                                    foreach (var path in ks.UnixSocketPath)
-                                    {
-                                        if (File.Exists(path)) File.Delete(path);
-                                        options.ListenUnixSocket(path);
-                                    }
-#endif
-                                if (ks.Port.Length > 0)
-                                    foreach (var port in ks.Port)
-                                        options.Listen(IPAddress.Loopback, port);
-                            }).UseStartup<Startup>();
-                        });
-        }
-
-        private static void CreateDbIfNotExists(IHost host)
-        {
-            using var scope = host.Services.CreateScope();
-            var services = scope.ServiceProvider;
             try
             {
-                var context = services.GetRequiredService<DanmuContext>();
-                DbInitializer.Initialize(context, AppSettings);
+                Logger.Debug("init main");
+                Parser.Default.ParseArguments<CommandOptions>(args).WithParsed(opts =>
+                {
+                    var host = CreateHostBuilder(args).Build();
+
+                    if (!string.IsNullOrEmpty(opts.UserName) && !string.IsNullOrEmpty(opts.Password))
+                    {
+                        //这里初始化用户名和密码
+                    }
+                    else
+                    {
+                        //正常启动
+                        DbInit(AppSettings.DanmuDb);
+                        host.Run();
+                    }
+                });
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                var logger = services.GetRequiredService<ILogger<Program>>();
-                logger.LogError(ex, "An error occurred creating the DB.");
+                //NLog: catch setup errors
+                Logger.Error(exception, "Stopped program because of exception");
+                throw;
             }
+            finally
+            {
+                // Ensure to flush and stop internal timers/threads before application-exit (Avoid segmentation fault on Linux)
+                LogManager.Shutdown();
+            }
+        }
+
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            return Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((context, builder) =>
+                {
+                    var env = context.HostingEnvironment;
+                    builder
+                        .AddJsonFile("appsettings.json", true, true)
+                        .AddYamlFile("appsettings.yml", true, true)
+                        .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true)
+                        .AddJsonFile($"appsettings.{env.EnvironmentName}.yml", true);
+                    AppSettings = builder.Build().Get<AppSettings>();
+                })
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.ConfigureKestrel(options =>
+                    {
+                        var ks = AppSettings.KestrelSettings;
+#if LINUX
+                        if (ks.UnixSocketPath.Length > 0)
+                            foreach (var path in ks.UnixSocketPath)
+                            {
+                                if (File.Exists(path)) File.Delete(path);
+                                options.ListenUnixSocket(path);
+                            }
+#endif
+                        if (ks.Listens.Count > 0)
+                            foreach (var listen in ks.Listens)
+                                if (IPAddress.TryParse(listen.Key, out var ip))
+                                    foreach (var port in listen.Value)
+                                        options.Listen(ip, port);
+                    }).UseStartup<Startup>();
+                });
+        }
+
+        private static void DbInit(DanmuDb db)
+        {
+            if (!Directory.Exists(db.Directory)) Directory.CreateDirectory(db.Directory);
+        }
+
+        private static void RunOptions(CommandOptions opts)
+        {
         }
     }
 }

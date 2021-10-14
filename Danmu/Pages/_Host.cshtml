@@ -1,42 +1,29 @@
-@page "/admin"
-@using Microsoft.AspNetCore.Authorization
-@using static Utils.Global.VariableDictionary;
-@attribute [Authorize(Policy = AdminRolePolicy)]
+﻿@page "/"
 @namespace Danmu.Pages
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
-  Layout = null;
+    Layout = null;
 }
 
 <!DOCTYPE html>
-<html lang="zh-cn">
+<html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Danmu</title>
-  <base href="~/"/>
-  <link href="css/site.css" rel="stylesheet" />
-  <link rel="stylesheet" href="/_content/Blazui.Component/css/index.css" />
-  <link rel="stylesheet" href="/_content/Blazui.Component/css/fix.css" />
-  <link rel="icon" href="favicon.png"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Danmu</title>
+    <base href="~/" />
+    <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet" />
+    <link href="_content/AntDesign.Pro.Layout/css/ant-design-pro-layout-blazor.css" rel="stylesheet" />
+    <link href="./css/site.css" rel="stylesheet" />
 </head>
 <body>
-  <app>
-    @(await Html.RenderComponentAsync<App>(RenderMode.ServerPrerendered))
-  </app>
+    <app>
+        <component type="typeof(App)" render-mode="Server" />
+    </app>
 
-<div id="blazor-error-ui">
-  <environment include="Staging,Production">
-    An error has occurred. This application may no longer respond until reloaded.
-  </environment>
-  <environment include="Development">
-    An unhandled exception has occurred. See browser dev tools for details.
-  </environment>
-  <a href="" class="reload">Reload</a>
-  <a class="dismiss">🗙</a>
-</div>
-
-<script src="_content/Blazui.Component/js/dom.js"></script>
-<script src="_framework/blazor.server.js"></script>
+    <script src="_content/AntDesign.Charts/g2plot.js"></script>
+    <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
+    <script src="_content/AntDesign.Charts/ant-design-charts-blazor.js"></script>
+    <script src="_framework/blazor.server.js"></script>
 </body>
 </html>

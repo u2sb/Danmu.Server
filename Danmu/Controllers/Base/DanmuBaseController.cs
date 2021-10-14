@@ -1,7 +1,7 @@
-using Danmu.Utils.Dao;
+﻿using Danmu.Utils.Dao.Danmu;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using static Danmu.Utils.Global.VariableDictionary;
+using static Danmu.Utils.Globals.VariableDictionary;
 
 namespace Danmu.Controllers.Base
 {
@@ -10,13 +10,13 @@ namespace Danmu.Controllers.Base
     [FormatFilter]
     public abstract class DanmuBaseController : ControllerBase
     {
-        private protected DanmuDao DanmuDao;
-        private protected VideoDao VideoDao;
+        internal DanmuDao DanmuDao;
+        internal VideoDao VideoDao;
 
-        protected DanmuBaseController(DanmuDao danmuDao, VideoDao videoDao)
+        protected DanmuBaseController(DanmuDao danmu, VideoDao video)
         {
-            DanmuDao = danmuDao;
-            VideoDao = videoDao;
+            DanmuDao = danmu;
+            VideoDao = video;
         }
     }
 }

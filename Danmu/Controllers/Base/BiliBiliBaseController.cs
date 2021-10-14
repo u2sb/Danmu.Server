@@ -1,7 +1,7 @@
-using Danmu.Utils.BiliBili;
+using Danmu.Utils.BiliBiliHelp;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using static Danmu.Utils.Global.VariableDictionary;
+using static Danmu.Utils.Globals.VariableDictionary;
 
 namespace Danmu.Controllers.Base
 {

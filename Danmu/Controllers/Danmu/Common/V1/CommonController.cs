@@ -1,22 +1,26 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Danmu.Controllers.Base;
-using Danmu.Model.Danmu.BiliBili;
-using Danmu.Model.Danmu.DanmuData;
-using Danmu.Model.DataTable;
-using Danmu.Model.WebResult;
-using Danmu.Utils.Dao;
+using Danmu.Models.Danmus.BiliBili;
+using Danmu.Models.Danmus.Danmu;
+using Danmu.Models.Danmus.DataTables;
+using Danmu.Models.WebResults;
+using Danmu.Utils.Dao.Danmu;
 using Microsoft.AspNetCore.Mvc;
+
+// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Danmu.Controllers.Danmu.Common.V1
 {
     [Route("/api/danmu/v1")]
-    [FormatFilter]
     public class CommonController : DanmuBaseController
     {
-        public CommonController(DanmuDao danmuDao, VideoDao videoDao) : base(danmuDao, videoDao) { }
+        public CommonController(DanmuDao danmu, VideoDao video) : base(danmu, video)
+        {
+        }
+
 
         [HttpGet]
         [HttpGet("{id}.{format?}")]
@@ -27,10 +31,11 @@ namespace Danmu.Controllers.Danmu.Common.V1
 
             var result = await DanmuDao.QueryDanmusByVidAsync(id);
 
-            if (!string.IsNullOrEmpty(format) && format.Equals("xml")) return (DanmuDataBiliBili) result;
+            if (!string.IsNullOrEmpty(format) && format.Equals("xml")) return (BiliBiliDanmuData) result;
 
             return new WebResult<BaseDanmuData[]>(result);
         }
+
 
         [HttpPost]
         public async Task<WebResult> Post([FromBody] BaseDanmuDataIn data)
@@ -38,10 +43,10 @@ namespace Danmu.Controllers.Danmu.Common.V1
             if (string.IsNullOrWhiteSpace(data.Id) || string.IsNullOrWhiteSpace(data.Text))
                 return new WebResult(1);
             data.Ip = IPAddress.TryParse(Request.Headers["X-Real-IP"], out var ip)
-                    ? ip
-                    : Request.HttpContext.Connection.RemoteIpAddress;
+                ? ip
+                : Request.HttpContext.Connection.RemoteIpAddress;
             data.Referer ??= Request.Headers["Referer"].FirstOrDefault();
-            var video = await VideoDao.InsertAsync(data.Id, new Uri(data.Referer));
+            var video = VideoDao.Insert(data.Id, new Uri(data.Referer ?? string.Empty));
             var danmu = new DanmuTable
             {
                 Vid = data.Id,
