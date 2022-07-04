@@ -3,6 +3,7 @@ using DanMu.Models.Converters;
 using DanMu.Models.Settings;
 using DanMu.Utils.BiliBiliHelp;
 using DanMu.Utils.Cache;
+using DanMu.Utils.Dao.Danmu;
 using DanMu.Utils.Dao.DbContext;
 using EasyCaching.LiteDB;
 using LiteDB;
@@ -29,10 +30,6 @@ services.AddControllers().AddXmlSerializerFormatters().AddJsonOptions(opt =>
     opt.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
     opt.JsonSerializerOptions.Converters.Add(new IpAddressConverter());
 });
-
-// 配置数据库
-services.AddDbContextPool<DanMuDbContext>(options => new DbContextBuild(appSettings.DataBase, options),
-    appSettings.DataBase.PoolSize);
 
 
 // 配置弹幕缓存数据库
@@ -69,9 +66,11 @@ services.AddCors(options =>
 
 // 注入
 services.AddSingleton<AppSettings>();
+services.AddSingleton<DanMuDbContext>();
 services.AddSingleton(new RestClient(new HttpClient()));
 services.AddScoped<BiliBiliCache>();
 services.AddScoped<BiliBiliHelp>();
+services.AddScoped<DanmuTableDao>();
 
 
 var app = builder.Build();
