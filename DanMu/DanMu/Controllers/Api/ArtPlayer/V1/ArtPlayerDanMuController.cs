@@ -19,8 +19,6 @@ public class ArtPlayerDanMuController : DanMuController
     [HttpGet]
     [HttpGet(".{format?}")]
     [HttpGet("{id}.{format?}")]
-    [HttpGet("{id}.{format?}/{p:int?}")]
-    [HttpGet("{id}/{p:int}.{format?}")]
     public async Task<dynamic> GetAsync(string? id, string? format)
     {
         id ??= Request.Query["id"];
