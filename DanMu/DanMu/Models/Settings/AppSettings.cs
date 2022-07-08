@@ -25,6 +25,11 @@ public class AppSettings
     ///     数据库设置
     /// </summary>
     public DataBase DataBase { get; set; } = new();
+
+    /// <summary>
+    ///     管理用户，临时解决方案
+    /// </summary>
+    public Admin[] Admins { get; set; } = Array.Empty<Admin>();
 }
 
 /// <summary>
@@ -51,5 +56,10 @@ public class DataBase
     public string Directory { get; set; } = "DataBase";
     public string DanMuCachingDb { get; set; } = "DanMuCaching.db";
     public string DanMuDb { get; set; } = "DanMu.db";
-    public int PoolSize { get; set; } = 5;
+}
+
+public class Admin
+{
+    public string UserName { get; set; } = null!;
+    public string Password { get; set; } = null!;
 }

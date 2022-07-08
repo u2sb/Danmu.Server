@@ -13,8 +13,8 @@ public class DanmuTableDao
 
     public DanmuTableDao(DanMuDbContext dbContext)
     {
-        _danmuTable = dbContext.Database.GetCollection<DanMuTable>();
-        _videoTable = dbContext.Database.GetCollection<VideoTable>();
+        _danmuTable = dbContext.DanMuTable;
+        _videoTable = dbContext.VideoTable;
     }
 
     /// <summary>
@@ -68,5 +68,14 @@ public class DanmuTableDao
         };
 
         return await _danmuTable.InsertAsync(d) != null;
+    }
+
+    /// <summary>
+    ///     获取全部弹幕
+    /// </summary>
+    /// <returns></returns>
+    public async Task<DanMuTable[]> GetAllDanMuAsync()
+    {
+        return await _danmuTable.Query().Include(x => x.Video).ToArrayAsync();
     }
 }

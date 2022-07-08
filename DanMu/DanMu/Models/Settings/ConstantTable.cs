@@ -6,4 +6,6 @@ public static class ConstantTable
     ///     弹幕缓存Name
     /// </summary>
     public const string BiliBiliDanMuCacheLiteDbName = "BiliBiliDanMuCacheLiteDbName";
+
+    public const string AdminRolePolicy = "AdminRolePolicy";
 }
