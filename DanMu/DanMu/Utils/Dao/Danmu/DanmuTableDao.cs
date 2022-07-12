@@ -76,6 +76,17 @@ public class DanmuTableDao
     /// <returns></returns>
     public async Task<DanMuTable[]> GetAllDanMuAsync()
     {
-        return await _danmuTable.Query().Include(x => x.Video).ToArrayAsync();
+        return await _danmuTable.Query().Include(x => x.Video).OrderByDescending(e => e.CTime).ToArrayAsync();
+    }
+
+    /// <summary>
+    ///     删除弹幕
+    /// </summary>
+    /// <param name="guid"></param>
+    /// <returns></returns>
+    public async Task<bool> DeleteDanMuAsync(Guid guid)
+    {
+        var a = await _danmuTable.DeleteManyAsync(e => e.Id == guid);
+        return a > 0;
     }
 }

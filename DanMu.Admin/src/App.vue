@@ -18,7 +18,7 @@
           </router-link>
         </a-menu-item>
         <a-menu-item key="2">
-          <router-link to="/list">
+          <router-link to="/danmulist">
             <unordered-list-outlined /> <span class="nav-text">弹幕列表</span>
           </router-link>
         </a-menu-item>

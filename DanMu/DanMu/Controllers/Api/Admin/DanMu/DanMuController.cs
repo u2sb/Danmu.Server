@@ -22,4 +22,14 @@ public class DanMuController : Base.DanMuController
 
         return new WebResult<DanMuTable[]>(danmuList);
     }
+
+    [HttpGet("delete/{id}")]
+    public async Task<WebResult> DeleteDanMuAsync(string id)
+    {
+        if (!string.IsNullOrWhiteSpace(id) && Guid.TryParse(id, out var guid))
+            if (await Danmu.DeleteDanMuAsync(guid))
+                return new WebResult(0);
+
+        return new WebResult(1);
+    }
 }

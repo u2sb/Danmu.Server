@@ -104,7 +104,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 
 app.UseDefaultFiles();
-app.UseSpaStaticFiles();
+app.UseStaticFiles();
 
 app.UseForwardedHeaders();
 
@@ -117,5 +117,11 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+
+app.UseSpa(spa =>
+{
+    spa.Options.SourcePath = "wwwroot";
+    spa.Options.DefaultPage = "/index.html";
+});
 
 app.Run();

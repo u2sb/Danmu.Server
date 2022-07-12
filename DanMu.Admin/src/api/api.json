@@ -1,0 +1,5 @@
+{
+    "login": "/api/admin/account/login",
+    "danmuList": "/api/admin/danmu/list",
+    "danmuDelete": "/api/admin/danmu/delete"
+}

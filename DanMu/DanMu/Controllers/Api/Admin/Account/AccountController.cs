@@ -40,7 +40,7 @@ public class AccountController : ControllerBase
     {
         var userName = data.TryGetProperty("username", out JsonElement a) ? a.GetString() : null;
         var password = data.TryGetProperty("password", out JsonElement b) ? b.GetString() : null;
-        var url = data.TryGetProperty("path", out JsonElement c) ? c.GetString() : null;
+        var url = data.TryGetProperty("url", out JsonElement c) ? c.GetString() : null;
 
         if (userName != null && password != null)
         {
