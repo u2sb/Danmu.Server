@@ -1,5 +1,10 @@
 <template>
-  <div>主页</div>
+  <div>
+    欢迎使用
+    <a href="https://github.com/u2sb/Danmu.Server" target="_blank"
+      >DanMu.Server</a
+    >
+  </div>
 </template>
 
 <script lang="ts">
