@@ -1,8 +1,10 @@
-﻿using System.Net;
-using DanMu.Models.DanMu.Generic.V1;
+﻿using DanMu.Models.DanMu.Generic.V1;
 using DanMu.Models.DataTables.DanMu;
 using DanMu.Utils.Dao.DbContext;
+
 using LiteDB.Async;
+
+using System.Net;
 
 namespace DanMu.Utils.Dao.Danmu;
 
@@ -88,5 +90,15 @@ public class DanmuTableDao
     {
         var a = await _danmuTable.DeleteManyAsync(e => e.Id == guid);
         return a > 0;
+    }
+
+    /// <summary>
+    /// 编辑弹幕
+    /// </summary>
+    /// <param name="danmu"></param>
+    /// <returns></returns>
+    public async Task<bool> EditorDanMuAsync(DanMuTable danmu)
+    {
+        return await _danmuTable.UpdateAsync(danmu);
     }
 }
