@@ -3,13 +3,13 @@ using static DanMu.Models.Settings.ConstantTable;
 
 namespace DanMu.Utils.Cache;
 
-public class BiliBiliCache
+public class MetingCache
 {
     private readonly IEasyCachingProvider _caching;
 
-    public BiliBiliCache(IEasyCachingProviderFactory caching)
+    public MetingCache(IEasyCachingProviderFactory caching)
     {
-        _caching = caching.GetCachingProvider(BiliBiliDanMuCacheLiteDbName);
+        _caching = caching.GetCachingProvider(MetingCacheLiteDbName);
     }
 
     /// <summary>

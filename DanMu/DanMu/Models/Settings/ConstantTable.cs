@@ -7,5 +7,7 @@ public static class ConstantTable
     /// </summary>
     public const string BiliBiliDanMuCacheLiteDbName = "BiliBiliDanMuCacheLiteDbName";
 
+    public const string MetingCacheLiteDbName = "MetingCacheLiteDbName";
+
     public const string AdminRolePolicy = "AdminRolePolicy";
 }

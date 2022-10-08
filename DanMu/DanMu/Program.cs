@@ -8,6 +8,7 @@ using DanMu.Utils.BiliBiliHelp;
 using DanMu.Utils.Cache;
 using DanMu.Utils.Dao.Danmu;
 using DanMu.Utils.Dao.DbContext;
+using DanMu.Utils.MetingHelp;
 using EasyCaching.LiteDB;
 using LiteDB;
 using Microsoft.AspNetCore.Authentication;
@@ -42,16 +43,16 @@ services.AddControllers().AddXmlSerializerFormatters().AddJsonOptions(opt =>
 // https://github.com/dotnetcore/EasyCaching
 services.AddEasyCaching(options =>
 {
-    //use memory cache
-    options.UseLiteDB(config =>
+    var dbConfig = new LiteDBDBOptions
     {
-        config.DBConfig = new LiteDBDBOptions
-        {
-            ConnectionType = ConnectionType.Direct,
-            FilePath = appSettings.DataBase.Directory,
-            FileName = appSettings.DataBase.DanMuCachingDb
-        };
-    }, BiliBiliDanMuCacheLiteDbName);
+        ConnectionType = ConnectionType.Direct,
+        FilePath = appSettings.DataBase.Directory,
+        FileName = appSettings.DataBase.CachingDb
+    };
+
+    options.UseLiteDB(config => { config.DBConfig = dbConfig; }, BiliBiliDanMuCacheLiteDbName);
+
+    options.UseLiteDB(config => { config.DBConfig = dbConfig; }, MetingCacheLiteDbName);
 });
 
 // 配置转接头，代理
@@ -96,6 +97,9 @@ services.AddSingleton(new RestClient(new HttpClient()));
 services.AddScoped<BiliBiliCache>();
 services.AddScoped<BiliBiliHelp>();
 services.AddScoped<DanmuTableDao>();
+
+services.AddScoped<MetingCache>();
+services.AddScoped<MetingHelp>();
 
 services.AddSpaStaticFiles(opt => { opt.RootPath = "wwwroot"; });
 

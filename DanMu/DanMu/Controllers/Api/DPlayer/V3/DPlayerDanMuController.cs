@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DanMu.Controllers.Api.DPlayer.V3;
 
-
 [Route("/api/dplayer/v3/")]
 public class DPlayerDanMuController : DanMuController
 {

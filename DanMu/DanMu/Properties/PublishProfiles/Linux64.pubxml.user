@@ -4,4 +4,9 @@
 自定义此过程的行为。为了解与此相关的更多内容，请访问 https://go.microsoft.com/fwlink/?LinkID=208121。 
 -->
 <Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>D:\Users\mc\Documents\GitHub\Danmu.Server\DanMu\DanMu\bin\Release\net6.0\publish\linux64</_PublishTargetUrl>
+    <History>True|2022-10-07T12:31:38.2363177Z;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
 </Project>

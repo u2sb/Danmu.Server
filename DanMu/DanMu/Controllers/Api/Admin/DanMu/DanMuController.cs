@@ -1,10 +1,8 @@
 ﻿using DanMu.Models.DataTables.DanMu;
 using DanMu.Models.WebResults;
 using DanMu.Utils.Dao.Danmu;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
 using static DanMu.Models.Settings.ConstantTable;
 
 namespace DanMu.Controllers.Api.Admin.DanMu;
@@ -38,10 +36,7 @@ public class DanMuController : Base.DanMuController
     [HttpPost("editor")]
     public async Task<WebResult> EditorDanMuAsync(DanMuTable danmu)
     {
-        if (await Danmu.EditorDanMuAsync(danmu))
-        {
-            return new WebResult(0);
-        }
+        if (await Danmu.EditorDanMuAsync(danmu)) return new WebResult(0);
 
         return new WebResult(1);
     }
