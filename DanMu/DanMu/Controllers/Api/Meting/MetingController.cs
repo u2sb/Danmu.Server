@@ -38,8 +38,8 @@ public class MetingController : ControllerBase
                 var picUrl = meting.GetPicAsync(query.Id);
                 return Redirect(await picUrl ?? "404");
             case QueryType.Url:
-                var url = meting.GetUrlAsync(query.Id);
-                return Redirect(await url ?? "404");
+                var url = await meting.GetUrlAsync(query.Id);
+                return Redirect(!string.IsNullOrWhiteSpace(url) ? url : "404");
             default:
                 var request = HttpContext.Request;
                 var baseUrl = string.IsNullOrEmpty(_settings.Meting.Url)

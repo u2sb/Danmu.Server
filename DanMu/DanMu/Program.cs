@@ -20,7 +20,7 @@ using static DanMu.Models.Settings.ConstantTable;
 var builder = WebApplication.CreateBuilder(args);
 
 // 配置文件
-var appSettings = builder.Configuration.Get<AppSettings>();
+var appSettings = builder.Configuration.Get<AppSettings>()!;
 
 // 创建数据库目录
 if (!Directory.Exists(appSettings.DataBase.Directory)) Directory.CreateDirectory(appSettings.DataBase.Directory);
@@ -120,7 +120,7 @@ app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+app.MapControllers();
 
 app.UseSpa(spa =>
 {

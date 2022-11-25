@@ -6,7 +6,7 @@
 <Project>
   <PropertyGroup>
     <_PublishTargetUrl>D:\Users\mc\Documents\GitHub\Danmu.Server\DanMu\DanMu\bin\Release\net6.0\publish\linux64</_PublishTargetUrl>
-    <History>True|2022-10-07T12:31:38.2363177Z;</History>
+    <History>True|2022-10-27T05:54:31.5818293Z;True|2022-10-27T13:47:46.1192859+08:00;True|2022-10-08T16:30:01.0875627+08:00;True|2022-10-07T20:31:38.2363177+08:00;</History>
     <LastFailureDetails />
   </PropertyGroup>
 </Project>
