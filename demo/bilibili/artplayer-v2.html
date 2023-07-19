@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>demo</title>
+    <style>
+        .art-container {
+            width: 800px;
+            height: 450px;
+        }
+    </style>
+</head>
+
+<body>
+    <H2>protobuf 墙裂推荐</H2>
+    <div id="art0" class="art-container"></div>
+
+    <H2>JSON 不推荐</H2>
+    <div id="art1" class="art-container"></div>
+
+    <H2>XML 不推荐</H2>
+    <div id="art2" class="art-container"></div>
+
+    <script type="module">
+        import artplayer from "https://cdn.jsdelivr.net/npm/artplayer/+esm";
+        import artdm from "https://cdn.jsdelivr.net/npm/artplayer-plugin-danmuku/+esm";
+        import { DanMu } from "/assets/dm/dm.js";
+
+        const Artplayer = artplayer.default;
+        const artplayerPluginDanmuku = artdm.default;
+        const art0 = new Artplayer({
+            container: "#art0",
+            url: "/assets/video/s_720.mp4",
+            plugins: [
+                artplayerPluginDanmuku({
+                    danmuku: () =>
+                        fetch(
+                            "http://localhost:3567/api/bilibili/v2/BV1zt411t79A"
+                        )
+                            .then((res) => res.arrayBuffer())
+                            .then((buffer) => {
+                                let d =
+                                DanMu.Models.Protos.BiliBili.Dm.DmSegMobileReply.decode(
+                                        new Uint8Array(buffer)
+                                    );
+                                return d.elems.map((m) => ({
+                                    text: m.content,
+                                    time: m.progress / 1000,
+                                    color: "#" + m.color.toString(16),
+                                    border: false,
+                                    mode: m.mode === 4 || m.mode === 5 ? 1 : 0,
+                                }));
+                            }),
+                }),
+            ],
+        });
+
+        //不推荐
+        const art1 = new Artplayer({
+            container: "#art1",
+            url: "/assets/video/s_720.mp4",
+            plugins: [
+                artplayerPluginDanmuku({
+                    danmuku: () =>
+                        fetch(
+                            "http://localhost:3567/api/bilibili/v2/BV1zt411t79A.json"
+                        )
+                            .then((res) => res.json())
+                            .then((d) => {
+                                return d.elems.map((m) => ({
+                                    text: m.content,
+                                    time: m.progress / 1000,
+                                    color: "#" + m.color.toString(16),
+                                    border: false,
+                                    mode: m.mode === 4 || m.mode === 5 ? 1 : 0,
+                                }));
+                            }),
+                }),
+            ],
+        });
+
+        //不推荐
+        const art2 = new Artplayer({
+            container: "#art2",
+            url: "/assets/video/s_720.mp4",
+            plugins: [
+                artplayerPluginDanmuku({
+                    danmuku: "http://localhost:3567/api/bilibili/v2/BV1zt411t79A.xml"
+                }),
+            ],
+        });
+    </script>
+</body>

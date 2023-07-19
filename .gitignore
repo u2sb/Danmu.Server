@@ -400,4 +400,4 @@ FodyWeavers.xsd
 
 
 *.db
-wwwroot
+*.cache

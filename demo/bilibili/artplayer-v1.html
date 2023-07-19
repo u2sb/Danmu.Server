@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>demo</title>
+    <style>
+        .art-container {
+            width: 800px;
+            height: 450px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="art0" class="art-container"></div>
+
+    <script type="module">
+        import artplayer from "https://cdn.jsdelivr.net/npm/artplayer/+esm";
+        import artdm from "https://cdn.jsdelivr.net/npm/artplayer-plugin-danmuku/+esm";
+
+        const Artplayer = artplayer.default;
+        const artplayerPluginDanmuku = artdm.default;
+        const art0 = new Artplayer({
+            container: "#art0",
+            url: "/assets/video/s_720.mp4",
+            plugins: [
+                artplayerPluginDanmuku({
+                    danmuku: "http://localhost:3567/api/bilibili/v1/BV1zt411t79A.xml"
+                }),
+            ],
+        });
+    </script>
+</body>
