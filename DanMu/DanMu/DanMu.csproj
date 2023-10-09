@@ -7,15 +7,15 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Google.Protobuf" Version="3.23.4" />
-		<PackageReference Include="Grpc.Core.Api" Version="2.55.0" />
-		<PackageReference Include="Grpc.Tools" Version="2.56.2">
+		<PackageReference Include="Google.Protobuf" Version="3.24.3" />
+		<PackageReference Include="Grpc.Core.Api" Version="2.57.0" />
+		<PackageReference Include="Grpc.Tools" Version="2.58.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="LiteDB" Version="5.0.16" />
-		<PackageReference Include="LiteDB.Async" Version="0.1.6" />
-		<PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="8.0.0-preview.2.23153.2" />
+		<PackageReference Include="LiteDB" Version="5.0.17" />
+		<PackageReference Include="LiteDB.Async" Version="0.1.7" />
+		<PackageReference Include="MemoryPack" Version="1.9.16" />
 		<PackageReference Include="RestSharp" Version="110.2.0" />
 		<PackageReference Include="SBLib.WebApi.ProtobufFormatter" Version="0.0.7" />
 	</ItemGroup>

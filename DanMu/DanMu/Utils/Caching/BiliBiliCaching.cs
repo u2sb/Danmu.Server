@@ -4,33 +4,28 @@ using LiteDB.Async;
 
 namespace DanMu.Utils.Caching;
 
-public class BiliBiliCaching
+public class BiliBiliCaching(CachingContext context)
 {
-  private readonly ILiteStorageAsync<int> _dmCaching;
-  private readonly ILiteCollectionAsync<BiliBiliPagesCaching> _pagesCaching;
+  private readonly ILiteStorageAsync<int> _dmCaching = context.BiliDanMuCache;
+  private readonly ILiteCollectionAsync<BiliBiliPagesCaching> _pagesCaching = context.BiliBiliPagesCaching;
 
-  public BiliBiliCaching(CachingContext context)
-  {
-    _pagesCaching = context.BiliBiliPagesCaching;
-    _dmCaching = context.BiliDanMuCache;
-  }
 
   /// <summary>
-  ///   ¶ÁÈ¡»òÉèÖÃPages»º´æ
+  ///   è·å–æˆ–è®¾ç½®é¡µé¢ç¼“å­˜
   /// </summary>
-  /// <param name="key">¼ü</param>
+  /// <param name="key"></param>
   /// <param name="factory"></param>
-  /// <param name="expiration">¹ıÆÚÊ±¼ä</param>
+  /// <param name="expiration"></param>
   /// <returns></returns>
-  public async Task<BiliBiliPages?> PagesGetOrSetAsync(string key, Func<Task<BiliBiliPages?>> factory,
+  public async ValueTask<BiliBiliPages?> PagesGetOrSetAsync(string key, Func<Task<BiliBiliPages?>> factory,
     TimeSpan expiration)
   {
-    var a = await _pagesCaching.FindOneAsync(x => x.BvId == key);
+    var a = await _pagesCaching.FindOneAsync(x => x.BvId == key).ConfigureAwait(false);
 
     if (a is { Pages.Data.Length: > 0 } && a.DateTime.Add(expiration) > DateTime.UtcNow)
       return a.Pages;
 
-    var b = await factory.Invoke();
+    var b = await factory.Invoke().ConfigureAwait(false);
 
     if (b is { Code: 0 } and { Data.Length: > 0 })
       await _pagesCaching.UpsertAsync(new BiliBiliPagesCaching
@@ -39,24 +34,24 @@ public class BiliBiliCaching
         BvId = key,
         Pages = b,
         DateTime = DateTime.UtcNow
-      });
+      }).ConfigureAwait(false);
     return b;
   }
 
   /// <summary>
-  ///   »ñÈ¡»òÉèÖÃµ¯Ä»»º´æ
+  ///   è·å–æˆ–è®¾ç½®å¼¹å¹•ç¼“å­˜
   /// </summary>
-  /// <param name="key">¼ü</param>
+  /// <param name="key"></param>
   /// <param name="factory"></param>
-  /// <param name="expiration">¹ıÆÚÊ±¼ä</param>
+  /// <param name="expiration"></param>
   /// <returns></returns>
-  public async Task<Stream?> DmGetOrSetAsync(int key, Func<Task<Stream?>> factory,
+  public async ValueTask<Stream?> DmGetOrSetAsync(int key, Func<Task<Stream?>> factory,
     TimeSpan expiration)
   {
-    var a = await _dmCaching.FindByIdAsync(key);
+    var a = await _dmCaching.FindByIdAsync(key).ConfigureAwait(false);
     if (a != null && a.UploadDate.Add(expiration) > DateTime.UtcNow)
     {
-      var b = await _dmCaching.FindByIdAsync(key);
+      var b = await _dmCaching.FindByIdAsync(key).ConfigureAwait(false);
 
       if (b != null)
       {
@@ -66,11 +61,11 @@ public class BiliBiliCaching
       }
     }
 
-    var f = await factory.Invoke();
+    var f = await factory.Invoke().ConfigureAwait(false);
     if (f != null)
     {
       f.Position = 0;
-      await _dmCaching.UploadAsync(key, key.ToString(), f);
+      await _dmCaching.UploadAsync(key, key.ToString(), f).ConfigureAwait(false);
     }
 
     return f;

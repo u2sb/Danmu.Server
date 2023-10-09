@@ -10,13 +10,13 @@ public partial class BiliBiliHelp
   /// <param name="path"></param>
   /// <param name="queryParams"></param>
   /// <returns></returns>
-  private async Task<Stream?> GetBiliBiliDataRawAsync(string path, Dictionary<string, string>? queryParams)
+  private async ValueTask<Stream?> GetBiliBiliDataRawAsync(string path, Dictionary<string, string>? queryParams)
   {
     var request = new RestRequest(BaseUrl + path);
 
     if (queryParams != null)
       foreach (var item in queryParams)
         request.AddQueryParameter(item.Key, item.Value, false);
-    return await _restClient.DownloadStreamAsync(request);
+    return await restClient.DownloadStreamAsync(request).ConfigureAwait(false);
   }
 }

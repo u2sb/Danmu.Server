@@ -10,14 +10,14 @@ public partial class BiliBiliHelp
   /// </summary>
   /// <param name="bvid"></param>
   /// <returns></returns>
-  private async Task<BiliBiliPages?> GetBiliBiliPageAsync(string bvid)
+  private ValueTask<BiliBiliPages?> GetBiliBiliPageAsync(string bvid)
   {
     //使用缓存
-    return await _caching.PagesGetOrSetAsync(bvid, async () =>
+    return caching.PagesGetOrSetAsync(bvid, async () =>
     {
-      var a = await GetBiliBiliDataRawAsync(PageUrl, new Dictionary<string, string> { { "bvid", bvid } });
+      var a = await GetBiliBiliDataRawAsync(PageUrl, new Dictionary<string, string> { { "bvid", bvid } }).ConfigureAwait(false);
       if (a != null)
-        return await JsonSerializer.DeserializeAsync<BiliBiliPages>(a);
+        return await JsonSerializer.DeserializeAsync<BiliBiliPages>(a).ConfigureAwait(false);
       return null;
     }, TimeSpan.FromHours(_setting.PageCacheTime));
   }
@@ -28,9 +28,9 @@ public partial class BiliBiliHelp
   /// <param name="bvid"></param>
   /// <param name="p"></param>
   /// <returns></returns>
-  public async Task<BiliBiliPages.PagesData?> GetBiliBiliPagesDataAsync(string bvid, int p = 1)
+  public async ValueTask<BiliBiliPages.PagesData?> GetBiliBiliPagesDataAsync(string bvid, int p = 1)
   {
-    var a = await GetBiliBiliPageAsync(bvid);
+    var a = await GetBiliBiliPageAsync(bvid).ConfigureAwait(false);
     return GetBiliBiliPagesDataAsync(a, p);
   }
 
