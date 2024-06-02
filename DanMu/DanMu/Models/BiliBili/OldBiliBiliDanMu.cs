@@ -1,7 +1,5 @@
 using System.ComponentModel;
 using System.Xml.Serialization;
-using DanMu.Models.Protos.BiliBili.Dm;
-using Google.Protobuf.Collections;
 
 namespace DanMu.Models.BiliBili;
 
@@ -14,21 +12,21 @@ public class OldBiliBiliDanMu
   [XmlElement("chatserver")] public string ChatServer { get; set; } = "chat.bilibili.com";
   [XmlElement("chatid")] public int ChatId { get; set; }
   [XmlElement("mission")] public int Mission { get; set; }
-  [XmlElement("maxlimit")] public int MaxLimit { get; set; } = 1500;
+  [XmlElement("maxlimit")] public int MaxLimit { get; set; } = 9999;
   [XmlElement("state")] public int State { get; set; }
   [XmlElement("real_name")] public string RealName { get; set; } = "0";
   [XmlElement("source")] public string Source { get; set; } = "e-r";
   [XmlElement("d")] public D[]? D { get; set; }
 
-  public static explicit operator OldBiliBiliDanMu(RepeatedField<DanmakuElem>? data)
+  public static explicit operator OldBiliBiliDanMu(List<DanmakuElem>? data)
   {
     var d = data?.Select(s => new D
     {
       P =
-        $"{s.Progress / 1000f},{s.Mode},{s.Fontsize},{s.Color},{s.Ctime},{s.Pool},{s.MidHash},{s.Id}, {s.Weight}",
+        $"{s.Progress / 1000f},{s.Mode},{s.FontSize},{s.Color},{s.CTime},{s.Pool},{s.MidHash},{s.Id}, {s.Weight}",
       Value = s.Content
     }).ToArray();
-    return new OldBiliBiliDanMu { D = d, MaxLimit = data?.Count ?? 1500 };
+    return new OldBiliBiliDanMu { D = d, MaxLimit = data?.Count ?? 9999 };
   }
 }
 

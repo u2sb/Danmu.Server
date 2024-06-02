@@ -1,13 +1,10 @@
-using System.Text.Encodings.Web;
-using System.Text.Json;
-using System.Text.Unicode;
 using DanMu.Models.Settings;
 using DanMu.Utils.BiliBili;
 using DanMu.Utils.Caching;
 using DanMu.Utils.Program;
+using MemoryPack.AspNetCoreMvcFormatter;
 using Microsoft.AspNetCore.HttpOverrides;
 using RestSharp;
-using WebApiProtobufFormatter;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 
@@ -30,14 +27,10 @@ var services = builder.Services;
 if (!Directory.Exists(appSettings.DataBase.Directory))
   Directory.CreateDirectory(appSettings.DataBase.Directory);
 
-services.AddControllers().AddProtobufFormatters(opt =>
+services.AddControllers(options =>
 {
-  opt.OutputFormatterOptions.ContentTypeDefault = "application/x-protobuf";
-}).AddJsonOptions(opt =>
-{
-  opt.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-  opt.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-  opt.JsonSerializerOptions.Encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
+  options.InputFormatters.Insert(0, new MemoryPackInputFormatter());
+  options.OutputFormatters.Insert(0, new MemoryPackOutputFormatter(true));
 }).AddXmlSerializerFormatters();
 
 services.Configure<ForwardedHeadersOptions>(options =>

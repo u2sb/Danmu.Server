@@ -401,3 +401,5 @@ FodyWeavers.xsd
 
 *.db
 *.cache
+/DanMu/DanMu/*.pid
+/DanMu/DanMu/appsettings.Development.json

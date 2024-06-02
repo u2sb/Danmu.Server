@@ -1,20 +1,13 @@
 using DanMu.Models.BiliBili;
-using DanMu.Models.Protos.BiliBili.Dm;
 using DanMu.Models.Settings;
 using DanMu.Utils.Caching;
-using Google.Protobuf;
+using ProtoBuf;
 using RestSharp;
-using static WebApiProtobufFormatter.Utils.Serialize;
 
 namespace DanMu.Utils.BiliBili;
 
 public partial class BiliBiliHelp(AppSettings setting, RestClient restClient, BiliBiliCaching caching)
 {
-  // 接口
-  private const string BaseUrl = "https://api.bilibili.com";
-  private const string PageUrl = "/x/player/pagelist";
-  private const string DanMuUrl = "/x/v2/dm/list/seg.so";
-
   private readonly BiliBiliSetting _setting = setting.BiliBiliSetting;
 
 
@@ -24,13 +17,11 @@ public partial class BiliBiliHelp(AppSettings setting, RestClient restClient, Bi
   /// <param name="id"></param>
   /// <param name="p"></param>
   /// <returns></returns>
-  public async ValueTask<DanmakuElem[]?> GetGenericDanMuAsync(string id = "", int p = 1)
+  public async ValueTask<List<DanmakuElem>> GetGenericDanMuAsync(string id = "", int p = 1)
   {
     var a = await GetDanMuAsync(id, p).ConfigureAwait(false);
 
-    if (a != null) return a.Elems.ToArray();
-
-    return Array.Empty<DanmakuElem>();
+    return a != null ? a.Elems : [];
   }
 
 
@@ -44,7 +35,8 @@ public partial class BiliBiliHelp(AppSettings setting, RestClient restClient, Bi
   {
     var a = await GetDanMuStreamAsync(id, p).ConfigureAwait(false);
     a.Position = 0;
-    return Parse(a, DmSegMobileReply.Parser);
+
+    return Serializer.Deserialize<DmSegMobileReply>(a);
   }
 
 
@@ -65,7 +57,7 @@ public partial class BiliBiliHelp(AppSettings setting, RestClient restClient, Bi
         {
           var dm = await GetDanMuNoCacheAsync(page).ConfigureAwait(false);
           var ms = new MemoryStream();
-          dm.WriteTo(ms);
+          Serializer.Serialize(ms, dm);
           ms.Position = 0;
           return ms;
         },
@@ -107,14 +99,12 @@ public partial class BiliBiliHelp(AppSettings setting, RestClient restClient, Bi
     var danMuRawList = await Task.WhenAll(getDanMuTaskList).ConfigureAwait(false);
 
     var danMuSegList = danMuRawList.Where(w => w != null && w != Stream.Null)
-      .Select(s => Parse(s!, DmSegMobileReply.Parser));
+      .Select(Serializer.Deserialize<DmSegMobileReply>);
 
     var dmSeg = new DmSegMobileReply
     {
-      State = 0
+      Elems = danMuSegList.SelectMany(s => s.Elems).ToList()
     };
-
-    foreach (var danMuSeg in danMuSegList) dmSeg.Elems.Add(danMuSeg.Elems);
 
     if (dmSeg.Elems.Count > 0) return dmSeg;
 

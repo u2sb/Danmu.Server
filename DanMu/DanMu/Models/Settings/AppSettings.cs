@@ -2,9 +2,7 @@ namespace DanMu.Models.Settings;
 
 public class AppSettings
 {
-  public AppSettings()
-  {
-  }
+  public AppSettings() { }
 
   public AppSettings(IConfiguration configuration)
   {
@@ -62,4 +60,9 @@ public class BiliBiliSetting
   ///   弹幕缓存时间 单位h
   /// </summary>
   public int DanMuCacheTime { get; set; } = 6;
+
+  /// <summary>
+  ///   Cookie
+  /// </summary>
+  public string? Cookie { get; set; }
 }

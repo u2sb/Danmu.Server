@@ -5,7 +5,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 <Project>
   <PropertyGroup>
     <_PublishTargetUrl>D:\Users\mc\Documents\GitHub\Danmu.Server\DanMu\DanMu\bin\Release\net8.0\publish\</_PublishTargetUrl>
-    <History>True|2023-10-06T07:06:07.1504964Z;True|2023-10-06T14:25:17.1926552+08:00;</History>
+    <History>True|2024-06-02T09:31:46.9547780Z||;True|2024-06-02T17:29:20.5416759+08:00||;True|2024-05-12T21:16:36.1843915+08:00||;True|2024-05-12T20:49:34.5030333+08:00||;True|2023-10-06T15:06:07.1504964+08:00||;True|2023-10-06T14:25:17.1926552+08:00||;</History>
     <LastFailureDetails />
   </PropertyGroup>
 </Project>

@@ -5,7 +5,7 @@ namespace DanMu.Models.BiliBili;
 public class BiliBiliPages
 {
   [JsonPropertyName("code")] public int Code { get; set; } = -1;
-  [JsonPropertyName("data")] public PagesData[] Data { get; set; } = Array.Empty<PagesData>();
+  [JsonPropertyName("data")] public PagesData[] Data { get; set; } = [];
 
 
   public class PagesData

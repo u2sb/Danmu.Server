@@ -1,27 +1,33 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net9.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Google.Protobuf" Version="3.24.3" />
-		<PackageReference Include="Grpc.Core.Api" Version="2.57.0" />
-		<PackageReference Include="Grpc.Tools" Version="2.58.0">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="LiteDB" Version="5.0.17" />
+		<PackageReference Include="LiteDB" Version="5.0.19" />
 		<PackageReference Include="LiteDB.Async" Version="0.1.7" />
-		<PackageReference Include="MemoryPack" Version="1.9.16" />
-		<PackageReference Include="RestSharp" Version="110.2.0" />
-		<PackageReference Include="SBLib.WebApi.ProtobufFormatter" Version="0.0.7" />
+		<PackageReference Include="MemoryPack" Version="1.21.1" />
+		<PackageReference Include="MemoryPack.AspNetCoreMvcFormatter" Version="1.21.1" />
+		<PackageReference Include="protobuf-net" Version="3.2.30" />
+		<PackageReference Include="protobuf-net.BuildTools" Version="3.2.33">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="RestSharp" Version="111.2.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<Protobuf Include="Models\Protos\BiliBili\BiliBiliDm.proto" />
+		<CompilerVisibleProperty Include="MemoryPackGenerator_TypeScriptOutputDirectory" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="wwwroot\js\" />
+	</ItemGroup>
+	<PropertyGroup>
+		<MemoryPackGenerator_TypeScriptOutputDirectory>$(MSBuildProjectDirectory)\wwwroot\js\memorypack</MemoryPackGenerator_TypeScriptOutputDirectory>
+	</PropertyGroup>
 
 </Project>

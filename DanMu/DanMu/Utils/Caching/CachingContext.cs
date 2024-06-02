@@ -1,4 +1,4 @@
-﻿using DanMu.Models.BiliBili;
+using DanMu.Models.BiliBili;
 using DanMu.Models.Settings;
 using LiteDB.Async;
 

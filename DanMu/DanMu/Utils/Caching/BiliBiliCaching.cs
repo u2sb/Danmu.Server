@@ -30,7 +30,7 @@ public class BiliBiliCaching(CachingContext context)
     if (b is { Code: 0 } and { Data.Length: > 0 })
       await _pagesCaching.UpsertAsync(new BiliBiliPagesCaching
       {
-        _id = a?._id ?? ObjectId.NewObjectId(),
+        Id = a?.Id ?? ObjectId.NewObjectId(),
         BvId = key,
         Pages = b,
         DateTime = DateTime.UtcNow
