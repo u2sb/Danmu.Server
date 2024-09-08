@@ -14,22 +14,24 @@
 </head>
 
 <body>
-  <h2>protobuf 墙裂推荐</h2>
+  <h2>MemoryPack 推荐</h2>
   <div id="art0" class="art-container"></div>
 
-  <h2>JSON 不推荐</h2>
+  <h2>MessagePack 推荐</h2>
   <div id="art1" class="art-container"></div>
 
-  <script src="/assets/artplayer-plugin-danmuku.js"></script>
+  <h2>JSON 不推荐</h2>
+  <div id="art2" class="art-container"></div>
+
   <script type="module">
     import artplayer from "https://cdn.jsdelivr.net/npm/artplayer/+esm";
+    import artdm from "https://cdn.jsdelivr.net/npm/artplayer-plugin-danmuku/+esm";
+
     import { ArtPlayerDm } from "/assets/memorypack/ArtPlayerDm.js";
-    
-    // import artdm from "https://cdn.jsdelivr.net/npm/artplayer-plugin-danmuku@5.1.1/+esm";
-    // const artplayerPluginDanmuku = artdm.default;
-    
+    import { decodeAsync } from "https://cdn.jsdelivr.net/npm/@msgpack/msgpack/+esm";
+
     const Artplayer = artplayer.default;
-    
+    const artplayerPluginDanmuku = artdm.default;
 
     const bin = await fetch(
       "http://localhost:3567/api/art/bilibili/v2/BV1zt411t79A",
@@ -40,11 +42,9 @@
     const buffer = await bin.arrayBuffer();
     const d = ArtPlayerDm.deserializeArray(buffer);
 
-    console.log(d);
-
     const art0 = new Artplayer({
       container: "#art0",
-      url: "/assets/video/s_720.mp4",
+      url: "/assets/video/1214946209-1-192.mp4",
       plugins: [
         artplayerPluginDanmuku({
           danmuku: d,
@@ -52,10 +52,27 @@
       ],
     });
 
-    //不推荐
+    const mb = await fetch(
+      "http://localhost:3567/api/art/bilibili/v2/BV1zt411t79A",
+      {
+        headers: { "Content-Type": "application/x-msgpack" },
+      }
+    );
+    const md = await decodeAsync(mb.body);
     const art1 = new Artplayer({
       container: "#art1",
-      url: "/assets/video/s_720.mp4",
+      url: "/assets/video/1214946209-1-192.mp4",
+      plugins: [
+        artplayerPluginDanmuku({
+          danmuku: md,
+        }),
+      ],
+    });
+
+    //不推荐
+    const art2 = new Artplayer({
+      container: "#art2",
+      url: "/assets/video/1214946209-1-192.mp4",
       plugins: [
         artplayerPluginDanmuku({
           danmuku: () =>

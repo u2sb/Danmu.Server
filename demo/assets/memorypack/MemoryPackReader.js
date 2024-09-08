@@ -224,11 +224,13 @@ export class MemoryPackReader {
         if (!ok) {
             return null;
         }
-        const result = new Map();
+        // const result = new Map();
+        const result = new Object();
         for (var i = 0; i < length; i++) {
             const key = keyReader(this);
             const value = valueReader(this);
-            result.set(key, value);
+            // result.set(key, value);
+            result[key] = value;
         }
         return result;
     }

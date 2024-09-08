@@ -1,11 +1,13 @@
 using System.Text.Json.Serialization;
 using DanMu.Models.BiliBili;
 using MemoryPack;
+using MessagePack;
 
 namespace DanMu.Models.ArtPlayer;
 
 [MemoryPackable]
 [GenerateTypeScript]
+[MessagePackObject]
 public partial class ArtPlayerDm
 {
   /// <summary>
@@ -13,6 +15,7 @@ public partial class ArtPlayerDm
   /// </summary>
   [MemoryPackOrder(0)]
   [JsonPropertyName("text")]
+  [Key("text")]
   public string? Text { get; set; }
 
   /// <summary>
@@ -20,6 +23,7 @@ public partial class ArtPlayerDm
   /// </summary>
   [MemoryPackOrder(1)]
   [JsonPropertyName("model")]
+  [Key("model")]
   public int Model { get; set; }
 
   /// <summary>
@@ -27,6 +31,7 @@ public partial class ArtPlayerDm
   /// </summary>
   [MemoryPackOrder(2)]
   [JsonPropertyName("color")]
+  [Key("color")]
   public string? Color { get; set; } = "#FFF";
 
   /// <summary>
@@ -34,6 +39,7 @@ public partial class ArtPlayerDm
   /// </summary>
   [MemoryPackOrder(3)]
   [JsonPropertyName("time")]
+  [Key("time")]
   public int Time { get; set; }
 
   /// <summary>
@@ -41,6 +47,7 @@ public partial class ArtPlayerDm
   /// </summary>
   [MemoryPackOrder(4)]
   [JsonPropertyName("border")]
+  [Key("border")]
   public bool Border { get; set; }
 
   /// <summary>
@@ -48,6 +55,7 @@ public partial class ArtPlayerDm
   /// </summary>
   [MemoryPackOrder(5)]
   [JsonPropertyName("style")]
+  [Key("style")]
   public Dictionary<string, string>? Style { get; set; }
 
 

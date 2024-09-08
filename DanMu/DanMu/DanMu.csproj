@@ -11,12 +11,14 @@
 		<PackageReference Include="LiteDB.Async" Version="0.1.8" />
 		<PackageReference Include="MemoryPack" Version="1.21.1" />
 		<PackageReference Include="MemoryPack.AspNetCoreMvcFormatter" Version="1.21.1" />
+		<PackageReference Include="MessagePack" Version="3.0.134-beta" />
+		<PackageReference Include="MessagePack.AspNetCoreMvcFormatter" Version="3.0.134-beta" />
 		<PackageReference Include="protobuf-net" Version="3.2.30" />
 		<PackageReference Include="protobuf-net.BuildTools" Version="3.2.33">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="RestSharp" Version="111.2.0" />
+		<PackageReference Include="RestSharp" Version="112.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>

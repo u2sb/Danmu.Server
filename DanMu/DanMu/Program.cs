@@ -3,6 +3,8 @@ using DanMu.Utils.BiliBili;
 using DanMu.Utils.Caching;
 using DanMu.Utils.Program;
 using MemoryPack.AspNetCoreMvcFormatter;
+using MessagePack.AspNetCoreMvcFormatter;
+using MessagePack.Resolvers;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using RestSharp;
@@ -22,7 +24,6 @@ builder.WebHost.ConfigureKestrel((b, options) =>
     options.ListenUnixSocket(unixSocket, listenOptions => { listenOptions.Protocols = HttpProtocols.Http2; });
 });
 
-
 var services = builder.Services;
 
 if (!Directory.Exists(appSettings.DataBase.Directory))
@@ -30,8 +31,11 @@ if (!Directory.Exists(appSettings.DataBase.Directory))
 
 services.AddControllers(options =>
 {
-  options.InputFormatters.Insert(0, new MemoryPackInputFormatter());
-  options.OutputFormatters.Insert(0, new MemoryPackOutputFormatter(true));
+  options.InputFormatters.Add(new MemoryPackInputFormatter());
+  options.OutputFormatters.Add(new MemoryPackOutputFormatter(true));
+
+  options.InputFormatters.Add(new MessagePackInputFormatter(ContractlessStandardResolver.Options));
+  options.OutputFormatters.Add(new MessagePackOutputFormatter(ContractlessStandardResolver.Options));
 }).AddXmlSerializerFormatters();
 
 services.Configure<ForwardedHeadersOptions>(options =>
