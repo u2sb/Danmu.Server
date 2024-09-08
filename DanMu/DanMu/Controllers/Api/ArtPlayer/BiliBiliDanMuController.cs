@@ -1,3 +1,4 @@
+using System.Net.Mime;
 using DanMu.Models.ArtPlayer;
 using DanMu.Models.BiliBili;
 using DanMu.Utils.BiliBili;
@@ -5,10 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DanMu.Controllers.Api.ArtPlayer;
 
-[Route("/api/art/bilibili/")]
 [FormatFilter]
 [ApiController]
-public class BiliBiliDanMuController(BiliBiliHelp bilibili)
+[Route("/api/art/bilibili/")]
+public class BiliBiliDanMuController(BiliBiliHelp bilibili) : ControllerBase
 {
   #region MemoryPack弹幕
 
@@ -28,12 +29,12 @@ public class BiliBiliDanMuController(BiliBiliHelp bilibili)
 
   [HttpGet("v2/{bvid}.json")]
   [HttpGet("v2/{bvid}/{p}.json")]
-  [Produces("application/json")]
+  [Produces(MediaTypeNames.Application.Json)]
   public async ValueTask<List<ArtPlayerDm>> GetJsonDanMuAsync(string bvid, int p = 1)
   {
     var dm = await bilibili.GetDanMuAsync(bvid, p);
 
-    return  ArtPlayerDm.FromBilibiliDanMu(dm?.Elems);
+    return ArtPlayerDm.FromBilibiliDanMu(dm?.Elems);
   }
 
   #endregion
@@ -44,7 +45,7 @@ public class BiliBiliDanMuController(BiliBiliHelp bilibili)
   [HttpGet("v1/{bvid}/{p}")]
   [HttpGet("v1/{bvid}.xml")]
   [HttpGet("v1/{bvid}/{p}.xml")]
-  [Produces("text/xml")]
+  [Produces(MediaTypeNames.Application.Xml)]
   public async ValueTask<OldBiliBiliDanMu> GetXmlDanMuAsync(string bvid, int p = 1)
   {
     var a = await bilibili.GetDanMuAsync(bvid, p).ConfigureAwait(false);
@@ -52,7 +53,7 @@ public class BiliBiliDanMuController(BiliBiliHelp bilibili)
   }
 
   [HttpGet("v1")]
-  [Produces("text/xml")]
+  [Produces(MediaTypeNames.Application.Xml)]
   public async ValueTask<OldBiliBiliDanMu> GetDanXmlMuFromQueryAsync([FromQuery] string? bvid, [FromQuery] int p = 1)
   {
     if (string.IsNullOrWhiteSpace(bvid)) return new OldBiliBiliDanMu();

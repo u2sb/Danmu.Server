@@ -1,56 +1,102 @@
 <!DOCTYPE html>
 
 <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>demo</title>
-    <style>
-        .dp-container {
-            width: 800px;
-            height: 450px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>demo</title>
+  <style>
+    .dp-container {
+      width: 800px;
+      height: 450px;
+    }
+  </style>
 </head>
 
 <body>
-    <H2>protobuf 墙裂推荐</H2>
-    <div id="dp0" class="dp-container"></div>
+  <h2>protobuf 墙裂推荐</h2>
+  <div id="dp0" class="dp-container"></div>
 
-    <script type="module">
-        import DPlayer from 'https://cdn.jsdelivr.net/npm/dplayer/+esm'
-        import { DanMu } from "/assets/dm/dm.js";
+  <h2>json 不推荐</h2>
+  <div id="dp1" class="dp-container"></div>
 
-        const danmu = await fetch(
-            "http://localhost:3567/api/bilibili/v2/BV1zt411t79A"
-        )
-            .then((res) => res.arrayBuffer())
-            .then((buffer) => {
-                let d =
-                    DanMu.Models.Protos.BiliBili.Dm.DmSegMobileReply.decode(
-                        new Uint8Array(buffer)
-                    );
-                let data = d.elems.map((m) => (
-                    [m.progress / 1000, (m.mode === 4 ? 2 : (m.mode === 5 ? 1 : 0)), m.color, "", m.content]
-                ));
+  <script type="module">
+    import DPlayer from "https://cdn.jsdelivr.net/npm/dplayer/+esm";
+    import { DanMu } from "/assets/dm/dm.js";
 
-                return {
-                    code: 0,
-                    data
-                }
-            });
-        const db = URL.createObjectURL(new Blob([JSON.stringify(danmu)], { type: 'application/json' }));
+    const danmu0 = await fetch(
+      "http://localhost:3567/api/bilibili/v2/BV1zt411t79A"
+    )
+      .then((res) => res.arrayBuffer())
+      .then((buffer) => {
+        let d = DanMu.Models.Protos.BiliBili.Dm.DmSegMobileReply.decode(
+          new Uint8Array(buffer)
+        );
+        let data = d.elems.map((m) => [
+          m.progress / 1000,
+          m.mode === 4 ? 2 : m.mode === 5 ? 1 : 0,
+          m.color,
+          "",
+          m.content,
+        ]);
 
-        const dp = new DPlayer({
-            container: document.getElementById("dp0"),
-            video: {
-                url: "/assets/video/s_720.mp4",
-            },
-            danmaku: {
-                api: "/assets/dm/dp/",
-                addition: [db],
-            },
-        });
+        return {
+          code: 0,
+          data,
+        };
+      });
 
-    </script>
+    const db0 = URL.createObjectURL(
+      new Blob([JSON.stringify(danmu0)], { type: "application/json" })
+    );
+    
+
+    const dp0 = new DPlayer({
+      container: document.getElementById("dp0"),
+      video: {
+        url: "/assets/video/s_720.mp4",
+      },
+      danmaku: {
+        id: "1",
+        api: "/assets/dm/dp/",
+        addition: [db0],
+      },
+    });
+
+
+    const danmu1 = await fetch(
+      "http://localhost:3567/api/bilibili/v2/BV1zt411t79A.json"
+    )
+      .then((res) => res.json())
+      .then((d) => {
+        let data = d.elems.map((m) => [
+          m.progress / 1000,
+          m.mode === 4 ? 2 : m.mode === 5 ? 1 : 0,
+          m.color,
+          "",
+          m.content,
+        ]);
+
+        return {
+          code: 0,
+          data,
+        };
+      });
+
+      const db1 = URL.createObjectURL(
+      new Blob([JSON.stringify(danmu1)], { type: "application/json" })
+    );
+
+    const dp1 = new DPlayer({
+      container: document.getElementById("dp1"),
+      video: {
+        url: "/assets/video/s_720.mp4",
+      },
+      danmaku: {
+        id: "1",
+        api: "/assets/dm/dp/",
+        addition: [db1],
+      },
+    });
+  </script>
 </body>

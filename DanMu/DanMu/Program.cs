@@ -4,6 +4,7 @@ using DanMu.Utils.Caching;
 using DanMu.Utils.Program;
 using MemoryPack.AspNetCoreMvcFormatter;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using RestSharp;
 
 var builder = WebApplication.CreateSlimBuilder(args);
@@ -15,10 +16,10 @@ builder.WebHost.ConfigureKestrel((b, options) =>
   var unixSocket = appSettings?.UnixSocket;
   var port = appSettings?.Port ?? 0;
   if (port > 0)
-    options.ListenLocalhost(port);
+    options.ListenLocalhost(port, listenOptions => { listenOptions.Protocols = HttpProtocols.Http1AndHttp2AndHttp3; });
 
   if (!string.IsNullOrWhiteSpace(unixSocket))
-    options.ListenUnixSocket(unixSocket);
+    options.ListenUnixSocket(unixSocket, listenOptions => { listenOptions.Protocols = HttpProtocols.Http2; });
 });
 
 
@@ -48,6 +49,8 @@ services.AddCors(options =>
     .AllowAnyHeader());
 });
 
+services.AddAuthentication();
+
 services.AddSingleton(appSettings);
 services.AddSingleton<RestClient>();
 services.AddSingleton<CachingContext>();
@@ -64,7 +67,8 @@ app.UseDefaultFiles();
 app.UseStaticFiles();
 
 app.UseForwardedHeaders();
-app.UseRouting();
+
+app.UseAuthentication();
 
 app.MapControllers();
 
