@@ -2,7 +2,7 @@
 
 ## 公告
 
-> 使用旧版服务器的，请尽快迁移到新版服务器，相关 API 更改可以看[文档](https://www.u2sb.com/pages/15f418/)
+> 使用旧版服务器的，请尽快迁移到新版服务器，相关 API 更改可以看[文档](https://www.u2sb.com/OpenSw/Danmu.Server/)
 
 ## 文档
 
@@ -20,7 +20,7 @@
 
 ## 公共服务
 
-见[文档](https://www.u2sb.com/pages/15f418/)
+见[文档](https://www.u2sb.com/OpenSw/Danmu.Server/)
 
 > 公共服务器是我个人维护的，存在不稳定因素，随时可能会停止服务器，以后也有可能清理弹幕，请勿用于生产环境。
 
