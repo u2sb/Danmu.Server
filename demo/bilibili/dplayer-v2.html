@@ -22,80 +22,43 @@
 
   <script type="module">
     import DPlayer from "https://cdn.jsdelivr.net/npm/dplayer/+esm";
-    import { DanMu } from "/assets/dm/dm.js";
+    import { decodeAsync } from "https://cdn.jsdelivr.net/npm/@msgpack/msgpack/+esm";
 
-    const danmu0 = await fetch(
-      "http://localhost:3567/api/bilibili/v2/BV1zt411t79A"
-    )
-      .then((res) => res.arrayBuffer())
-      .then((buffer) => {
-        let d = DanMu.Models.Protos.BiliBili.Dm.DmSegMobileReply.decode(
-          new Uint8Array(buffer)
-        );
-        let data = d.elems.map((m) => [
-          m.progress / 1000,
-          m.mode === 4 ? 2 : m.mode === 5 ? 1 : 0,
-          m.color,
-          "",
-          m.content,
-        ]);
-
-        return {
-          code: 0,
-          data,
-        };
-      });
+    const mb = await fetch(
+      "http://localhost:3567/api/dp/bilibili/v3/BV1JP41167xK",
+      {
+        headers: { "Content-Type": "application/x-msgpack" },
+      }
+    );
+    const md = await decodeAsync(mb.body);
 
     const db0 = URL.createObjectURL(
-      new Blob([JSON.stringify(danmu0)], { type: "application/json" })
+      new Blob([JSON.stringify(md)], { type: "application/json" })
     );
-    
 
     const dp0 = new DPlayer({
       container: document.getElementById("dp0"),
       video: {
-        url: "/assets/video/s_720.mp4",
+        url: "/assets/video/1214946209-1-192.mp4",
       },
       danmaku: {
         id: "1",
-        api: "/assets/dm/dp/",
+        api: "http://localhost:3567/api/dp/bilibili/",
         addition: [db0],
       },
     });
 
-
-    const danmu1 = await fetch(
-      "http://localhost:3567/api/bilibili/v2/BV1zt411t79A.json"
-    )
-      .then((res) => res.json())
-      .then((d) => {
-        let data = d.elems.map((m) => [
-          m.progress / 1000,
-          m.mode === 4 ? 2 : m.mode === 5 ? 1 : 0,
-          m.color,
-          "",
-          m.content,
-        ]);
-
-        return {
-          code: 0,
-          data,
-        };
-      });
-
-      const db1 = URL.createObjectURL(
-      new Blob([JSON.stringify(danmu1)], { type: "application/json" })
-    );
-
     const dp1 = new DPlayer({
       container: document.getElementById("dp1"),
       video: {
-        url: "/assets/video/s_720.mp4",
+        url: "/assets/video/1214946209-1-192.mp4",
       },
       danmaku: {
         id: "1",
-        api: "/assets/dm/dp/",
-        addition: [db1],
+        api: "http://localhost:3567/api/dp/bilibili/",
+        addition: [
+          "http://localhost:3567/api/dp/bilibili/v3/BV1JP41167xK.json",
+        ],
       },
     });
   </script>

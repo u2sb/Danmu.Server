@@ -1,25 +1,28 @@
 using DanMu.Models.BiliBili;
 using DanMu.Models.Settings;
 using DanMu.Utils.Caching;
+using Flurl.Http;
+using Flurl.Http.Configuration;
 using ProtoBuf;
-using RestSharp;
 
 namespace DanMu.Utils.BiliBili;
 
-public partial class BiliBiliHelp(AppSettings setting, RestClient restClient, BiliBiliCaching caching)
+public partial class BiliBiliHelp(AppSettings setting, IFlurlClientCache flurlClientCache, BiliBiliCaching caching)
 {
+  private readonly IFlurlClient _flurlClient = flurlClientCache.Get(nameof(BiliBiliHelp));
   private readonly BiliBiliSetting _setting = setting.BiliBiliSetting;
 
 
   /// <summary>
   ///   获取B站弹幕 并返回通用弹幕格式
   /// </summary>
-  /// <param name="id"></param>
+  /// <param name="bvid"></param>
   /// <param name="p"></param>
+  /// <param name="ct"></param>
   /// <returns></returns>
-  public async ValueTask<List<DanmakuElem>> GetGenericDanMuAsync(string id = "", int p = 1)
+  public async ValueTask<List<DanmakuElem>> GetGenericDanMuAsync(string bvid, int p = 1, CancellationToken ct = default)
   {
-    var a = await GetDanMuAsync(id, p).ConfigureAwait(false);
+    var a = await GetDanMuAsync(bvid, p, ct).ConfigureAwait(false);
 
     return a != null ? a.Elems : [];
   }
@@ -30,13 +33,11 @@ public partial class BiliBiliHelp(AppSettings setting, RestClient restClient, Bi
   /// </summary>
   /// <param name="id"></param>
   /// <param name="p"></param>
+  /// <param name="ct"></param>
   /// <returns></returns>
-  public async ValueTask<DmSegMobileReply?> GetDanMuAsync(string id = "", int p = 1)
+  public async ValueTask<DmSegMobileReply?> GetDanMuAsync(string id, int p = 1, CancellationToken ct = default)
   {
-    var a = await GetDanMuStreamAsync(id, p).ConfigureAwait(false);
-    a.Position = 0;
-
-    return Serializer.Deserialize<DmSegMobileReply>(a);
+    return await GetDanMuStreamAsync(id, p, ct).ConfigureAwait(false);
   }
 
 
@@ -45,32 +46,20 @@ public partial class BiliBiliHelp(AppSettings setting, RestClient restClient, Bi
   /// </summary>
   /// <param name="bvid"></param>
   /// <param name="p"></param>
+  /// <param name="ct"></param>
   /// <returns></returns>
-  public async ValueTask<Stream> GetDanMuStreamAsync(string bvid = "", int p = 1)
+  private async ValueTask<DmSegMobileReply?> GetDanMuStreamAsync(string bvid, int p = 1,
+    CancellationToken ct = default)
   {
-    var page = await GetBiliBiliPagesDataAsync(bvid, p).ConfigureAwait(false);
+    var page = await GetBiliBiliPagesDataAsync(bvid, p, ct).ConfigureAwait(false);
 
-    if (page != null && page.Cid != 0)
-    {
-      var a = await caching.DmGetOrSetAsync(page.Cid,
-        async () =>
-        {
-          var dm = await GetDanMuNoCacheAsync(page).ConfigureAwait(false);
-          var ms = new MemoryStream();
-          Serializer.Serialize(ms, dm);
-          ms.Position = 0;
-          return ms;
-        },
-        TimeSpan.FromHours(_setting.DanMuCacheTime)).ConfigureAwait(false);
+    if (page is not { Cid: > 0 }) return null;
 
-      if (a != null)
-      {
-        a.Position = 0;
-        return a;
-      }
-    }
+    var a = await caching.DmGetOrSetAsync(page.Cid,
+      async ct1 => await GetDanMuNoCacheAsync(page, ct1).ConfigureAwait(false),
+      TimeSpan.FromHours(_setting.DanMuCacheTime), ct).ConfigureAwait(false);
 
-    return Stream.Null;
+    return a;
   }
 
 
@@ -78,11 +67,13 @@ public partial class BiliBiliHelp(AppSettings setting, RestClient restClient, Bi
   ///   获取B站弹幕无缓存
   /// </summary>
   /// <param name="page"></param>
+  /// <param name="ct"></param>
   /// <returns></returns>
-  private async ValueTask<DmSegMobileReply?> GetDanMuNoCacheAsync(BiliBiliPages.PagesData page)
+  private async ValueTask<DmSegMobileReply?> GetDanMuNoCacheAsync(BiliBiliPages.PagesData page,
+    CancellationToken ct = default)
   {
     var d = page.Duration / 360 + 1;
-    var getDanMuTaskList = new List<Task<Stream?>>();
+    var getDanMuTaskList = new List<Task<Stream>>();
 
     for (var i = 0; i < d; i++)
     {
@@ -91,14 +82,14 @@ public partial class BiliBiliHelp(AppSettings setting, RestClient restClient, Bi
         { "type", "1" /* 1 视频  2 漫画*/ },
         { "oid", page.Cid.ToString() },
         { "segment_index", (i + 1).ToString() }
-      });
+      }, ct);
 
       getDanMuTaskList.Add(a.AsTask());
     }
 
     var danMuRawList = await Task.WhenAll(getDanMuTaskList).ConfigureAwait(false);
 
-    var danMuSegList = danMuRawList.Where(w => w != null && w != Stream.Null)
+    var danMuSegList = danMuRawList.Where(w => w != Stream.Null)
       .Select(Serializer.Deserialize<DmSegMobileReply>);
 
     var dmSeg = new DmSegMobileReply
@@ -106,8 +97,6 @@ public partial class BiliBiliHelp(AppSettings setting, RestClient restClient, Bi
       Elems = danMuSegList.SelectMany(s => s.Elems).ToList()
     };
 
-    if (dmSeg.Elems.Count > 0) return dmSeg;
-
-    return null;
+    return dmSeg.Elems.Count > 0 ? dmSeg : null;
   }
 }

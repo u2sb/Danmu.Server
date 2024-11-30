@@ -7,18 +7,17 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="LiteDB" Version="5.0.21" />
-		<PackageReference Include="LiteDB.Async" Version="0.1.8" />
-		<PackageReference Include="MemoryPack" Version="1.21.1" />
-		<PackageReference Include="MemoryPack.AspNetCoreMvcFormatter" Version="1.21.1" />
-		<PackageReference Include="MessagePack" Version="3.0.134-beta" />
-		<PackageReference Include="MessagePack.AspNetCoreMvcFormatter" Version="3.0.134-beta" />
-		<PackageReference Include="protobuf-net" Version="3.2.30" />
+		<PackageReference Include="Flurl" Version="4.0.0" />
+		<PackageReference Include="Flurl.Http" Version="4.0.2" />
+		<PackageReference Include="MessagePack" Version="3.0.238-rc.1" />
+		<PackageReference Include="MessagePack.AspNetCoreMvcFormatter" Version="3.0.238-rc.1" />
+		<PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="9.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.0" />
+		<PackageReference Include="protobuf-net" Version="3.2.45" />
 		<PackageReference Include="protobuf-net.BuildTools" Version="3.2.33">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="RestSharp" Version="112.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -26,7 +25,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="wwwroot\js\" />
+	  <Folder Include="wwwroot\assets\" />
 	</ItemGroup>
 	<PropertyGroup>
 		<MemoryPackGenerator_TypeScriptOutputDirectory>$(MSBuildProjectDirectory)\wwwroot\js\memorypack</MemoryPackGenerator_TypeScriptOutputDirectory>

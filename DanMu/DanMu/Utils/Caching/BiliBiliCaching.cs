@@ -1,14 +1,15 @@
+using System.Buffers;
+using System.Text.Json;
 using DanMu.Models.BiliBili;
-using LiteDB;
-using LiteDB.Async;
+using Microsoft.EntityFrameworkCore;
+using ProtoBuf;
 
 namespace DanMu.Utils.Caching;
 
 public class BiliBiliCaching(CachingContext context)
 {
-  private readonly ILiteStorageAsync<int> _dmCaching = context.BiliDanMuCache;
-  private readonly ILiteCollectionAsync<BiliBiliPagesCaching> _pagesCaching = context.BiliBiliPagesCaching;
-
+  private readonly DbSet<BiliBiliDmCaching> _dmCaching = context.BiliBiliDmCaching;
+  private readonly DbSet<BiliBiliPagesCaching> _pagesCaching = context.BiliBiliPagesCaching;
 
   /// <summary>
   ///   获取或设置页面缓存
@@ -16,26 +17,48 @@ public class BiliBiliCaching(CachingContext context)
   /// <param name="key"></param>
   /// <param name="factory"></param>
   /// <param name="expiration"></param>
+  /// <param name="ct"></param>
   /// <returns></returns>
-  public async ValueTask<BiliBiliPages?> PagesGetOrSetAsync(string key, Func<Task<BiliBiliPages?>> factory,
-    TimeSpan expiration)
+  public async ValueTask<BiliBiliPages?> PagesGetOrSetAsync(string key,
+    Func<CancellationToken, ValueTask<Stream>> factory,
+    TimeSpan expiration, CancellationToken ct = default)
   {
-    var a = await _pagesCaching.FindOneAsync(x => x.BvId == key).ConfigureAwait(false);
+    var a = await _pagesCaching.FirstOrDefaultAsync(x => x.BvId == key, ct)
+      .ConfigureAwait(false);
 
-    if (a is { Pages.Data.Length: > 0 } && a.DateTime.Add(expiration) > DateTime.UtcNow)
-      return a.Pages;
+    if (a != null && a.DateTime.Add(expiration) > DateTime.UtcNow)
+    {
+      await using var ms = new MemoryStream(a.PagesData);
+      return await JsonSerializer.DeserializeAsync<BiliBiliPages>(ms, cancellationToken: ct);
+    }
 
-    var b = await factory.Invoke().ConfigureAwait(false);
+    var f = await factory.Invoke(ct).ConfigureAwait(false);
+    if (f == Stream.Null) return null;
 
-    if (b is { Code: 0 } and { Data.Length: > 0 })
-      await _pagesCaching.UpsertAsync(new BiliBiliPagesCaching
+    var pages = await JsonSerializer.DeserializeAsync<BiliBiliPages>(f, cancellationToken: ct);
+
+    await using var ms1 = new MemoryStream();
+    await JsonSerializer.SerializeAsync(ms1, pages, cancellationToken: ct);
+
+    if (a == null)
+    {
+      var bpc = new BiliBiliPagesCaching
       {
-        Id = a?.Id ?? ObjectId.NewObjectId(),
         BvId = key,
-        Pages = b,
+        PagesData = ms1.ToArray(),
         DateTime = DateTime.UtcNow
-      }).ConfigureAwait(false);
-    return b;
+      };
+      _pagesCaching.Add(bpc);
+    }
+    else
+    {
+      a.PagesData = ms1.ToArray();
+      a.DateTime = DateTime.UtcNow;
+    }
+
+    await context.SaveChangesAsync(ct);
+
+    return pages;
   }
 
   /// <summary>
@@ -44,29 +67,41 @@ public class BiliBiliCaching(CachingContext context)
   /// <param name="key"></param>
   /// <param name="factory"></param>
   /// <param name="expiration"></param>
+  /// <param name="ct"></param>
   /// <returns></returns>
-  public async ValueTask<Stream?> DmGetOrSetAsync(int key, Func<Task<Stream?>> factory,
-    TimeSpan expiration)
+  public async ValueTask<DmSegMobileReply?> DmGetOrSetAsync(int key,
+    Func<CancellationToken, ValueTask<DmSegMobileReply?>> factory,
+    TimeSpan expiration, CancellationToken ct = default)
   {
-    var a = await _dmCaching.FindByIdAsync(key).ConfigureAwait(false);
-    if (a != null && a.UploadDate.Add(expiration) > DateTime.UtcNow)
-    {
-      var b = await _dmCaching.FindByIdAsync(key).ConfigureAwait(false);
+    var a = await _dmCaching.FirstOrDefaultAsync(x => x.Cid == key, ct)
+      .ConfigureAwait(false);
+    if (a != null && a.DateTime.Add(expiration) > DateTime.UtcNow)
+      return Serializer.Deserialize<DmSegMobileReply>(a.Data.AsSpan());
 
-      if (b != null)
+    var f = await factory.Invoke(ct).ConfigureAwait(false);
+    if (f is not { Elems.Count: > 0 }) return f;
+
+    var buffer = new ArrayBufferWriter<byte>();
+    Serializer.Serialize(buffer, f);
+    var b = buffer.WrittenSpan;
+
+    if (a == null)
+    {
+      var bdc = new BiliBiliDmCaching
       {
-        var ms = new MemoryStream();
-        b.CopyTo(ms);
-        return ms;
-      }
+        Cid = key,
+        Data = b.ToArray(),
+        DateTime = DateTime.UtcNow
+      };
+      _dmCaching.Add(bdc);
+    }
+    else
+    {
+      a.Data = b.ToArray();
+      a.DateTime = DateTime.UtcNow;
     }
 
-    var f = await factory.Invoke().ConfigureAwait(false);
-    if (f != null)
-    {
-      f.Position = 0;
-      await _dmCaching.UploadAsync(key, key.ToString(), f).ConfigureAwait(false);
-    }
+    await context.SaveChangesAsync(ct);
 
     return f;
   }

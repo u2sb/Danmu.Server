@@ -14,9 +14,6 @@
 </head>
 
 <body>
-  <h2>MemoryPack 推荐</h2>
-  <div id="art0" class="art-container"></div>
-
   <h2>MessagePack 推荐</h2>
   <div id="art1" class="art-container"></div>
 
@@ -26,45 +23,22 @@
   <script type="module">
     import artplayer from "https://cdn.jsdelivr.net/npm/artplayer/+esm";
     import artdm from "https://cdn.jsdelivr.net/npm/artplayer-plugin-danmuku/+esm";
-
-    import { ArtPlayerDm } from "/assets/memorypack/ArtPlayerDm.js";
-    import { decodeAsync } from "https://cdn.jsdelivr.net/npm/@msgpack/msgpack/+esm";
+    import { getDanMuAsync } from "/assets/dm/artMsgpackDm.js";
 
     const Artplayer = artplayer.default;
     const artplayerPluginDanmuku = artdm.default;
 
-    const bin = await fetch(
-      "http://localhost:3567/api/art/bilibili/v2/BV1zt411t79A",
-      {
-        headers: { "Content-Type": "application/x-memorypack" },
-      }
-    );
-    const buffer = await bin.arrayBuffer();
-    const d = ArtPlayerDm.deserializeArray(buffer);
-
-    const art0 = new Artplayer({
-      container: "#art0",
-      url: "/assets/video/1214946209-1-192.mp4",
-      plugins: [
-        artplayerPluginDanmuku({
-          danmuku: d,
-        }),
-      ],
-    });
-
-    const mb = await fetch(
-      "http://localhost:3567/api/art/bilibili/v2/BV1zt411t79A",
-      {
-        headers: { "Content-Type": "application/x-msgpack" },
-      }
-    );
-    const md = await decodeAsync(mb.body);
     const art1 = new Artplayer({
       container: "#art1",
       url: "/assets/video/1214946209-1-192.mp4",
+      fullscreen: true,
+      fullscreenWeb: true,
       plugins: [
         artplayerPluginDanmuku({
-          danmuku: md,
+          danmuku: () =>
+            getDanMuAsync(
+              "http://localhost:3567/api/art/bilibili/v2/BV1JP41167xK"
+            ),
         }),
       ],
     });
@@ -73,11 +47,13 @@
     const art2 = new Artplayer({
       container: "#art2",
       url: "/assets/video/1214946209-1-192.mp4",
+      fullscreen: true,
+      fullscreenWeb: true,
       plugins: [
         artplayerPluginDanmuku({
           danmuku: () =>
             fetch(
-              "http://localhost:3567/api/art/bilibili/v2/BV1zt411t79A.json"
+              "http://localhost:3567/api/art/bilibili/v2/BV1JP41167xK.json"
             ).then((res) => res.json()),
         }),
       ],

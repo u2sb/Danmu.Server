@@ -2,7 +2,9 @@ namespace DanMu.Models.Settings;
 
 public class AppSettings
 {
-  public AppSettings() { }
+  public AppSettings()
+  {
+  }
 
   public AppSettings(IConfiguration configuration)
   {
@@ -12,29 +14,29 @@ public class AppSettings
   /// <summary>
   ///   UnixSocket
   /// </summary>
-  public string UnixSocket { get; set; } = string.Empty;
+  public string UnixSocket { get; init; } = string.Empty;
 
   /// <summary>
   ///   Port
   /// </summary>
-  public int Port { get; set; } = 3567;
+  public int Port { get; init; } = 3567;
 
-  public string PidFile { get; set; } = "./DanMu.pid";
+  public string PidFile { get; init; } = "./DanMu.pid";
 
   /// <summary>
   ///   跨域设置
   /// </summary>
-  public string[] WithOrigins { get; set; } = Array.Empty<string>();
+  public string[] WithOrigins { get; init; } = [];
 
   /// <summary>
   ///   数据库设置
   /// </summary>
-  public DataBase DataBase { get; set; } = new();
+  public DataBase DataBase { get; init; } = new();
 
   /// <summary>
   ///   BiliBili弹幕解析相关设置
   /// </summary>
-  public BiliBiliSetting BiliBiliSetting { get; set; } = new();
+  public BiliBiliSetting BiliBiliSetting { get; init; } = new();
 }
 
 /// <summary>
@@ -42,8 +44,10 @@ public class AppSettings
 /// </summary>
 public class DataBase
 {
-  public string Directory { get; set; } = "DataBase";
-  public string CachingDb { get; set; } = "Caching.cache";
+  public string Directory { get; init; } = "DataBase";
+  public string CachingDb { get; init; } = "Caching.cache";
+  
+  public int PoolSize { get; init; } = 8;
 }
 
 /// <summary>
@@ -54,15 +58,15 @@ public class BiliBiliSetting
   /// <summary>
   ///   Cid缓存时间 单位h
   /// </summary>
-  public int PageCacheTime { get; set; } = 8640;
+  public int PageCacheTime { get; init; } = 8640;
 
   /// <summary>
   ///   弹幕缓存时间 单位h
   /// </summary>
-  public int DanMuCacheTime { get; set; } = 6;
+  public int DanMuCacheTime { get; init; } = 6;
 
   /// <summary>
   ///   Cookie
   /// </summary>
-  public string? Cookie { get; set; }
+  public string? Cookie { get; init; }
 }

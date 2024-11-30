@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using DanMu.Models.Settings;
 using DanMu.Utils.Caching;
 
@@ -14,22 +13,24 @@ public class SbLife(AppSettings appSettings, CachingContext cachingContext)
   }
 
 
-  public void OnStarted()
+  private void OnStarted()
   {
     // PID文件
     if (!string.IsNullOrWhiteSpace(appSettings.PidFile))
     {
-      var pid = Process.GetCurrentProcess().Id;
+      var pid = Environment.ProcessId;
       File.WriteAllText(appSettings.PidFile, pid.ToString());
     }
+
+    // 数据库确保表被创建
+    cachingContext.Database.EnsureCreated();
   }
 
-  public void OnStopping()
+  private void OnStopping()
   {
-    cachingContext.Database.Dispose();
   }
 
-  public void OnStopped()
+  private void OnStopped()
   {
     // 删除文件
     if (File.Exists(appSettings.PidFile)) File.Delete(appSettings.PidFile);

@@ -1,4 +1,3 @@
-using System.Text.Json;
 using DanMu.Models.BiliBili;
 
 namespace DanMu.Utils.BiliBili;
@@ -9,17 +8,14 @@ public partial class BiliBiliHelp
   ///   获取视频详细
   /// </summary>
   /// <param name="bvid"></param>
+  /// <param name="ct"></param>
   /// <returns></returns>
-  private ValueTask<BiliBiliPages?> GetBiliBiliPageAsync(string bvid)
+  private async ValueTask<BiliBiliPages?> GetBiliBiliPageAsync(string bvid, CancellationToken ct = default)
   {
     //使用缓存
-    return caching.PagesGetOrSetAsync(bvid, async () =>
-    {
-      var a = await GetBiliBiliDataRawAsync(PageUrl, new Dictionary<string, string> { { "bvid", bvid } }).ConfigureAwait(false);
-      if (a != null)
-        return await JsonSerializer.DeserializeAsync<BiliBiliPages>(a).ConfigureAwait(false);
-      return null;
-    }, TimeSpan.FromHours(_setting.PageCacheTime));
+    return await caching.PagesGetOrSetAsync(bvid, async ct1 =>
+      await GetBiliBiliDataRawAsync(PageUrl, new Dictionary<string, string> { { "bvid", bvid } }, ct1)
+        .ConfigureAwait(false), TimeSpan.FromHours(_setting.PageCacheTime), ct);
   }
 
   /// <summary>
@@ -27,11 +23,13 @@ public partial class BiliBiliHelp
   /// </summary>
   /// <param name="bvid"></param>
   /// <param name="p"></param>
+  /// <param name="ct"></param>
   /// <returns></returns>
-  public async ValueTask<BiliBiliPages.PagesData?> GetBiliBiliPagesDataAsync(string bvid, int p = 1)
+  private async ValueTask<BiliBiliPages.PagesData?> GetBiliBiliPagesDataAsync(string bvid, int p = 1,
+    CancellationToken ct = default)
   {
-    var a = await GetBiliBiliPageAsync(bvid).ConfigureAwait(false);
-    return GetBiliBiliPagesDataAsync(a, p);
+    var a = await GetBiliBiliPageAsync(bvid, ct).ConfigureAwait(false);
+    return GetBiliBiliPagesData(a, p);
   }
 
   /// <summary>
@@ -40,7 +38,7 @@ public partial class BiliBiliHelp
   /// <param name="pages"></param>
   /// <param name="p"></param>
   /// <returns></returns>
-  private BiliBiliPages.PagesData? GetBiliBiliPagesDataAsync(BiliBiliPages? pages, int p)
+  private BiliBiliPages.PagesData? GetBiliBiliPagesData(BiliBiliPages? pages, int p)
   {
     if (pages?.Data is { Length: > 0 }) return pages.Code == 0 ? pages.Data.FirstOrDefault(e => e.Page == p) : null;
     return null;

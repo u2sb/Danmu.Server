@@ -1,61 +1,52 @@
 using System.Text.Json.Serialization;
 using DanMu.Models.BiliBili;
-using MemoryPack;
 using MessagePack;
 
 namespace DanMu.Models.ArtPlayer;
 
-[MemoryPackable]
-[GenerateTypeScript]
 [MessagePackObject]
-public partial class ArtPlayerDm
+public class ArtPlayerDm
 {
   /// <summary>
   ///   弹幕文本
   /// </summary>
-  [MemoryPackOrder(0)]
   [JsonPropertyName("text")]
-  [Key("text")]
+  [Key(0)]
   public string? Text { get; set; }
 
   /// <summary>
   ///   弹幕位置  0: 滚动，1: 顶部，2: 底部
   /// </summary>
-  [MemoryPackOrder(1)]
   [JsonPropertyName("model")]
-  [Key("model")]
+  [Key(1)]
   public int Model { get; set; }
 
   /// <summary>
   ///   弹幕颜色
   /// </summary>
-  [MemoryPackOrder(2)]
   [JsonPropertyName("color")]
-  [Key("color")]
+  [Key(2)]
   public string? Color { get; set; } = "#FFF";
 
   /// <summary>
   ///   出现时间 (单位: s)
   /// </summary>
-  [MemoryPackOrder(3)]
   [JsonPropertyName("time")]
-  [Key("time")]
+  [Key(3)]
   public int Time { get; set; }
 
   /// <summary>
   ///   是否描边
   /// </summary>
-  [MemoryPackOrder(4)]
   [JsonPropertyName("border")]
-  [Key("border")]
+  [Key(4)]
   public bool Border { get; set; }
 
   /// <summary>
   ///   样式
   /// </summary>
-  [MemoryPackOrder(5)]
   [JsonPropertyName("style")]
-  [Key("style")]
+  [Key(5)]
   public Dictionary<string, string>? Style { get; set; }
 
 
@@ -80,6 +71,6 @@ public partial class ArtPlayerDm
       {
         { "font-size", $"{s.FontSize}px" }
       }
-    }).ToList() ?? new List<ArtPlayerDm>();
+    }).ToList() ?? [];
   }
 }

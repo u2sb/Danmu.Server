@@ -11,13 +11,13 @@ namespace DanMu.Controllers.Api.ArtPlayer;
 [Route("/api/art/bilibili/")]
 public class BiliBiliDanMuController(BiliBiliHelp bilibili) : ControllerBase
 {
-  #region MemoryPack 弹幕   MessagePack 弹幕
+  #region MessagePack 弹幕
 
   [HttpGet("v2/{bvid}")]
   [HttpGet("v2/{bvid}/{p:int}")]
+  [Produces("application/x-msgpack")]
   public async ValueTask<List<ArtPlayerDm>> GetMemoryPackDanMuAsync(string bvid, int p = 1)
   {
-    HttpContext.Response.ContentType = HttpContext.Request.ContentType;
     var dm = await bilibili.GetDanMuAsync(bvid, p);
     return ArtPlayerDm.FromBilibiliDanMu(dm?.Elems);
   }
@@ -32,7 +32,6 @@ public class BiliBiliDanMuController(BiliBiliHelp bilibili) : ControllerBase
   public async ValueTask<List<ArtPlayerDm>> GetJsonDanMuAsync(string bvid, int p = 1)
   {
     var dm = await bilibili.GetDanMuAsync(bvid, p);
-
     return ArtPlayerDm.FromBilibiliDanMu(dm?.Elems);
   }
 

@@ -1,32 +1,33 @@
 using DanMu.Models.BiliBili;
 using DanMu.Models.Settings;
-using LiteDB.Async;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 
 namespace DanMu.Utils.Caching;
 
-public class CachingContext
+public class CachingContext(DbContextOptions<CachingContext> options) : DbContext(options)
 {
-  /// <summary>
-  ///   BiliBili Page 缓存库
-  /// </summary>
-  public ILiteCollectionAsync<BiliBiliPagesCaching> BiliBiliPagesCaching;
+  public DbSet<BiliBiliPagesCaching> BiliBiliPagesCaching { get; init; }
+  public DbSet<BiliBiliDmCaching> BiliBiliDmCaching { get; init; }
 
-  /// <summary>
-  ///   BiliBili 弹幕缓存库
-  /// </summary>
-  public ILiteStorageAsync<int> BiliDanMuCache;
-
-  public CachingContext(AppSettings appSettings)
+  protected override void OnModelCreating(ModelBuilder modelBuilder)
   {
-    Database = new LiteDatabaseAsync(Path.Combine(appSettings.DataBase.Directory, appSettings.DataBase.CachingDb));
-
-    // BiliBili Page 缓存库
-    BiliBiliPagesCaching = Database.GetCollection<BiliBiliPagesCaching>("BiliPages");
-    BiliBiliPagesCaching.EnsureIndexAsync(x => x.BvId);
-
-    // 弹幕缓存库
-    BiliDanMuCache = Database.GetStorage<int>("BiliDanMu", "_biliDanMuChunks");
+    modelBuilder.Entity<BiliBiliPagesCaching>();
+    modelBuilder.Entity<BiliBiliDmCaching>();
   }
+}
 
-  public LiteDatabaseAsync Database { get; }
+public static class CachingContextBuilder
+{
+  public static void Build(DataBase dataBase, DbContextOptionsBuilder option)
+  {
+    var connectionString = new SqliteConnectionStringBuilder
+    {
+      Mode = SqliteOpenMode.ReadWriteCreate,
+      Cache = SqliteCacheMode.Default,
+      DataSource = Path.Combine(dataBase.Directory, dataBase.CachingDb),
+      Pooling = true
+    }.ToString();
+    option.UseSqlite(connectionString);
+  }
 }

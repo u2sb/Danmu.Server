@@ -2,12 +2,11 @@ using DanMu.Models.Settings;
 using DanMu.Utils.BiliBili;
 using DanMu.Utils.Caching;
 using DanMu.Utils.Program;
-using MemoryPack.AspNetCoreMvcFormatter;
+using Flurl.Http.Configuration;
 using MessagePack.AspNetCoreMvcFormatter;
 using MessagePack.Resolvers;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
-using RestSharp;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 
@@ -31,19 +30,24 @@ if (!Directory.Exists(appSettings.DataBase.Directory))
 
 services.AddControllers(options =>
 {
-  options.InputFormatters.Add(new MemoryPackInputFormatter());
-  options.OutputFormatters.Add(new MemoryPackOutputFormatter(true));
-
   options.InputFormatters.Add(new MessagePackInputFormatter(ContractlessStandardResolver.Options));
   options.OutputFormatters.Add(new MessagePackOutputFormatter(ContractlessStandardResolver.Options));
 }).AddXmlSerializerFormatters();
 
+// 代理头
 services.Configure<ForwardedHeadersOptions>(options =>
 {
   options.ForwardedHeaders =
     ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
 });
 
+// 数据库
+services.AddDbContextPool<CachingContext>(op =>
+    CachingContextBuilder.Build(appSettings.DataBase, op),
+  appSettings.DataBase.PoolSize
+);
+
+// 跨域
 services.AddCors(options =>
 {
   options.AddDefaultPolicy(b => b
@@ -56,11 +60,12 @@ services.AddCors(options =>
 services.AddAuthentication();
 
 services.AddSingleton(appSettings);
-services.AddSingleton<RestClient>();
-services.AddSingleton<CachingContext>();
-services.AddSingleton<BiliBiliCaching>();
-services.AddSingleton<SbLife>();
+services.AddSingleton<IFlurlClientCache>(_ => new FlurlClientCache()
+  .Add(nameof(BiliBiliHelp), BiliBiliHelp.BaseUrl));
+services.AddScoped<CachingContext>();
 services.AddScoped<BiliBiliHelp>();
+services.AddScoped<BiliBiliCaching>();
+
 
 var app = builder.Build();
 
@@ -80,7 +85,7 @@ var serviceScope = app.Services.CreateScope();
 var s = serviceScope.ServiceProvider;
 
 var life = app.Lifetime;
-var sbLife = s.GetService<SbLife>();
-sbLife?.Register(life);
+var sbLife = new SbLife(appSettings, s.GetRequiredService<CachingContext>());
+sbLife.Register(life);
 
 app.Run();
