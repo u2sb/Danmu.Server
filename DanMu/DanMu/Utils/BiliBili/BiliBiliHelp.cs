@@ -20,7 +20,7 @@ public partial class BiliBiliHelp(AppSettings setting, IFlurlClientCache flurlCl
   /// <param name="p"></param>
   /// <param name="ct"></param>
   /// <returns></returns>
-  public async ValueTask<List<DanmakuElem>> GetGenericDanMuAsync(string bvid, int p = 1, CancellationToken ct = default)
+  public async ValueTask<IEnumerable<DanmakuElem>> GetGenericDanMuAsync(string bvid, int p = 1, CancellationToken ct = default)
   {
     var a = await GetDanMuAsync(bvid, p, ct).ConfigureAwait(false);
 
@@ -94,9 +94,9 @@ public partial class BiliBiliHelp(AppSettings setting, IFlurlClientCache flurlCl
 
     var dmSeg = new DmSegMobileReply
     {
-      Elems = danMuSegList.SelectMany(s => s.Elems).ToList()
+      Elems = danMuSegList.SelectMany(s => s.Elems).ToArray()
     };
 
-    return dmSeg.Elems.Count > 0 ? dmSeg : null;
+    return dmSeg.Elems.Length > 0 ? dmSeg : null;
   }
 }

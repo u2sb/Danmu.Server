@@ -41,7 +41,7 @@ public class DPlayerDm
   ///   从bilibili弹幕转换
   /// </summary>
   /// <returns></returns>
-  public static List<DPlayerDm> FromBilibiliDanMu(List<DanmakuElem>? elems)
+  public static IEnumerable<DPlayerDm> FromBilibiliDanMu(IEnumerable<DanmakuElem>? elems)
   {
     return elems?.Select(s => new DPlayerDm
       {
@@ -55,7 +55,7 @@ public class DPlayerDm
         Color = s.Color,
         Time = s.Progress / 1000f
       }
-    ).ToList() ?? [];
+    ) ?? [];
   }
 }
 

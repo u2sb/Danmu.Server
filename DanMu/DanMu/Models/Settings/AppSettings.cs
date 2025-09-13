@@ -19,7 +19,7 @@ public class AppSettings
   /// <summary>
   ///   Port
   /// </summary>
-  public int Port { get; init; } = 3567;
+  public ushort Port { get; init; } = 3567;
 
   public string PidFile { get; init; } = "./DanMu.pid";
 

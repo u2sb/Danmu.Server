@@ -54,6 +54,7 @@ public class BiliBiliCaching(CachingContext context)
     {
       a.PagesData = ms1.ToArray();
       a.DateTime = DateTime.UtcNow;
+      _pagesCaching.Update(a);
     }
 
     await context.SaveChangesAsync(ct);
@@ -79,7 +80,7 @@ public class BiliBiliCaching(CachingContext context)
       return Serializer.Deserialize<DmSegMobileReply>(a.Data.AsSpan());
 
     var f = await factory.Invoke(ct).ConfigureAwait(false);
-    if (f is not { Elems.Count: > 0 }) return f;
+    if (f is not { Elems.Length: > 0 }) return f;
 
     var buffer = new ArrayBufferWriter<byte>();
     Serializer.Serialize(buffer, f);
@@ -99,6 +100,7 @@ public class BiliBiliCaching(CachingContext context)
     {
       a.Data = b.ToArray();
       a.DateTime = DateTime.UtcNow;
+      _dmCaching.Update(a);
     }
 
     await context.SaveChangesAsync(ct);

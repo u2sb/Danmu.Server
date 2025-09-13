@@ -54,7 +54,7 @@ public class ArtPlayerDm
   ///   从bilibili弹幕转换
   /// </summary>
   /// <returns></returns>
-  public static List<ArtPlayerDm> FromBilibiliDanMu(List<DanmakuElem>? elems)
+  public static IEnumerable<ArtPlayerDm> FromBilibiliDanMu(IEnumerable<DanmakuElem>? elems)
   {
     return elems?.Select(s => new ArtPlayerDm
     {
@@ -71,6 +71,6 @@ public class ArtPlayerDm
       {
         { "font-size", $"{s.FontSize}px" }
       }
-    }).ToList() ?? [];
+    }) ?? [];
   }
 }

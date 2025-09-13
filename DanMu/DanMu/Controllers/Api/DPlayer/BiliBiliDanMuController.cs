@@ -18,7 +18,7 @@ public class BiliBiliDanMuController(BiliBiliHelp bilibili) : ControllerBase
   public async ValueTask<DPlayerDmResult> GetMemoryPackDanMuAsync(string bvid, int p = 1)
   {
     var dm = await bilibili.GetDanMuAsync(bvid, p);
-    var dpDm = DPlayerDm.FromBilibiliDanMu(dm?.Elems);
+    var dpDm = DPlayerDm.FromBilibiliDanMu(dm?.Elems).ToList();
 
     return new DPlayerDmResult
     {
@@ -36,7 +36,7 @@ public class BiliBiliDanMuController(BiliBiliHelp bilibili) : ControllerBase
   public async ValueTask<DPlayerDmResult> GetJsonDanMuAsync(string bvid, int p = 1)
   {
     var dm = await bilibili.GetDanMuAsync(bvid, p);
-    var dpDm = DPlayerDm.FromBilibiliDanMu(dm?.Elems);
+    var dpDm = DPlayerDm.FromBilibiliDanMu(dm?.Elems).ToList();
 
     return new DPlayerDmResult
     {

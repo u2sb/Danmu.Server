@@ -7,8 +7,15 @@ using MessagePack.AspNetCoreMvcFormatter;
 using MessagePack.Resolvers;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using VYaml.Configuration;
 
 var builder = WebApplication.CreateSlimBuilder(args);
+builder.Configuration
+  .AddJsonFile("appsettings.json", true, true)
+  .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", true)
+  .AddYamlFile("appsettings.yaml", false, true)
+  .AddYamlFile($"appsettings.{builder.Environment.EnvironmentName}.yaml", true)
+  .AddEnvironmentVariables();
 
 var appSettings = builder.Configuration.Get<AppSettings>()!;
 

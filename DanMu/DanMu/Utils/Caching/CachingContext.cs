@@ -7,8 +7,8 @@ namespace DanMu.Utils.Caching;
 
 public class CachingContext(DbContextOptions<CachingContext> options) : DbContext(options)
 {
-  public DbSet<BiliBiliPagesCaching> BiliBiliPagesCaching { get; init; }
-  public DbSet<BiliBiliDmCaching> BiliBiliDmCaching { get; init; }
+  public DbSet<BiliBiliPagesCaching> BiliBiliPagesCaching { get; init; } = null!;
+  public DbSet<BiliBiliDmCaching> BiliBiliDmCaching { get; init; } = null!;
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {

@@ -16,10 +16,10 @@ public class BiliBiliDanMuController(BiliBiliHelp bilibili) : ControllerBase
   [HttpGet("v2/{bvid}")]
   [HttpGet("v2/{bvid}/{p:int}")]
   [Produces("application/x-msgpack")]
-  public async ValueTask<List<ArtPlayerDm>> GetMemoryPackDanMuAsync(string bvid, int p = 1)
+  public async ValueTask<ArtPlayerDm[]> GetMemoryPackDanMuAsync(string bvid, int p = 1)
   {
     var dm = await bilibili.GetDanMuAsync(bvid, p);
-    return ArtPlayerDm.FromBilibiliDanMu(dm?.Elems);
+    return ArtPlayerDm.FromBilibiliDanMu(dm?.Elems).ToArray();
   }
 
   #endregion
@@ -27,12 +27,12 @@ public class BiliBiliDanMuController(BiliBiliHelp bilibili) : ControllerBase
   #region Json弹幕
 
   [HttpGet("v2/{bvid}.json")]
-  [HttpGet("v2/{bvid}/{p}.json")]
+  [HttpGet("v2/{bvid}/{p:int}.json")]
   [Produces(MediaTypeNames.Application.Json)]
-  public async ValueTask<List<ArtPlayerDm>> GetJsonDanMuAsync(string bvid, int p = 1)
+  public async ValueTask<ArtPlayerDm[]> GetJsonDanMuAsync(string bvid, int p = 1)
   {
     var dm = await bilibili.GetDanMuAsync(bvid, p);
-    return ArtPlayerDm.FromBilibiliDanMu(dm?.Elems);
+    return ArtPlayerDm.FromBilibiliDanMu(dm?.Elems).ToArray();
   }
 
   #endregion
@@ -40,9 +40,11 @@ public class BiliBiliDanMuController(BiliBiliHelp bilibili) : ControllerBase
   #region XML弹幕
 
   [HttpGet("v1/{bvid}")]
-  [HttpGet("v1/{bvid}/{p}")]
+  [HttpGet("v1/{bvid}/{p:int}")]
   [HttpGet("v1/{bvid}.xml")]
-  [HttpGet("v1/{bvid}/{p}.xml")]
+  [HttpGet("v1/{bvid}/{p:int}.xml")]
+  [HttpGet("v2/{bvid}.xml")]
+  [HttpGet("v2/{bvid}/{p:int}.xml")]
   [Produces(MediaTypeNames.Application.Xml)]
   public async ValueTask<OldBiliBiliDanMu> GetXmlDanMuAsync(string bvid, int p = 1)
   {

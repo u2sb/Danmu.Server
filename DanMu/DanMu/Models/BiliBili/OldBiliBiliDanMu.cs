@@ -18,7 +18,7 @@ public class OldBiliBiliDanMu
   [XmlElement("source")] public string Source { get; set; } = "e-r";
   [XmlElement("d")] public D[]? D { get; set; }
 
-  public static explicit operator OldBiliBiliDanMu(List<DanmakuElem>? data)
+  public static explicit operator OldBiliBiliDanMu(DanmakuElem[]? data)
   {
     var d = data?.Select(s => new D
     {
@@ -26,7 +26,7 @@ public class OldBiliBiliDanMu
         $"{s.Progress / 1000f},{s.Mode},{s.FontSize},{s.Color},{s.CTime},{s.Pool},{s.MidHash},{s.Id}, {s.Weight}",
       Value = s.Content
     }).ToArray();
-    return new OldBiliBiliDanMu { D = d, MaxLimit = data?.Count ?? 9999 };
+    return new OldBiliBiliDanMu { D = d, MaxLimit = data?.Length ?? 9999 };
   }
 }
 
