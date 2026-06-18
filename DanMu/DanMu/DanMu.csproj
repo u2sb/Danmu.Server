@@ -10,7 +10,7 @@
     <ItemGroup>
         <PackageReference Include="Flurl" Version="4.0.0"/>
         <PackageReference Include="Flurl.Http" Version="4.0.2"/>
-        <PackageReference Include="MessagePack" Version="3.1.4"/>
+        <PackageReference Include="MessagePack" Version="3.1.7"/>
         <PackageReference Include="MessagePack.AspNetCoreMvcFormatter" Version="3.1.4"/>
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="10.0.0-rc.1.25451.107"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.0-rc.1.25451.107"/>
